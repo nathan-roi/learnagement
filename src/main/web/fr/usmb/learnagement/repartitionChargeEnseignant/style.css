@@ -1,0 +1,47 @@
+body {
+  background: white;
+}
+table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+  border: 3px solid purple;
+}
+table tr:nth-child(odd){
+  background-color:#f2f2f2;
+}
+table tr:nth-child(even){
+  background-color:#fafafa;
+}
+thead{
+  border-collapse: collapse;
+  border: 3px solid purple;
+}
+tr { border: none; }
+th, td {
+  padding: 10px;
+  border-right: solid 1px #f00; 
+  border-left: solid 1px #f00;
+}
+.collapsible {
+  background-color: #777;
+  color: white;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+.active, .collapsible:hover {
+  background-color: #555;
+}
+
+.content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #f1f1f1;
+}
