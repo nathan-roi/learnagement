@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.4
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Hôte : localhost:3308
--- Généré le : jeu. 12 jan. 2023 à 17:52
--- Version du serveur :  5.7.33
--- Version de PHP : 7.4.14
+-- Hôte : localhost
+-- Généré le : jeu. 27 avr. 2023 à 00:39
+-- Version du serveur : 10.4.24-MariaDB
+-- Version de PHP : 8.1.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,9 +20,19 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `learnagement`
 --
+CREATE DATABASE IF NOT EXISTS `learnagement` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `learnagement`;
 
-CREATE DATABASE IF NOT EXISTS learnagement;
- 
+-- --------------------------------------------------------
+
+--
+-- Doublure de structure pour la vue `INFO_check_module_as_not_promo`
+-- (Voir ci-dessous la vue réelle)
+--
+CREATE TABLE `INFO_check_module_as_not_promo` (
+`id_module` int(11)
+);
+
 -- --------------------------------------------------------
 
 --
@@ -30,14 +40,13 @@ CREATE DATABASE IF NOT EXISTS learnagement;
 --
 
 CREATE TABLE `INFO_CMTDTP` (
-  `id` int(11) NOT NULL,
+  `id_CMTDTP` int(11) NOT NULL,
   `lieu` varchar(25) NOT NULL,
   `type` varchar(10) NOT NULL,
   `heure` float NOT NULL,
-  `intervenant_id` int(11) DEFAULT NULL,
-  `module_id` int(11) NOT NULL
+  `id_enseignant` int(11) DEFAULT NULL,
+  `id_module` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 -- --------------------------------------------------------
 
@@ -47,9 +56,8 @@ CREATE TABLE `INFO_CMTDTP` (
 
 CREATE TABLE `INFO_CMTDTP_as_promo` (
   `id_CMTDTP` int(11) NOT NULL,
-  `id_filiere` int(11) NOT NULL
+  `id_promo` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 
 -- --------------------------------------------------------
 
@@ -69,7 +77,7 @@ CREATE TABLE `INFO_dependances_CMTDTP` (
 --
 
 CREATE TABLE `INFO_enseignant` (
-  `id` int(11) NOT NULL,
+  `id_enseignant` int(11) NOT NULL,
   `prenom` varchar(25) NOT NULL,
   `nom` varchar(25) NOT NULL,
   `username` varchar(25) NOT NULL,
@@ -78,8 +86,8 @@ CREATE TABLE `INFO_enseignant` (
   `composante` varchar(25) DEFAULT NULL,
   `service statutaire` int(11) NOT NULL,
   `décharge` int(11) NOT NULL,
-  `service effectif` float NOT NULL DEFAULT '192',
-  `HCAutorisees` tinyint(1) NOT NULL DEFAULT '1',
+  `service effectif` float NOT NULL DEFAULT 192,
+  `HCAutorisees` tinyint(1) NOT NULL DEFAULT 1,
   `commentaire` varchar(150) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -111,7 +119,7 @@ CREATE TABLE `INFO_interventions` (
 ,`type` varchar(10)
 ,`heure` float
 ,`enseignant` varchar(25)
-,`filières` text
+,`filières` mediumtext
 );
 
 -- --------------------------------------------------------
@@ -121,7 +129,7 @@ CREATE TABLE `INFO_interventions` (
 --
 
 CREATE TABLE `INFO_module` (
-  `id` int(11) NOT NULL,
+  `id_module` int(11) NOT NULL,
   `code` varchar(10) NOT NULL,
   `nom` varchar(50) NOT NULL,
   `semestre` int(11) NOT NULL,
@@ -130,8 +138,8 @@ CREATE TABLE `INFO_module` (
   `hTP` float DEFAULT NULL,
   `hTPTD` float DEFAULT NULL,
   `filiere` varchar(20) NOT NULL,
-  `id_responsable` int(11) DEFAULT NULL,
-  `commentaire` text
+  `id_enseignant` int(11) DEFAULT NULL,
+  `commentaire` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -182,12 +190,13 @@ CREATE TABLE `INFO_module_as_promo` (
 --
 
 CREATE TABLE `INFO_promo` (
-  `id_filiere` int(11) NOT NULL,
+  `id_promo` int(11) NOT NULL,
   `nom_filiere` varchar(8) DEFAULT NULL,
   `annee` int(11) NOT NULL,
   `parcour` varchar(25) DEFAULT NULL,
+  `semestre` int(11) DEFAULT NULL,
   `site` varchar(25) NOT NULL,
-  `nbGroupeCM` int(11) NOT NULL DEFAULT '1',
+  `nbGroupeCM` int(11) NOT NULL DEFAULT 1,
   `nbGroupeTD` int(11) NOT NULL,
   `nbGroupeTP` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -199,11 +208,12 @@ CREATE TABLE `INFO_promo` (
 --
 
 CREATE TABLE `INFO_seance` (
-  `id` int(11) NOT NULL,
-  `id_CMTDTP` int(11) NOT NULL,
+  `id_seance` int(11) NOT NULL,
+  `type` varchar(10) NOT NULL,
   `date` datetime NOT NULL,
-  `duree` float NOT NULL,
-  `id_intervenant` int(11) NOT NULL
+  `duree` time NOT NULL,
+  `id_module` int(11) NOT NULL,
+  `id_enseignant` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -288,7 +298,7 @@ CREATE TABLE `INFO_vue_module2` (
 `site` varchar(25)
 ,`code` varchar(10)
 ,`type` varchar(10)
-,`Filière` text
+,`Filière` mediumtext
 ,`prenom` varchar(25)
 );
 
@@ -306,10 +316,10 @@ CREATE TABLE `INFO_vue_modules` (
 ,`hTD` float
 ,`hTP` float
 ,`hTPTD` float
-,`filières` text
-,`parcours` text
-,`sites` text
-,`responsables` text
+,`filières` mediumtext
+,`parcours` mediumtext
+,`sites` mediumtext
+,`responsables` mediumtext
 );
 
 -- --------------------------------------------------------
@@ -354,7 +364,7 @@ CREATE TABLE `INFO_vue_resume_heures` (
 CREATE TABLE `INFO_vue_resume_responsabilite` (
 `nom` varchar(25)
 ,`responsabilite` bigint(21)
-,`modules` text
+,`modules` mediumtext
 );
 
 -- --------------------------------------------------------
@@ -376,11 +386,20 @@ CREATE TABLE `INFO_vue_semestre` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la vue `INFO_check_module_as_not_promo`
+--
+DROP TABLE IF EXISTS `INFO_check_module_as_not_promo`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `INFO_check_module_as_not_promo`  AS SELECT `INFO_module`.`id_module` AS `id_module` FROM (`INFO_module` left join `INFO_module_as_promo` on(`INFO_module`.`id_module` = `INFO_module_as_promo`.`id_module`)) WHERE `INFO_module_as_promo`.`id_module` is null ORDER BY `INFO_module`.`id_module` ASC  ;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la vue `INFO_intervenants`
 --
 DROP TABLE IF EXISTS `INFO_intervenants`;
 
-CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `INFO_intervenants`  AS SELECT `INFO_module`.`code` AS `code`, `INFO_module`.`nom` AS `module`, `INFO_CMTDTP`.`lieu` AS `lieu`, `INFO_CMTDTP`.`type` AS `type`, `INFO_CMTDTP`.`heure` AS `heure`, `INFO_enseignant`.`nom` AS `enseignant` FROM ((`INFO_CMTDTP` join `INFO_enseignant`) join `INFO_module`) WHERE ((`INFO_CMTDTP`.`intervenant_id` = `INFO_enseignant`.`id`) AND (`INFO_CMTDTP`.`module_id` = `INFO_module`.`id`)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`learnagement`@`%` SQL SECURITY DEFINER VIEW `INFO_intervenants`  AS SELECT `INFO_module`.`code` AS `code`, `INFO_module`.`nom` AS `module`, `INFO_CMTDTP`.`lieu` AS `lieu`, `INFO_CMTDTP`.`type` AS `type`, `INFO_CMTDTP`.`heure` AS `heure`, `INFO_enseignant`.`nom` AS `enseignant` FROM ((`INFO_CMTDTP` join `INFO_enseignant`) join `INFO_module`) WHERE `INFO_CMTDTP`.`id_enseignant` = `INFO_enseignant`.`id_enseignant` AND `INFO_CMTDTP`.`id_module` = `INFO_module`.`id_module``id_module`  ;
 
 -- --------------------------------------------------------
 
@@ -389,7 +408,7 @@ CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `INFO_intervenants`  AS SE
 --
 DROP TABLE IF EXISTS `INFO_interventions`;
 
-CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `INFO_interventions`  AS SELECT `INFO_module`.`code` AS `code`, `INFO_module`.`nom` AS `module`, `INFO_CMTDTP`.`lieu` AS `lieu`, `INFO_CMTDTP`.`type` AS `type`, `INFO_CMTDTP`.`heure` AS `heure`, `INFO_enseignant`.`nom` AS `enseignant`, group_concat(`INFO_promo`.`nom_filiere` separator ',') AS `filières` FROM ((((`INFO_CMTDTP` join `INFO_enseignant`) join `INFO_module`) join `INFO_CMTDTP_as_promo`) join `INFO_promo`) WHERE ((`INFO_CMTDTP`.`intervenant_id` = `INFO_enseignant`.`id`) AND (`INFO_CMTDTP`.`module_id` = `INFO_module`.`id`) AND (`INFO_CMTDTP`.`id` = `INFO_CMTDTP_as_promo`.`id_CMTDTP`) AND (`INFO_CMTDTP_as_promo`.`id_filiere` = `INFO_promo`.`id_filiere`)) GROUP BY `INFO_module`.`code`, `INFO_module`.`nom`, `INFO_CMTDTP`.`lieu`, `INFO_CMTDTP`.`type`, `INFO_CMTDTP`.`heure`, `INFO_enseignant`.`nom` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`learnagement`@`%` SQL SECURITY DEFINER VIEW `INFO_interventions`  AS SELECT `INFO_module`.`code` AS `code`, `INFO_module`.`nom` AS `module`, `INFO_CMTDTP`.`lieu` AS `lieu`, `INFO_CMTDTP`.`type` AS `type`, `INFO_CMTDTP`.`heure` AS `heure`, `INFO_enseignant`.`nom` AS `enseignant`, group_concat(`INFO_promo`.`nom_filiere` separator ',') AS `filières` FROM ((((`INFO_CMTDTP` join `INFO_enseignant`) join `INFO_module`) join `INFO_CMTDTP_as_promo`) join `INFO_promo`) WHERE `INFO_CMTDTP`.`id_enseignant` = `INFO_enseignant`.`id_enseignant` AND `INFO_CMTDTP`.`id_module` = `INFO_module`.`id_module` AND `INFO_CMTDTP`.`id_CMTDTP` = `INFO_CMTDTP_as_promo`.`id_CMTDTP` AND `INFO_CMTDTP_as_promo`.`id_promo` = `INFO_promo`.`id_promo` GROUP BY `INFO_module`.`code`, `INFO_module`.`nom`, `INFO_CMTDTP`.`lieu`, `INFO_CMTDTP`.`type`, `INFO_CMTDTP`.`heure`, `INFO_enseignant`.`nom``nom`  ;
 
 -- --------------------------------------------------------
 
@@ -398,7 +417,7 @@ CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `INFO_interventions`  AS S
 --
 DROP TABLE IF EXISTS `INFO_module_2_promo_mccc`;
 
-CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `INFO_module_2_promo_mccc`  AS SELECT `INFO_module`.`code` AS `code`, `INFO_promo`.`site` AS `site`, `INFO_module`.`hCM` AS `hCMmccc`, sum((`INFO_module`.`hTD` * `INFO_promo`.`nbGroupeTD`)) AS `hTDmccc`, sum((`INFO_module`.`hTP` * `INFO_promo`.`nbGroupeTP`)) AS `hTPmccc`, sum((`INFO_module`.`hTPTD` * `INFO_promo`.`nbGroupeTD`)) AS `hTPTDmccc` FROM ((`INFO_module` join `INFO_module_as_promo` on((`INFO_module`.`id` = `INFO_module_as_promo`.`id_module`))) join `INFO_promo` on((`INFO_module_as_promo`.`id_promo` = `INFO_promo`.`id_filiere`))) WHERE 1 GROUP BY `INFO_module`.`code`, `INFO_promo`.`site` ORDER BY `INFO_module`.`semestre` ASC, `INFO_module`.`code` ASC ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`learnagement`@`%` SQL SECURITY DEFINER VIEW `INFO_module_2_promo_mccc`  AS SELECT `INFO_module`.`code` AS `code`, `INFO_promo`.`site` AS `site`, `INFO_module`.`hCM` AS `hCMmccc`, sum(`INFO_module`.`hTD` * `INFO_promo`.`nbGroupeTD`) AS `hTDmccc`, sum(`INFO_module`.`hTP` * `INFO_promo`.`nbGroupeTP`) AS `hTPmccc`, sum(`INFO_module`.`hTPTD` * `INFO_promo`.`nbGroupeTD`) AS `hTPTDmccc` FROM ((`INFO_module` join `INFO_module_as_promo` on(`INFO_module`.`id_module` = `INFO_module_as_promo`.`id_module`)) join `INFO_promo` on(`INFO_module_as_promo`.`id_promo` = `INFO_promo`.`id_promo`)) WHERE 1 GROUP BY `INFO_module`.`code`, `INFO_promo`.`site` ORDER BY `INFO_module`.`semestre` ASC, `INFO_module`.`code` ASC  ;
 
 -- --------------------------------------------------------
 
@@ -407,7 +426,7 @@ CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `INFO_module_2_promo_mccc`
 --
 DROP TABLE IF EXISTS `INFO_module_2_promo_prev`;
 
-CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `INFO_module_2_promo_prev`  AS SELECT `INFO_module`.`code` AS `code`, `INFO_CMTDTP`.`lieu` AS `site`, sum((case when (`INFO_CMTDTP`.`type` = 'CM') then `INFO_CMTDTP`.`heure` end)) AS `hCMprev`, sum((case when (`INFO_CMTDTP`.`type` = 'TD') then `INFO_CMTDTP`.`heure` end)) AS `hTDprev`, sum((case when (`INFO_CMTDTP`.`type` = 'TP') then `INFO_CMTDTP`.`heure` end)) AS `hTPprev`, sum((case when (`INFO_CMTDTP`.`type` = 'TPTD') then `INFO_CMTDTP`.`heure` end)) AS `hTPTDprev` FROM (`INFO_CMTDTP` join `INFO_module` on((`INFO_CMTDTP`.`module_id` = `INFO_module`.`id`))) WHERE 1 GROUP BY `INFO_module`.`code`, `INFO_CMTDTP`.`lieu` ORDER BY `INFO_module`.`semestre` ASC, `INFO_module`.`code` ASC ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`learnagement`@`%` SQL SECURITY DEFINER VIEW `INFO_module_2_promo_prev`  AS SELECT `INFO_module`.`code` AS `code`, `INFO_CMTDTP`.`lieu` AS `site`, sum(case when `INFO_CMTDTP`.`type` = 'CM' then `INFO_CMTDTP`.`heure` end) AS `hCMprev`, sum(case when `INFO_CMTDTP`.`type` = 'TD' then `INFO_CMTDTP`.`heure` end) AS `hTDprev`, sum(case when `INFO_CMTDTP`.`type` = 'TP' then `INFO_CMTDTP`.`heure` end) AS `hTPprev`, sum(case when `INFO_CMTDTP`.`type` = 'TPTD' then `INFO_CMTDTP`.`heure` end) AS `hTPTDprev` FROM (`INFO_CMTDTP` join `INFO_module` on(`INFO_CMTDTP`.`id_module` = `INFO_module`.`id_module`)) WHERE 1 GROUP BY `INFO_module`.`code`, `INFO_CMTDTP`.`lieu` ORDER BY `INFO_module`.`semestre` ASC, `INFO_module`.`code` ASC  ;
 
 -- --------------------------------------------------------
 
@@ -416,7 +435,7 @@ CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `INFO_module_2_promo_prev`
 --
 DROP TABLE IF EXISTS `INFO_vue_Check_MCCC_prev`;
 
-CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `INFO_vue_Check_MCCC_prev`  AS SELECT `INFO_module_2_promo_mccc`.`code` AS `code`, `INFO_module_2_promo_mccc`.`site` AS `site`, `INFO_module_2_promo_mccc`.`hCMmccc` AS `hCMmccc`, `INFO_module_2_promo_mccc`.`hTDmccc` AS `hTDmccc`, `INFO_module_2_promo_mccc`.`hTPmccc` AS `hTPmccc`, `INFO_module_2_promo_mccc`.`hTPTDmccc` AS `hTPTDmccc`, `INFO_module_2_promo_prev`.`hCMprev` AS `hCMprev`, `INFO_module_2_promo_prev`.`hTDprev` AS `hTDprev`, `INFO_module_2_promo_prev`.`hTPprev` AS `hTPprev`, `INFO_module_2_promo_prev`.`hTPTDprev` AS `hTPTDprev`, (ifnull(`INFO_module_2_promo_mccc`.`hCMmccc`,0) - ifnull(`INFO_module_2_promo_prev`.`hCMprev`,0)) AS `hCM non Plan`, (ifnull(`INFO_module_2_promo_mccc`.`hTDmccc`,0) - ifnull(`INFO_module_2_promo_prev`.`hTDprev`,0)) AS `hTD non Plan`, (ifnull(`INFO_module_2_promo_mccc`.`hTPmccc`,0) - ifnull(`INFO_module_2_promo_prev`.`hTPprev`,0)) AS `hTP non Plan`, (ifnull(`INFO_module_2_promo_mccc`.`hTPTDmccc`,0) - ifnull(`INFO_module_2_promo_prev`.`hTPTDprev`,0)) AS `hTPTD non Plan` FROM (`INFO_module_2_promo_mccc` join `INFO_module_2_promo_prev` on(((`INFO_module_2_promo_mccc`.`code` = `INFO_module_2_promo_prev`.`code`) and (`INFO_module_2_promo_mccc`.`site` = `INFO_module_2_promo_prev`.`site`)))) WHERE 1 ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`learnagement`@`%` SQL SECURITY DEFINER VIEW `INFO_vue_Check_MCCC_prev`  AS SELECT `INFO_module_2_promo_mccc`.`code` AS `code`, `INFO_module_2_promo_mccc`.`site` AS `site`, `INFO_module_2_promo_mccc`.`hCMmccc` AS `hCMmccc`, `INFO_module_2_promo_mccc`.`hTDmccc` AS `hTDmccc`, `INFO_module_2_promo_mccc`.`hTPmccc` AS `hTPmccc`, `INFO_module_2_promo_mccc`.`hTPTDmccc` AS `hTPTDmccc`, `INFO_module_2_promo_prev`.`hCMprev` AS `hCMprev`, `INFO_module_2_promo_prev`.`hTDprev` AS `hTDprev`, `INFO_module_2_promo_prev`.`hTPprev` AS `hTPprev`, `INFO_module_2_promo_prev`.`hTPTDprev` AS `hTPTDprev`, ifnull(`INFO_module_2_promo_mccc`.`hCMmccc`,0) - ifnull(`INFO_module_2_promo_prev`.`hCMprev`,0) AS `hCM non Plan`, ifnull(`INFO_module_2_promo_mccc`.`hTDmccc`,0) - ifnull(`INFO_module_2_promo_prev`.`hTDprev`,0) AS `hTD non Plan`, ifnull(`INFO_module_2_promo_mccc`.`hTPmccc`,0) - ifnull(`INFO_module_2_promo_prev`.`hTPprev`,0) AS `hTP non Plan`, ifnull(`INFO_module_2_promo_mccc`.`hTPTDmccc`,0) - ifnull(`INFO_module_2_promo_prev`.`hTPTDprev`,0) AS `hTPTD non Plan` FROM (`INFO_module_2_promo_mccc` join `INFO_module_2_promo_prev` on(`INFO_module_2_promo_mccc`.`code` = `INFO_module_2_promo_prev`.`code` and `INFO_module_2_promo_mccc`.`site` = `INFO_module_2_promo_prev`.`site`)) WHERE 11  ;
 
 -- --------------------------------------------------------
 
@@ -425,7 +444,7 @@ CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `INFO_vue_Check_MCCC_prev`
 --
 DROP TABLE IF EXISTS `INFO_vue_Check_MCC_prev_ADE`;
 
-CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `INFO_vue_Check_MCC_prev_ADE`  AS SELECT `INFO_module`.`code` AS `code`, ifnull(`INFO_module`.`hCM`,0) AS `hCM MCCC`, (ifnull(`INFO_module`.`hTD`,0) + ifnull(`INFO_module`.`hTPTD`,0)) AS `hTD MCCC`, ifnull(`INFO_module`.`hTP`,0) AS `hTP MCCC`, sum((case when (`INFO_CMTDTP`.`type` = 'CM') then `INFO_CMTDTP`.`heure` end)) AS `Heure CM`, sum((case when (`INFO_CMTDTP`.`type` = 'TD') then `INFO_CMTDTP`.`heure` end)) AS `Heure TD`, sum((case when (`INFO_CMTDTP`.`type` = 'TP') then `INFO_CMTDTP`.`heure` end)) AS `Heure TP`, sum((case when (`INFO_CMTDTP`.`type` = 'Exam') then `INFO_CMTDTP`.`heure` end)) AS `Heure Exam` FROM ((`INFO_module` join `INFO_vue_parameters`) join `INFO_CMTDTP`) WHERE ((`INFO_module`.`code` = convert(`INFO_vue_parameters`.`module` using utf8)) AND (`INFO_module`.`id` = `INFO_CMTDTP`.`module_id`)) GROUP BY `INFO_module`.`code`, `INFO_module`.`hCM`, `INFO_module`.`hTD`, `INFO_module`.`hTP`, `INFO_module`.`hTPTD` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`learnagement`@`%` SQL SECURITY DEFINER VIEW `INFO_vue_Check_MCC_prev_ADE`  AS SELECT `INFO_module`.`code` AS `code`, ifnull(`INFO_module`.`hCM`,0) AS `hCM MCCC`, ifnull(`INFO_module`.`hTD`,0) + ifnull(`INFO_module`.`hTPTD`,0) AS `hTD MCCC`, ifnull(`INFO_module`.`hTP`,0) AS `hTP MCCC`, sum(case when `INFO_CMTDTP`.`type` = 'CM' then `INFO_CMTDTP`.`heure` end) AS `Heure CM`, sum(case when `INFO_CMTDTP`.`type` = 'TD' then `INFO_CMTDTP`.`heure` end) AS `Heure TD`, sum(case when `INFO_CMTDTP`.`type` = 'TP' then `INFO_CMTDTP`.`heure` end) AS `Heure TP`, sum(case when `INFO_CMTDTP`.`type` = 'Exam' then `INFO_CMTDTP`.`heure` end) AS `Heure Exam` FROM ((`INFO_module` join `INFO_vue_parameters`) join `INFO_CMTDTP`) WHERE `INFO_module`.`code` = convert(`INFO_vue_parameters`.`module` using utf8) AND `INFO_module`.`id_module` = `INFO_CMTDTP`.`id_module` GROUP BY `INFO_module`.`code`, `INFO_module`.`hCM`, `INFO_module`.`hTD`, `INFO_module`.`hTP`, `INFO_module`.`hTPTD``hTPTD`  ;
 
 -- --------------------------------------------------------
 
@@ -434,7 +453,7 @@ CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `INFO_vue_Check_MCC_prev_A
 --
 DROP TABLE IF EXISTS `INFO_vue_enseignant`;
 
-CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `INFO_vue_enseignant`  AS SELECT `INFO_module`.`code` AS `code`, `INFO_module`.`nom` AS `module`, `INFO_CMTDTP`.`lieu` AS `lieu`, `INFO_CMTDTP`.`type` AS `type`, `INFO_CMTDTP`.`heure` AS `heure`, `INFO_enseignant`.`nom` AS `enseignant` FROM (((`INFO_CMTDTP` join `INFO_module`) join `INFO_vue_parameters`) join `INFO_enseignant`) WHERE ((`INFO_module`.`id` = `INFO_CMTDTP`.`module_id`) AND (convert(`INFO_vue_parameters`.`enseignant` using utf8) = `INFO_enseignant`.`nom`) AND (`INFO_CMTDTP`.`intervenant_id` = `INFO_enseignant`.`id`)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`learnagement`@`%` SQL SECURITY DEFINER VIEW `INFO_vue_enseignant`  AS SELECT `INFO_module`.`code` AS `code`, `INFO_module`.`nom` AS `module`, `INFO_CMTDTP`.`lieu` AS `lieu`, `INFO_CMTDTP`.`type` AS `type`, `INFO_CMTDTP`.`heure` AS `heure`, `INFO_enseignant`.`nom` AS `enseignant` FROM (((`INFO_CMTDTP` join `INFO_module`) join `INFO_vue_parameters`) join `INFO_enseignant`) WHERE `INFO_module`.`id_module` = `INFO_CMTDTP`.`id_module` AND convert(`INFO_vue_parameters`.`enseignant` using utf8) = `INFO_enseignant`.`nom` AND `INFO_CMTDTP`.`id_enseignant` = `INFO_enseignant`.`id_enseignant``id_enseignant`  ;
 
 -- --------------------------------------------------------
 
@@ -443,7 +462,7 @@ CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `INFO_vue_enseignant`  AS 
 --
 DROP TABLE IF EXISTS `INFO_vue_module`;
 
-CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `INFO_vue_module`  AS SELECT `INFO_module`.`code` AS `code`, `INFO_module`.`nom` AS `module`, `INFO_module`.`semestre` AS `semestre`, `INFO_module`.`filiere` AS `filiere`, `INFO_CMTDTP`.`lieu` AS `lieu`, `INFO_CMTDTP`.`type` AS `type`, `INFO_CMTDTP`.`heure` AS `heure`, `INFO_enseignant`.`nom` AS `nom` FROM (((`INFO_module` join `INFO_CMTDTP`) join `INFO_enseignant`) join `INFO_vue_parameters`) WHERE ((`INFO_module`.`id` = `INFO_CMTDTP`.`module_id`) AND (`INFO_CMTDTP`.`intervenant_id` = `INFO_enseignant`.`id`) AND (`INFO_module`.`code` = convert(`INFO_vue_parameters`.`module` using utf8))) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`learnagement`@`%` SQL SECURITY DEFINER VIEW `INFO_vue_module`  AS SELECT `INFO_module`.`code` AS `code`, `INFO_module`.`nom` AS `module`, `INFO_module`.`semestre` AS `semestre`, `INFO_module`.`filiere` AS `filiere`, `INFO_CMTDTP`.`lieu` AS `lieu`, `INFO_CMTDTP`.`type` AS `type`, `INFO_CMTDTP`.`heure` AS `heure`, `INFO_enseignant`.`nom` AS `nom` FROM (((`INFO_module` join `INFO_CMTDTP`) join `INFO_enseignant`) join `INFO_vue_parameters`) WHERE `INFO_module`.`id_module` = `INFO_CMTDTP`.`id_module` AND `INFO_CMTDTP`.`id_enseignant` = `INFO_enseignant`.`id_enseignant` AND `INFO_module`.`code` = convert(`INFO_vue_parameters`.`module` using utf8)  ;
 
 -- --------------------------------------------------------
 
@@ -452,7 +471,7 @@ CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `INFO_vue_module`  AS SELE
 --
 DROP TABLE IF EXISTS `INFO_vue_module2`;
 
-CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `INFO_vue_module2`  AS SELECT `INFO_promo`.`site` AS `site`, `INFO_module`.`code` AS `code`, `INFO_CMTDTP`.`type` AS `type`, group_concat(distinct `INFO_promo`.`nom_filiere` separator ', ') AS `Filière`, `INFO_enseignant`.`prenom` AS `prenom` FROM (((((`INFO_enseignant` join `INFO_CMTDTP`) join `INFO_CMTDTP_as_promo`) join `INFO_promo`) join `INFO_module`) join `INFO_vue_parameters`) WHERE ((`INFO_enseignant`.`id` = `INFO_CMTDTP`.`intervenant_id`) AND (`INFO_CMTDTP`.`id` = `INFO_CMTDTP_as_promo`.`id_CMTDTP`) AND (`INFO_CMTDTP_as_promo`.`id_filiere` = `INFO_promo`.`id_filiere`) AND (`INFO_module`.`id` = `INFO_CMTDTP`.`module_id`) AND (`INFO_module`.`code` = convert(`INFO_vue_parameters`.`module` using utf8))) GROUP BY `INFO_promo`.`site`, `INFO_enseignant`.`prenom`, `INFO_module`.`code`, `INFO_CMTDTP`.`type`, `INFO_CMTDTP`.`lieu` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`learnagement`@`%` SQL SECURITY DEFINER VIEW `INFO_vue_module2`  AS SELECT `INFO_promo`.`site` AS `site`, `INFO_module`.`code` AS `code`, `INFO_CMTDTP`.`type` AS `type`, group_concat(distinct `INFO_promo`.`nom_filiere` separator ', ') AS `Filière`, `INFO_enseignant`.`prenom` AS `prenom` FROM (((((`INFO_enseignant` join `INFO_CMTDTP`) join `INFO_CMTDTP_as_promo`) join `INFO_promo`) join `INFO_module`) join `INFO_vue_parameters`) WHERE `INFO_enseignant`.`id_enseignant` = `INFO_CMTDTP`.`id_enseignant` AND `INFO_CMTDTP`.`id_CMTDTP` = `INFO_CMTDTP_as_promo`.`id_CMTDTP` AND `INFO_CMTDTP_as_promo`.`id_promo` = `INFO_promo`.`id_promo` AND `INFO_module`.`id_module` = `INFO_CMTDTP`.`id_module` AND `INFO_module`.`code` = convert(`INFO_vue_parameters`.`module` using utf8) GROUP BY `INFO_promo`.`site`, `INFO_enseignant`.`prenom`, `INFO_module`.`code`, `INFO_CMTDTP`.`type`, `INFO_CMTDTP`.`lieu``lieu`  ;
 
 -- --------------------------------------------------------
 
@@ -461,7 +480,7 @@ CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `INFO_vue_module2`  AS SEL
 --
 DROP TABLE IF EXISTS `INFO_vue_modules`;
 
-CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `INFO_vue_modules`  AS SELECT `INFO_module`.`code` AS `code`, `INFO_module`.`nom` AS `nom`, `INFO_module`.`semestre` AS `semestre`, `INFO_module`.`hCM` AS `hCM`, `INFO_module`.`hTD` AS `hTD`, `INFO_module`.`hTP` AS `hTP`, `INFO_module`.`hTPTD` AS `hTPTD`, group_concat(distinct `INFO_promo`.`nom_filiere` separator ', ') AS `filières`, group_concat(distinct `INFO_promo`.`parcour` separator ', ') AS `parcours`, group_concat(distinct `INFO_promo`.`site` separator ', ') AS `sites`, group_concat(distinct `INFO_enseignant`.`prenom` separator ', ') AS `responsables` FROM (((`INFO_module` join `INFO_module_as_promo`) join `INFO_promo`) left join `INFO_enseignant` on((`INFO_module`.`id_responsable` = `INFO_enseignant`.`id`))) WHERE ((`INFO_module`.`id` = `INFO_module_as_promo`.`id_module`) AND (`INFO_module_as_promo`.`id_promo` = `INFO_promo`.`id_filiere`)) GROUP BY `INFO_module`.`code`, `INFO_module`.`nom`, `INFO_module`.`semestre`, `INFO_module`.`hCM`, `INFO_module`.`hTD`, `INFO_module`.`hTP`, `INFO_module`.`hTPTD` ORDER BY `INFO_module`.`semestre` ASC, `INFO_module`.`code` ASC ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`learnagement`@`%` SQL SECURITY DEFINER VIEW `INFO_vue_modules`  AS SELECT `INFO_module`.`code` AS `code`, `INFO_module`.`nom` AS `nom`, `INFO_module`.`semestre` AS `semestre`, `INFO_module`.`hCM` AS `hCM`, `INFO_module`.`hTD` AS `hTD`, `INFO_module`.`hTP` AS `hTP`, `INFO_module`.`hTPTD` AS `hTPTD`, group_concat(distinct `INFO_promo`.`nom_filiere` separator ', ') AS `filières`, group_concat(distinct `INFO_promo`.`parcour` separator ', ') AS `parcours`, group_concat(distinct `INFO_promo`.`site` separator ', ') AS `sites`, group_concat(distinct `INFO_enseignant`.`prenom` separator ', ') AS `responsables` FROM (((`INFO_module` join `INFO_module_as_promo`) join `INFO_promo`) left join `INFO_enseignant` on(`INFO_module`.`id_enseignant` = `INFO_enseignant`.`id_enseignant`)) WHERE `INFO_module`.`id_module` = `INFO_module_as_promo`.`id_module` AND `INFO_module_as_promo`.`id_promo` = `INFO_promo`.`id_promo` GROUP BY `INFO_module`.`code`, `INFO_module`.`nom`, `INFO_module`.`semestre`, `INFO_module`.`hCM`, `INFO_module`.`hTD`, `INFO_module`.`hTP`, `INFO_module`.`hTPTD` ORDER BY `INFO_module`.`semestre` ASC, `INFO_module`.`code` ASC  ;
 
 -- --------------------------------------------------------
 
@@ -470,7 +489,7 @@ CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `INFO_vue_modules`  AS SEL
 --
 DROP TABLE IF EXISTS `INFO_vue_resume_heures`;
 
-CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `INFO_vue_resume_heures`  AS SELECT `INFO_enseignant`.`nom` AS `nom`, sum((case when (`INFO_CMTDTP`.`type` = 'CM') then `INFO_CMTDTP`.`heure` end)) AS `Heure CM`, sum((case when (`INFO_CMTDTP`.`type` = 'TD') then `INFO_CMTDTP`.`heure` end)) AS `Heure TD`, sum((case when (`INFO_CMTDTP`.`type` = 'TP') then `INFO_CMTDTP`.`heure` end)) AS `Heure TP`, sum((case when (`INFO_CMTDTP`.`type` = 'Exam') then `INFO_CMTDTP`.`heure` end)) AS `Heure Exam`, sum(`INFO_CMTDTP`.`heure`) AS `Heures effectives`, sum((case `INFO_CMTDTP`.`type` when 'CM' then (1.5 * `INFO_CMTDTP`.`heure`) when 'TD' then `INFO_CMTDTP`.`heure` when 'TP' then `INFO_CMTDTP`.`heure` when 'Exam' then (1.5 * `INFO_CMTDTP`.`heure`) end)) AS `Heure eTD`, (`INFO_enseignant`.`service statutaire` - `INFO_enseignant`.`décharge`) AS `service`, ((`INFO_enseignant`.`service statutaire` - `INFO_enseignant`.`décharge`) - sum((case `INFO_CMTDTP`.`type` when 'CM' then (1.5 * `INFO_CMTDTP`.`heure`) when 'TD' then `INFO_CMTDTP`.`heure` when 'TP' then `INFO_CMTDTP`.`heure` when 'Exam' then (1.5 * `INFO_CMTDTP`.`heure`) end))) AS `Difference`, `INFO_enseignant`.`commentaire` AS `commentaire` FROM (`INFO_CMTDTP` join `INFO_enseignant`) WHERE (`INFO_CMTDTP`.`intervenant_id` = `INFO_enseignant`.`id`) GROUP BY `INFO_enseignant`.`nom`, `INFO_enseignant`.`service statutaire`, `INFO_enseignant`.`décharge`, `INFO_enseignant`.`commentaire` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`learnagement`@`%` SQL SECURITY DEFINER VIEW `INFO_vue_resume_heures`  AS SELECT `INFO_enseignant`.`nom` AS `nom`, sum(case when `INFO_CMTDTP`.`type` = 'CM' then `INFO_CMTDTP`.`heure` end) AS `Heure CM`, sum(case when `INFO_CMTDTP`.`type` = 'TD' then `INFO_CMTDTP`.`heure` end) AS `Heure TD`, sum(case when `INFO_CMTDTP`.`type` = 'TP' then `INFO_CMTDTP`.`heure` end) AS `Heure TP`, sum(case when `INFO_CMTDTP`.`type` = 'Exam' then `INFO_CMTDTP`.`heure` end) AS `Heure Exam`, sum(`INFO_CMTDTP`.`heure`) AS `Heures effectives`, sum(case `INFO_CMTDTP`.`type` when 'CM' then 1.5 * `INFO_CMTDTP`.`heure` when 'TD' then `INFO_CMTDTP`.`heure` when 'TP' then `INFO_CMTDTP`.`heure` when 'Exam' then 1.5 * `INFO_CMTDTP`.`heure` end) AS `Heure eTD`, `INFO_enseignant`.`service statutaire`- `INFO_enseignant`.`décharge` AS `service`, `INFO_enseignant`.`service statutaire`- `INFO_enseignant`.`décharge` - sum(case `INFO_CMTDTP`.`type` when 'CM' then 1.5 * `INFO_CMTDTP`.`heure` when 'TD' then `INFO_CMTDTP`.`heure` when 'TP' then `INFO_CMTDTP`.`heure` when 'Exam' then 1.5 * `INFO_CMTDTP`.`heure` end) AS `Difference`, `INFO_enseignant`.`commentaire` AS `commentaire` FROM (`INFO_CMTDTP` join `INFO_enseignant`) WHERE `INFO_CMTDTP`.`id_enseignant` = `INFO_enseignant`.`id_enseignant` GROUP BY `INFO_enseignant`.`nom`, `INFO_enseignant`.`service statutaire`, `INFO_enseignant`.`décharge`, `INFO_enseignant`.`commentaire``commentaire`  ;
 
 -- --------------------------------------------------------
 
@@ -479,7 +498,7 @@ CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `INFO_vue_resume_heures`  
 --
 DROP TABLE IF EXISTS `INFO_vue_resume_responsabilite`;
 
-CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `INFO_vue_resume_responsabilite`  AS SELECT `INFO_enseignant`.`nom` AS `nom`, count(`INFO_module`.`id`) AS `responsabilite`, group_concat(distinct `INFO_module`.`code` separator ', ') AS `modules` FROM (`INFO_enseignant` join `INFO_module`) WHERE (`INFO_module`.`id_responsable` = `INFO_enseignant`.`id`) GROUP BY `INFO_enseignant`.`nom` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`learnagement`@`%` SQL SECURITY DEFINER VIEW `INFO_vue_resume_responsabilite`  AS SELECT `INFO_enseignant`.`nom` AS `nom`, count(`INFO_module`.`id_module`) AS `responsabilite`, group_concat(distinct `INFO_module`.`code` separator ', ') AS `modules` FROM (`INFO_enseignant` join `INFO_module`) WHERE `INFO_module`.`id_enseignant` = `INFO_enseignant`.`id_enseignant` GROUP BY `INFO_enseignant`.`nom``nom`  ;
 
 -- --------------------------------------------------------
 
@@ -488,7 +507,7 @@ CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `INFO_vue_resume_responsab
 --
 DROP TABLE IF EXISTS `INFO_vue_semestre`;
 
-CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `INFO_vue_semestre`  AS SELECT `INFO_CMTDTP`.`id` AS `id`, `INFO_module`.`code` AS `code`, `INFO_module`.`nom` AS `module`, `INFO_CMTDTP`.`lieu` AS `lieu`, `INFO_CMTDTP`.`type` AS `type`, `INFO_CMTDTP`.`heure` AS `heure`, `INFO_enseignant`.`nom` AS `enseignant` FROM (((`INFO_CMTDTP` join `INFO_module`) join `INFO_vue_parameters`) join `INFO_enseignant`) WHERE ((`INFO_module`.`id` = `INFO_CMTDTP`.`module_id`) AND (`INFO_vue_parameters`.`semestre` = `INFO_module`.`semestre`) AND (`INFO_CMTDTP`.`intervenant_id` = `INFO_enseignant`.`id`)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`learnagement`@`%` SQL SECURITY DEFINER VIEW `INFO_vue_semestre`  AS SELECT `INFO_CMTDTP`.`id_CMTDTP` AS `id`, `INFO_module`.`code` AS `code`, `INFO_module`.`nom` AS `module`, `INFO_CMTDTP`.`lieu` AS `lieu`, `INFO_CMTDTP`.`type` AS `type`, `INFO_CMTDTP`.`heure` AS `heure`, `INFO_enseignant`.`nom` AS `enseignant` FROM (((`INFO_CMTDTP` join `INFO_module`) join `INFO_vue_parameters`) join `INFO_enseignant`) WHERE `INFO_module`.`id_module` = `INFO_CMTDTP`.`id_module` AND `INFO_vue_parameters`.`semestre` = `INFO_module`.`semestre` AND `INFO_CMTDTP`.`id_enseignant` = `INFO_enseignant`.`id_enseignant``id_enseignant`  ;
 
 --
 -- Index pour les tables déchargées
@@ -498,16 +517,16 @@ CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `INFO_vue_semestre`  AS SE
 -- Index pour la table `INFO_CMTDTP`
 --
 ALTER TABLE `INFO_CMTDTP`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `FK_module_CMTDTP` (`module_id`),
-  ADD KEY `FK_enseignant_CMTDTP` (`intervenant_id`);
+  ADD PRIMARY KEY (`id_CMTDTP`),
+  ADD KEY `FK_module_CMTDTP` (`id_module`),
+  ADD KEY `FK_enseignant_CMTDTP` (`id_enseignant`);
 
 --
 -- Index pour la table `INFO_CMTDTP_as_promo`
 --
 ALTER TABLE `INFO_CMTDTP_as_promo`
-  ADD PRIMARY KEY (`id_CMTDTP`,`id_filiere`),
-  ADD KEY `id_filiere` (`id_filiere`);
+  ADD PRIMARY KEY (`id_CMTDTP`,`id_promo`),
+  ADD KEY `id_filiere` (`id_promo`);
 
 --
 -- Index pour la table `INFO_dependances_CMTDTP`
@@ -519,7 +538,7 @@ ALTER TABLE `INFO_dependances_CMTDTP`
 -- Index pour la table `INFO_enseignant`
 --
 ALTER TABLE `INFO_enseignant`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`id_enseignant`),
   ADD UNIQUE KEY `username` (`username`),
   ADD UNIQUE KEY `nom` (`nom`,`prenom`) USING BTREE;
 
@@ -527,9 +546,9 @@ ALTER TABLE `INFO_enseignant`
 -- Index pour la table `INFO_module`
 --
 ALTER TABLE `INFO_module`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`id_module`),
   ADD UNIQUE KEY `code` (`code`),
-  ADD KEY `id_responsable` (`id_responsable`);
+  ADD KEY `id_responsable` (`id_enseignant`);
 
 --
 -- Index pour la table `INFO_module_as_promo`
@@ -542,14 +561,15 @@ ALTER TABLE `INFO_module_as_promo`
 -- Index pour la table `INFO_promo`
 --
 ALTER TABLE `INFO_promo`
-  ADD PRIMARY KEY (`id_filiere`),
+  ADD PRIMARY KEY (`id_promo`),
   ADD UNIQUE KEY `nom_filiere` (`nom_filiere`,`annee`,`site`,`parcour`) USING BTREE;
 
 --
 -- Index pour la table `INFO_seance`
 --
 ALTER TABLE `INFO_seance`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id_seance`),
+  ADD UNIQUE KEY `date` (`date`,`id_enseignant`);
 
 --
 -- Index pour la table `INFO_vue_parameters`
@@ -566,37 +586,37 @@ ALTER TABLE `INFO_vue_parameters`
 -- AUTO_INCREMENT pour la table `INFO_CMTDTP`
 --
 ALTER TABLE `INFO_CMTDTP`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=490;
+  MODIFY `id_CMTDTP` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `INFO_enseignant`
 --
 ALTER TABLE `INFO_enseignant`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id_enseignant` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `INFO_module`
 --
 ALTER TABLE `INFO_module`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
+  MODIFY `id_module` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `INFO_promo`
 --
 ALTER TABLE `INFO_promo`
-  MODIFY `id_filiere` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id_promo` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `INFO_seance`
 --
 ALTER TABLE `INFO_seance`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_seance` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `INFO_vue_parameters`
 --
 ALTER TABLE `INFO_vue_parameters`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Contraintes pour les tables déchargées
@@ -606,28 +626,28 @@ ALTER TABLE `INFO_vue_parameters`
 -- Contraintes pour la table `INFO_CMTDTP`
 --
 ALTER TABLE `INFO_CMTDTP`
-  ADD CONSTRAINT `FK_enseignant_CMTDTP` FOREIGN KEY (`intervenant_id`) REFERENCES `INFO_enseignant` (`id`),
-  ADD CONSTRAINT `FK_module_CMTDTP` FOREIGN KEY (`module_id`) REFERENCES `INFO_module` (`id`);
+  ADD CONSTRAINT `FK_enseignant_CMTDTP` FOREIGN KEY (`id_enseignant`) REFERENCES `INFO_enseignant` (`id_enseignant`),
+  ADD CONSTRAINT `FK_module_CMTDTP` FOREIGN KEY (`id_module`) REFERENCES `INFO_module` (`id_module`);
 
 --
 -- Contraintes pour la table `INFO_CMTDTP_as_promo`
 --
 ALTER TABLE `INFO_CMTDTP_as_promo`
-  ADD CONSTRAINT `INFO_CMTDTP_as_promo_ibfk_1` FOREIGN KEY (`id_CMTDTP`) REFERENCES `INFO_CMTDTP` (`id`),
-  ADD CONSTRAINT `INFO_CMTDTP_as_promo_ibfk_2` FOREIGN KEY (`id_filiere`) REFERENCES `INFO_promo` (`id_filiere`);
+  ADD CONSTRAINT `INFO_CMTDTP_as_promo_ibfk_1` FOREIGN KEY (`id_CMTDTP`) REFERENCES `INFO_CMTDTP` (`id_CMTDTP`),
+  ADD CONSTRAINT `INFO_CMTDTP_as_promo_ibfk_2` FOREIGN KEY (`id_promo`) REFERENCES `INFO_promo` (`id_promo`);
 
 --
 -- Contraintes pour la table `INFO_module`
 --
 ALTER TABLE `INFO_module`
-  ADD CONSTRAINT `FK_enseignant` FOREIGN KEY (`id_responsable`) REFERENCES `INFO_enseignant` (`id`);
+  ADD CONSTRAINT `FK_enseignant` FOREIGN KEY (`id_enseignant`) REFERENCES `INFO_enseignant` (`id_enseignant`);
 
 --
 -- Contraintes pour la table `INFO_module_as_promo`
 --
 ALTER TABLE `INFO_module_as_promo`
-  ADD CONSTRAINT `FK_module` FOREIGN KEY (`id_module`) REFERENCES `INFO_module` (`id`),
-  ADD CONSTRAINT `FK_promo` FOREIGN KEY (`id_promo`) REFERENCES `INFO_promo` (`id_filiere`);
+  ADD CONSTRAINT `FK_module` FOREIGN KEY (`id_module`) REFERENCES `INFO_module` (`id_module`),
+  ADD CONSTRAINT `FK_promo` FOREIGN KEY (`id_promo`) REFERENCES `INFO_promo` (`id_promo`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
