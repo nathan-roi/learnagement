@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost
--- Généré le : jeu. 27 avr. 2023 à 00:39
+-- Généré le : jeu. 27 avr. 2023 à 22:56
 -- Version du serveur : 10.4.24-MariaDB
 -- Version de PHP : 8.1.6
 
@@ -259,10 +259,10 @@ CREATE TABLE `INFO_vue_Check_MCC_prev_ADE` (
 -- --------------------------------------------------------
 
 --
--- Doublure de structure pour la vue `INFO_vue_enseignant`
+-- Doublure de structure pour la vue `INFO_vue_enseignant_previsionel`
 -- (Voir ci-dessous la vue réelle)
 --
-CREATE TABLE `INFO_vue_enseignant` (
+CREATE TABLE `INFO_vue_enseignant_previsionel` (
 `code` varchar(10)
 ,`module` varchar(50)
 ,`lieu` varchar(25)
@@ -370,16 +370,30 @@ CREATE TABLE `INFO_vue_resume_responsabilite` (
 -- --------------------------------------------------------
 
 --
--- Doublure de structure pour la vue `INFO_vue_semestre`
+-- Doublure de structure pour la vue `INFO_vue_semestre_previsionel`
 -- (Voir ci-dessous la vue réelle)
 --
-CREATE TABLE `INFO_vue_semestre` (
+CREATE TABLE `INFO_vue_semestre_previsionel` (
 `id` int(11)
 ,`code` varchar(10)
 ,`module` varchar(50)
 ,`lieu` varchar(25)
 ,`type` varchar(10)
 ,`heure` float
+,`enseignant` varchar(25)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Doublure de structure pour la vue `INFO_vue_semestre_reel`
+-- (Voir ci-dessous la vue réelle)
+--
+CREATE TABLE `INFO_vue_semestre_reel` (
+`code` varchar(10)
+,`module` varchar(50)
+,`type` varchar(10)
+,`heure` decimal(39,1)
 ,`enseignant` varchar(25)
 );
 
@@ -449,11 +463,11 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`learnagement`@`%` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
--- Structure de la vue `INFO_vue_enseignant`
+-- Structure de la vue `INFO_vue_enseignant_previsionel`
 --
-DROP TABLE IF EXISTS `INFO_vue_enseignant`;
+DROP TABLE IF EXISTS `INFO_vue_enseignant_previsionel`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`learnagement`@`%` SQL SECURITY DEFINER VIEW `INFO_vue_enseignant`  AS SELECT `INFO_module`.`code` AS `code`, `INFO_module`.`nom` AS `module`, `INFO_CMTDTP`.`lieu` AS `lieu`, `INFO_CMTDTP`.`type` AS `type`, `INFO_CMTDTP`.`heure` AS `heure`, `INFO_enseignant`.`nom` AS `enseignant` FROM (((`INFO_CMTDTP` join `INFO_module`) join `INFO_vue_parameters`) join `INFO_enseignant`) WHERE `INFO_module`.`id_module` = `INFO_CMTDTP`.`id_module` AND convert(`INFO_vue_parameters`.`enseignant` using utf8) = `INFO_enseignant`.`nom` AND `INFO_CMTDTP`.`id_enseignant` = `INFO_enseignant`.`id_enseignant``id_enseignant`  ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`learnagement`@`%` SQL SECURITY DEFINER VIEW `INFO_vue_enseignant_previsionel`  AS SELECT `INFO_module`.`code` AS `code`, `INFO_module`.`nom` AS `module`, `INFO_CMTDTP`.`lieu` AS `lieu`, `INFO_CMTDTP`.`type` AS `type`, `INFO_CMTDTP`.`heure` AS `heure`, `INFO_enseignant`.`nom` AS `enseignant` FROM (((`INFO_CMTDTP` join `INFO_module`) join `INFO_vue_parameters`) join `INFO_enseignant`) WHERE `INFO_module`.`id_module` = `INFO_CMTDTP`.`id_module` AND convert(`INFO_vue_parameters`.`enseignant` using utf8) = `INFO_enseignant`.`nom` AND `INFO_CMTDTP`.`id_enseignant` = `INFO_enseignant`.`id_enseignant``id_enseignant`  ;
 
 -- --------------------------------------------------------
 
@@ -503,11 +517,20 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`learnagement`@`%` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
--- Structure de la vue `INFO_vue_semestre`
+-- Structure de la vue `INFO_vue_semestre_previsionel`
 --
-DROP TABLE IF EXISTS `INFO_vue_semestre`;
+DROP TABLE IF EXISTS `INFO_vue_semestre_previsionel`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`learnagement`@`%` SQL SECURITY DEFINER VIEW `INFO_vue_semestre`  AS SELECT `INFO_CMTDTP`.`id_CMTDTP` AS `id`, `INFO_module`.`code` AS `code`, `INFO_module`.`nom` AS `module`, `INFO_CMTDTP`.`lieu` AS `lieu`, `INFO_CMTDTP`.`type` AS `type`, `INFO_CMTDTP`.`heure` AS `heure`, `INFO_enseignant`.`nom` AS `enseignant` FROM (((`INFO_CMTDTP` join `INFO_module`) join `INFO_vue_parameters`) join `INFO_enseignant`) WHERE `INFO_module`.`id_module` = `INFO_CMTDTP`.`id_module` AND `INFO_vue_parameters`.`semestre` = `INFO_module`.`semestre` AND `INFO_CMTDTP`.`id_enseignant` = `INFO_enseignant`.`id_enseignant``id_enseignant`  ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`learnagement`@`%` SQL SECURITY DEFINER VIEW `INFO_vue_semestre_previsionel`  AS SELECT `INFO_CMTDTP`.`id_CMTDTP` AS `id`, `INFO_module`.`code` AS `code`, `INFO_module`.`nom` AS `module`, `INFO_CMTDTP`.`lieu` AS `lieu`, `INFO_CMTDTP`.`type` AS `type`, `INFO_CMTDTP`.`heure` AS `heure`, `INFO_enseignant`.`nom` AS `enseignant` FROM (((`INFO_CMTDTP` join `INFO_module`) join `INFO_vue_parameters`) join `INFO_enseignant`) WHERE `INFO_module`.`id_module` = `INFO_CMTDTP`.`id_module` AND `INFO_vue_parameters`.`semestre` = `INFO_module`.`semestre` AND `INFO_CMTDTP`.`id_enseignant` = `INFO_enseignant`.`id_enseignant``id_enseignant`  ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la vue `INFO_vue_semestre_reel`
+--
+DROP TABLE IF EXISTS `INFO_vue_semestre_reel`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `INFO_vue_semestre_reel`  AS SELECT `INFO_module`.`code` AS `code`, `INFO_module`.`nom` AS `module`, `INFO_seance`.`type` AS `type`, truncate(sum(time_to_sec(`INFO_seance`.`duree`)) / 3600,1) AS `heure`, `INFO_enseignant`.`nom` AS `enseignant` FROM ((`INFO_seance` join `INFO_module` on(`INFO_seance`.`id_module` = `INFO_module`.`id_module`)) join `INFO_enseignant` on(`INFO_seance`.`id_enseignant` = `INFO_enseignant`.`id_enseignant`)) WHERE 1 GROUP BY `INFO_module`.`code`, `INFO_seance`.`type`, `INFO_enseignant`.`nom`, `INFO_module`.`nom` ORDER BY `INFO_enseignant`.`nom` ASC, `INFO_module`.`nom` ASC  ;
 
 --
 -- Index pour les tables déchargées

@@ -7,7 +7,7 @@ import datetime
 reqEnseignants = "SELECT id_enseignant, nom, prenom FROM INFO_enseignant"
 reqModules = "SELECT id_module, code FROM INFO_module"
 
-insSeances = "INSERT INTO INFO_seance (type, date, duree, id_module, id_enseignant) VALUES (%s, %s, %s, %s, %s)"
+insSeances = "INSERT IGNORE INTO INFO_seance (type, date, duree, id_module, id_enseignant) VALUES (%s, %s, %s, %s, %s)"
 val=[]
 
 enseignants = {}
