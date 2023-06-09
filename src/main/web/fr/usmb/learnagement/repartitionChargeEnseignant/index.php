@@ -11,7 +11,7 @@
 
     // Vérifiez si l'utilisateur est connecté, sinon redirigez-le vers la page de connexion
     if(!isset($_SESSION["username"])){
-        /*header("Location: registration/login.php");
+        /*header("Location: webApp/login.php");
         exit();*/
         $username="anonymous";
     }else{
