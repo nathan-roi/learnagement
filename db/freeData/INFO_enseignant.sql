@@ -26,7 +26,7 @@ SET time_zone = "+00:00";
 --
 -- Structure de la table `INFO_enseignant`
 --
-
+/*
 CREATE TABLE `INFO_enseignant` (
   `id_enseignant` int(11) NOT NULL,
   `prenom` varchar(25) NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE `INFO_enseignant` (
   `HCAutorisees` tinyint(1) NOT NULL DEFAULT 1,
   `commentaire` varchar(150) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
+*/
 --
 -- Déchargement des données de la table `INFO_enseignant`
 --
@@ -86,29 +86,6 @@ INSERT INTO `INFO_enseignant` (`id_enseignant`, `prenom`, `nom`, `mail`, `passwo
 (51, 'MYRIAM', 'THUET', NULL, NULL, 'permanant', NULL, 192, 0, 192, 1, NULL),
 (52, 'CECILE', 'PICHARD', NULL, NULL, 'vacataire', NULL, 192, 0, 192, 1, NULL),
 (53, 'LAURENT', 'TEPPOZ', NULL, NULL, 'vacataire', NULL, 192, 0, 192, 1, NULL);
-
---
--- Index pour les tables déchargées
---
-
---
--- Index pour la table `INFO_enseignant`
---
-ALTER TABLE `INFO_enseignant`
-  ADD PRIMARY KEY (`id_enseignant`),
-  ADD UNIQUE KEY `username` (`mail`),
-  ADD UNIQUE KEY `SECONDARY` (`nom`,`prenom`) USING BTREE;
-
---
--- AUTO_INCREMENT pour les tables déchargées
---
-
---
--- AUTO_INCREMENT pour la table `INFO_enseignant`
---
-ALTER TABLE `INFO_enseignant`
-  MODIFY `id_enseignant` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

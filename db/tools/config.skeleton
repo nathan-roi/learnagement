@@ -12,4 +12,4 @@ connection_params = {
 
 # ade links
 adeLinks = {}
-adeLinks['LAST_NAME FIRST_NAME'] = "ADE_URL"
+#adeLinks['LAST_NAME FIRST_NAME'] = "ADE_URL"
