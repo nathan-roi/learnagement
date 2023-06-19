@@ -263,7 +263,7 @@ ALTER TABLE `INFO_dependances_CMTDTP`
 ALTER TABLE `INFO_enseignant`
   ADD PRIMARY KEY (`id_enseignant`),
   ADD UNIQUE KEY `mail` (`mail`),
-  ADD UNIQUE KEY `nom` (`nom`,`prenom`) USING BTREE;
+  ADD UNIQUE KEY `SECONDARY` (`nom`,`prenom`) USING BTREE;
 
 --
 -- Index pour la table `INFO_module`
