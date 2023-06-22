@@ -6,26 +6,54 @@ body {
   background-size: contain; /* Ajuste la taille de l'image pour tenir dans la div */
   background-repeat: no-repeat; /* Empêche la répétition de l'image */
   width: 1000px; /* Largeur du logo */
-  height: 100px; /* Hauteur du logo */
-  margin-right: 100px; /* Marge à droite pour séparer le logo du texte */
-  float: right; /* Place le logo à droite */
+  height: 165px; /* Hauteur du logo */
+  position: absolute;
+  top: 1;
+  right: 25;
+}
+
+
+.campus {
+  background-image: url("campus.png");
+  background-size: cover;
+  background-position: center;
+  height: 500px; /* une hauteur suffisante */
 
 }
 
 .bandeau {
-  background-color: #9AC5F4; /* Couleur de fond du bandeau */
-  padding: 10px; /* Marge intérieure du bandeau */
+  background-color: #addcff; /* Couleur de fond du bandeau */
   display: flex; /* Utilise un affichage flexbox pour aligner les éléments horizontalement */
+  padding: 10px;
   align-items: center; /* Centre les éléments verticalement */
+  perspective: 500px;
+  transform-style: preserve-3d;
 }
+
+
+.bandeau::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  background: #9AC5F4;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.75);
+  transform: translateZ(-10px);
+}
+
 
 
 h1 {
   position: relative;
   left: 850px; /* Déplace le titre h1 de 50 pixels vers la droite */
   color:#000080;
-  font-family: fantasy;
+  font-family: Courier New, Courier, monospace;
+  font-variant: small-caps;
+  font-size: 60px;
 }
+
 
 
 table {
@@ -89,19 +117,24 @@ th, td {
   display: none;
   overflow: hidden;
   background-color: #f1f1f1;
+
 }
 
 select{
-	Border: #53d3aa 1px solid;
+	Border: #7a84a0 1px solid;
   	border-radius: 10px;
 	font-size: 1.2em;
         padding: 6px 12px;
+        color:#7a84a0;
+        background-color:#d3c7d3
 }
 
 /*Alignement des boutons */
-.paramview .form-group.dropdown {
+.paramview{
   display: inline-block;
   margin-right: 10px;
+  margin-top: 50px;
+  align-items: center
 }
 
 

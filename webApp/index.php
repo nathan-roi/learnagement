@@ -65,8 +65,8 @@ print("<!DOCTYPE html>
 <div class=\"bandeau\">
     <h1>Bienvenue!</h1>
     <div class=\"logo\"></div>
-    
 </div>
+<div class=\"campus\"></div>
 <div class=\"paramview\">
     <form action=\"setViewParameters.php\" method=\"post\">
         
@@ -74,7 +74,8 @@ print("<!DOCTYPE html>
         <div class=\"dropdown\">
             <label for=\"semestre-select\"</label>    
             <select name=\"semestre\" id=\"semestre-select\">
-            <option> semetre</option>"
+            <option> semestre</option>
+        "
 );
             
             $sql = "SELECT DISTINCT `semestre` FROM `INFO_module` ORDER BY `INFO_module`.`semestre` ASC";
@@ -87,11 +88,12 @@ print("<!DOCTYPE html>
             } else {
                   echo "<option>Aucun semestre trouvé</option>";
               }
-          
+   
 
 /*un bouton pour filière*/
   print("<!DOCTYPE html>
   <html lang=\"fr\">
+  </select></div></div></form></div>
   <head>
       <link rel=\"stylesheet\" href=\"style.css\" />
   </head>
@@ -118,6 +120,7 @@ print("<!DOCTYPE html>
  /*un bouton pour MODULE*/            
   print("<!DOCTYPE html>
   <html lang=\"fr\">
+  </select></div></div></form></div>
   <head>
     <link rel=\"stylesheet\" href=\"style.css\" />
     </head>
@@ -146,6 +149,7 @@ print("<!DOCTYPE html>
 
   print("<!DOCTYPE html>
   <html lang=\"fr\">
+  </select></div></div></form></div>
   <head>
       <link rel=\"stylesheet\" href=\"style.css\" />
   </head>
