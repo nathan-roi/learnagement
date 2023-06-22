@@ -1,41 +1,70 @@
 body {
   background: #4682;
 }
+.logo {
+  background-image: url("logo.png");
+  background-size: contain; /* Ajuste la taille de l'image pour tenir dans la div */
+  background-repeat: no-repeat; /* Empêche la répétition de l'image */
+  width: 1000px; /* Largeur du logo */
+  height: 100px; /* Hauteur du logo */
+  margin-right: 100px; /* Marge à droite pour séparer le logo du texte */
+  float: right; /* Place le logo à droite */
+
+}
+
+.bandeau {
+  background-color: #9AC5F4; /* Couleur de fond du bandeau */
+  padding: 10px; /* Marge intérieure du bandeau */
+  display: flex; /* Utilise un affichage flexbox pour aligner les éléments horizontalement */
+  align-items: center; /* Centre les éléments verticalement */
+}
+
+
 h1 {
   position: relative;
-  left: 300px; /* Déplace le titre h1 de 50 pixels vers la droite */
-  color: #6495ED;
+  left: 850px; /* Déplace le titre h1 de 50 pixels vers la droite */
+  color:#000080;
   font-family: fantasy;
 }
 
-label {
-  font-family: Helvetica; /* Choisissez une police appropriée */
-  font-size: 20px; /* Définissez la taille de police souhaitée */
-  font-weight: bold;/* Appliquez une épaisseur de police en gras si nécessaire */
-  color: #4682; 
-}
 
 table {
   table-layout: fixed;
   width: 100%;
   border-collapse: collapse;
-  border: 3px solid rgb(93, 99, 66);
+  border: 3px solid #1b3c49;
+  border-radius: 5px;
+  box-shadow: 0 0 5px #000080;
+ 
 }
+
+td {
+  word-wrap: break-word;
+
+  box-shadow: inset 0px 0px 5px rgba(72, 212, 17, 0.1);
+  }
+
+
 table tr:nth-child(odd){
-  background-color:#f2f2f2;
+  background-color:#FFFAF4;
 }
 table tr:nth-child(even){
-  background-color:#fafafa;
+  background-color:#F8F6F4;
 }
 thead{
   border-collapse: collapse;
-  border: 3px solid purple;
+  border: 1.5px solid purple;
 }
+
+thead th {
+  word-wrap: break-word;
+}
+
 tr { border: none; }
 th, td {
   padding: 10px;
-  border-right: solid 1px #f00; 
-  border-left: solid 1px #f00;
+  border-right: solid 0.5px #1b3c49; 
+  border-left: solid 0.5px #1b3c49;
 }
 .collapsible {
   background-color: #777;
@@ -49,6 +78,8 @@ th, td {
   font-size: 15px;
 }
 
+
+
 .active, .collapsible:hover {
   background-color: #555;
 }
@@ -59,3 +90,27 @@ th, td {
   overflow: hidden;
   background-color: #f1f1f1;
 }
+
+select{
+	Border: #53d3aa 1px solid;
+  	border-radius: 10px;
+	font-size: 1.2em;
+        padding: 6px 12px;
+}
+
+/*Alignement des boutons */
+.paramview .form-group.dropdown {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+
+
+
+
+
+
+ 
+
+
+

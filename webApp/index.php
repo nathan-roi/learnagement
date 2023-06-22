@@ -55,36 +55,122 @@ if (mysqli_num_rows($result) > 0) {
     $module = "";
     $enseignant = "";
 }
-
+ /* un bouton pour semestre*/
 print("<!DOCTYPE html>
 <html lang=\"fr\">
 <head>
     <link rel=\"stylesheet\" href=\"style.css\" />
 </head>
 <body>
-<div class=\"success\">
+<div class=\"bandeau\">
     <h1>Bienvenue!</h1>
+    <div class=\"logo\"></div>
     
 </div>
 <div class=\"paramview\">
     <form action=\"setViewParameters.php\" method=\"post\">
         
         <div class=\"form-group\">
-            <label>Semestre</label>
-            <input type=\"text\" name=\"semestre\" class=\"form-control\" value=\"$semestre\">
-        </div>
-        <div class=\"form-group\">
-            <label>Module</label>
-            <input type=\"text\" name=\"module\" class=\"form-control\" value=\"$module\">
-        </div>
-        <div class=\"form-group\">
-            <label>Enseignant</label>
-            <input type=\"text\" name=\"enseignant\" class=\"form-control\" value=\"$enseignant\">
-        </div>
-        <input type=\"submit\" class=\"btn btn-primary\" name=\"submit\" value=\"Submit\">
-    </form>
-</div>");
+        <div class=\"dropdown\">
+            <label for=\"semestre-select\"</label>    
+            <select name=\"semestre\" id=\"semestre-select\">
+            <option> semetre</option>"
+);
+            
+            $sql = "SELECT DISTINCT `semestre` FROM `INFO_module` ORDER BY `INFO_module`.`semestre` ASC";
+            $result = mysqli_query($conn, $sql);
 
+            if (mysqli_num_rows($result) > 0) {
+                while ($row = mysqli_fetch_assoc($result)) {
+                    echo "<option value='" . $row['semestre'] . "'>" . $row['semestre'] . "</option>";
+                }
+            } else {
+                  echo "<option>Aucun semestre trouvé</option>";
+              }
+          
+
+/*un bouton pour filière*/
+  print("<!DOCTYPE html>
+  <html lang=\"fr\">
+  <head>
+      <link rel=\"stylesheet\" href=\"style.css\" />
+  </head>
+  
+  <div class=\"paramview\">
+      <form action=\"setViewParameters.php\" method=\"post\">
+        
+      <div class=\"form-group\">
+        <div class=\"dropdown\">
+          <label for=\"filiere-select\"</label>
+          <select name=\"filiere\" id=\"filiere-select\">
+          <option>filière</option>"
+);
+            $sql = "SELECT * FROM `INFO_filiere` ORDER BY nom_filiere";
+              $result = mysqli_query($conn, $sql);
+
+              if (mysqli_num_rows($result) > 0) {
+                  while ($row = mysqli_fetch_assoc($result)) {
+                    echo "<option value='" . $row["nom_filiere"] . "'>" . $row["nom_filiere"] . "</option>";
+                }
+              } else {
+                echo "<option>Aucune filière trouvée</option>";
+              }
+ /*un bouton pour MODULE*/            
+  print("<!DOCTYPE html>
+  <html lang=\"fr\">
+  <head>
+    <link rel=\"stylesheet\" href=\"style.css\" />
+    </head>
+                
+    <div class=\"paramview\">
+          <form action=\"setViewParameters.php\" method=\"post\">
+                      
+          <div class=\"form-group\">
+          <div class=\"dropdown\">
+              <label for=\"module-select\"</label>
+              <select name=\"module\" id=\"module-select\">
+              <option>module</option>"
+              );
+              $sql = "SELECT * FROM `INFO_module` ORDER BY nom" ;
+                $result = mysqli_query($conn, $sql);
+
+                if (mysqli_num_rows($result) > 0) {
+                    while ($row = mysqli_fetch_assoc($result)) {
+                      echo "<option value='" . $row["nom"] . $row["code"] . "'>" . $row["nom"] . $row["code"]  . "</option>";
+                  }
+                } else {
+                  echo "<option>Aucun semestre trouvé</option>";
+                }
+
+/*un bouton pour enseignant*/
+
+  print("<!DOCTYPE html>
+  <html lang=\"fr\">
+  <head>
+      <link rel=\"stylesheet\" href=\"style.css\" />
+  </head>
+
+    <div class=\"paramview\">
+        <form action=\"setViewParameters.php\" method=\"post\">
+            
+        <div class=\"form-group\">
+            <div class=\"dropdown\">
+                <label for=\"enseignant-select\"</label>
+                <select name=\"ensignant\" id=\"enseignant-select\">  
+                <option>enseignant</option>"
+      );
+
+                  $sql = "SELECT * FROM `INFO_enseignant` ORDER BY nom";
+                  $result = mysqli_query($conn, $sql);
+
+                  if (mysqli_num_rows($result) > 0) {
+                      
+                      while ($row = mysqli_fetch_assoc($result)) {
+                        echo "<option value='" .  $row["nom"] . $row["prenom"] . "'>" . $row["nom"] . " " . $row["prenom"] . "</option>";
+                      }
+                    } else {
+                      echo "<option>Aucun enseignant trouvé</option>";
+                    }
 
 /*
 * RECUPERATION DE TOUTES LES VUES (NOM DES TABLES) QUI COMMENCE PAR ...
@@ -96,11 +182,10 @@ $req="SELECT TABLE_NAME FROM information_schema.tables WHERE TABLE_TYPE = \"VIEW
         echo 'Impossible d\'exécuter la requête : ' . $req;
         echo 'error '.mysqli_error($conn);
         exit;
- }
+    }
 
 
-
- /*
+/*
 * POUR CHAQUE TABLE VUE, ON RECUPERE LA TABLE
 */
      
@@ -109,10 +194,8 @@ while ($view = mysqli_fetch_row($views)) {
    include("get_vue.php");
 }
 
-
-
-
-
+ 
+ 
 
 mysqli_close($conn);
 ?>
