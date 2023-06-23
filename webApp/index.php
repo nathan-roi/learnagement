@@ -63,18 +63,26 @@ print("<!DOCTYPE html>
 </head>
 <body>
 <div class=\"bandeau\">
-    <h1>Bienvenue!</h1>
-    <div class=\"logo\"></div>
+
+  <h1>POLYTECH ANNECY</h1>
+ </div>
 </div>
+
 <div class=\"campus\"></div>
+  <div class=\"overlay\"></div>
+  <p class=\"BIENVENUE\">Bienvenue à Learnagement</p>
+</div>
+
+
+
 <div class=\"paramview\">
-    <form action=\"setViewParameters.php\" method=\"post\">
+  <form action=\"setViewParameters.php\" method=\"post\">
         
-        <div class=\"form-group\">
-        <div class=\"dropdown\">
-            <label for=\"semestre-select\"</label>    
-            <select name=\"semestre\" id=\"semestre-select\">
-            <option> semestre</option>
+    <div class=\"form-group\">
+      <div class=\"dropdown\">
+        <label for=\"semestre-select\"</label>    
+        <select name=\"semestre\" id=\"semestre-select\">
+          <option> semestre</option>
         "
 );
             
@@ -91,15 +99,12 @@ print("<!DOCTYPE html>
    
 
 /*un bouton pour filière*/
-  print("<!DOCTYPE html>
-  <html lang=\"fr\">
-  </select></div></div></form></div>
-  <head>
-      <link rel=\"stylesheet\" href=\"style.css\" />
-  </head>
-  
-  <div class=\"paramview\">
-      <form action=\"setViewParameters.php\" method=\"post\">
+  print("</select>
+  </div>
+</div>
+</form>
+</div>
+
         
       <div class=\"form-group\">
         <div class=\"dropdown\">
@@ -118,28 +123,26 @@ print("<!DOCTYPE html>
                 echo "<option>Aucune filière trouvée</option>";
               }
  /*un bouton pour MODULE*/            
-  print("<!DOCTYPE html>
-  <html lang=\"fr\">
-  </select></div></div></form></div>
-  <head>
-    <link rel=\"stylesheet\" href=\"style.css\" />
-    </head>
-                
-    <div class=\"paramview\">
-          <form action=\"setViewParameters.php\" method=\"post\">
-                      
-          <div class=\"form-group\">
-          <div class=\"dropdown\">
-              <label for=\"module-select\"</label>
-              <select name=\"module\" id=\"module-select\">
-              <option>module</option>"
-              );
-              $sql = "SELECT * FROM `INFO_module` ORDER BY nom" ;
+  print("  </select>
+              </div>
+            </div>
+          </form>
+    </div>
+
+  
+  
+  <div class=\"form-group\">
+              <div class=\"dropdown\">
+                <label for=\"module-select\"</label>
+                <select name=\"module\" id=\"module-select\">
+                  <option>module</option>"
+                );
+                $sql = "SELECT * FROM `INFO_module` ORDER BY nom" ;
                 $result = mysqli_query($conn, $sql);
 
                 if (mysqli_num_rows($result) > 0) {
-                    while ($row = mysqli_fetch_assoc($result)) {
-                      echo "<option value='" . $row["nom"] . $row["code"] . "'>" . $row["nom"] . $row["code"]  . "</option>";
+                  while ($row = mysqli_fetch_assoc($result)) {
+                    echo "<option value='" . $row["nom"] . $row["code"] . "'>" . $row["nom"] . $row["code"]  . "</option>";
                   }
                 } else {
                   echo "<option>Aucun semestre trouvé</option>";
@@ -147,12 +150,13 @@ print("<!DOCTYPE html>
 
 /*un bouton pour enseignant*/
 
-  print("<!DOCTYPE html>
-  <html lang=\"fr\">
-  </select></div></div></form></div>
-  <head>
-      <link rel=\"stylesheet\" href=\"style.css\" />
-  </head>
+  print("
+                </select>
+              </div>
+            </div>
+          </form>
+    </div>
+
 
     <div class=\"paramview\">
         <form action=\"setViewParameters.php\" method=\"post\">
@@ -162,7 +166,9 @@ print("<!DOCTYPE html>
                 <label for=\"enseignant-select\"</label>
                 <select name=\"ensignant\" id=\"enseignant-select\">  
                 <option>enseignant</option>"
+
       );
+
 
                   $sql = "SELECT * FROM `INFO_enseignant` ORDER BY nom";
                   $result = mysqli_query($conn, $sql);
@@ -175,28 +181,48 @@ print("<!DOCTYPE html>
                     } else {
                       echo "<option>Aucun enseignant trouvé</option>";
                     }
+                   
+  
 
 /*
 * RECUPERATION DE TOUTES LES VUES (NOM DES TABLES) QUI COMMENCE PAR ...
 */
 
-$req="SELECT TABLE_NAME FROM information_schema.tables WHERE TABLE_TYPE = \"VIEW\" AND TABLE_NAME LIKE \"VUE_%\";";
+print("
+</select>
+</div>
+</div>
+<button type=\"submit\" class=\"btn-validate\">Valider</button>
+</form>
+</div>
+");
+
+$req = "SELECT TABLE_NAME FROM information_schema.tables WHERE TABLE_TYPE = 'VIEW' AND TABLE_NAME LIKE 'VUE_%';";
     $views = mysqli_query($conn, $req);
     if (!$views) {
         echo 'Impossible d\'exécuter la requête : ' . $req;
         echo 'error '.mysqli_error($conn);
         exit;
     }
-
+   
 
 /*
 * POUR CHAQUE TABLE VUE, ON RECUPERE LA TABLE
 */
-     
+print("
+</select>
+</div>
+</div>
+
+</form>
+</div>");
+
+
 while ($view = mysqli_fetch_row($views)) {
     $vue_name = $view[0];
    include("get_vue.php");
 }
+
 
  
  
