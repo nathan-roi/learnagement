@@ -1,33 +1,58 @@
 <?php
- include("requests.php");
+    include("requests.php");
 
-print("<button type=\"button\" class=\"collapsible\">$vue_name</button>");
+    print("<button type=\"button\" class=\"collapsible\">$table_name</button>");
 
-print("<div class=\"content\">
-  <table>
-    <thead>");
+    print("<div class=\"content\">
+      <table>
+        <thead>
+    ");
 
 
-/*  on suppose, bien entendu, que la vue existe  */
+    /* 
+     * get the table fields
+     */
 
-$result = mysqli_query($conn, $columns_vue_req);
-if (!$result) {
-  echo 'Impossible d\'exécuter la requête : ' . $req;
-  echo 'error '.mysqli_error();
-  exit;
-}
+    $table = mysqli_query($conn, $columns_table_req);
+    if (!$table) {
+        echo 'Impossible d\'exécuter la requête : ' . $req;
+        echo 'error '.mysqli_error();
+        exit;
+    }
 
-if (mysqli_num_rows($result) > 0) {
-print("<tr>");
-   while ($row = mysqli_fetch_row($result)) {
-      print("<th>".$row[0]."</th>");
-   }
-   print("<th>Validation</th>");
-   print("</tr></thead>\n");
-}
+    /*
+     * display fields
+     */
+    if (mysqli_num_rows($table) > 0) {
+        print("<tr>");
+        while ($row = mysqli_fetch_row($table)) {
+            print("<th>".$row[0]."</th>");
+        }
+        print("<th>Validation</th>");
+        print("</tr></thead>\n");
+    }
 
-    mysqli_free_result($result); // libère l'espace mémoire occupé par le résultat
+    mysqli_free_result($table); // libère l'espace mémoire occupé par le résultat
 
+    /*
+     * get the table primary K 
+     */
+
+
+    /*
+     * get the table foreign Ks 
+     */
+/*$forefnKs = mysqli_query($conn, $foreignK_req);
+    if (!$result) {
+        echo 'Impossible d\'exécuter la requête : ' . $req;
+        echo 'error '.mysqli_error();
+        exit;
+*/}
+
+
+    /* 
+     * get the table data
+     */
     print("    <tbody>");
     // envoi de la requête au serveur qui retourne un résultat    
 
