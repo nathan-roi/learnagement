@@ -1,29 +1,29 @@
 <?php
- include("requests.php");
+    include("requests.php");
 
-print("<button type=\"button\" class=\"collapsible\">$vue_name</button>");
+    print("<button type=\"button\" class=\"collapsible\">$vue_name</button>");
 
-print("<div class=\"content\">
-  <table>
-    <thead>");
+    print("<div class=\"content\">
+      <table>
+        <thead>");
 
 
-/*  on suppose, bien entendu, que la vue existe  */
+    /*  on suppose, bien entendu, que la vue existe  */
 
-$result = mysqli_query($conn, $columns_vue_req);
-if (!$result) {
-  echo 'Impossible d\'exécuter la requête : ' . $req;
-  echo 'error '.mysqli_error();
-  exit;
-}
+    $result = mysqli_query($conn, $columns_vue_req);
+    if (!$result) {
+      echo 'Impossible d\'exécuter la requête : ' . $req;
+      echo 'error '.mysqli_error();
+      exit;
+    }
 
-if (mysqli_num_rows($result) > 0) {
-print("<tr>");
-   while ($row = mysqli_fetch_row($result)) {
-      print("<th>".$row[0]."</th>");
-   }
-   print("</tr></thead>\n");
-}
+    if (mysqli_num_rows($result) > 0) {
+        print("<tr>");
+        while ($row = mysqli_fetch_row($result)) {
+            print("<th>".$row[0]."</th>");
+        }
+        print("</tr></thead>\n");
+    }
 
     mysqli_free_result($result); // libère l'espace mémoire occupé par le résultat
 
@@ -37,22 +37,20 @@ print("<tr>");
       exit; // inutile de poursuivre le traitement dans ce cas
     } 
     
-   while($ligne = mysqli_fetch_row ($result)){
+    while($ligne = mysqli_fetch_row ($result)){
    	print("<tr>");
    	foreach($ligne as $k=>$v){
 	    print("<td>".$v."</td>");
 	}
    	print("</tr>\n");
-   }
-print("
-    </tbody>
-  </table>
-</div>");
+    }
+    print("
+        </tbody>
+      </table>
+    </div>");
 
-   mysqli_free_result($result); // libère l'espace mémoire occupé par le résultat 
+    mysqli_free_result($result); // libère l'espace mémoire occupé par le résultat 
 
  //  }else{
 //	print("Vue not found!");
 //   }
-
-?>   

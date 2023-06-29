@@ -20,6 +20,7 @@
 // inclusion des informations de connexion à la base de données MySQL
   //include($inc_dir."mysql_inc.php");
 
+
 // Session timeout in second
   $session_timeout = 1440;
 
