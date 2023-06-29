@@ -1,5 +1,6 @@
 <?php
 
+
 if(isset($_POST['submit']))
 {    
      require("connectDB.php");
@@ -10,6 +11,9 @@ if(isset($_POST['submit']))
      //$module = $_POST['module'];
      ($_POST['enseignant'] == '') ? $enseignant = 'NULL' : $enseignant = $_POST['enseignant'];
      //$enseignant = $_POST['enseignant'];
+     ($_POST['filiere'] == '') ? $filiere = 'NULL' : $filiere = $_POST['filiere'];
+     //$filiere = $_POST['filiere'];
+
 
      $req = "TRUNCATE `INFO_vue_parameters`;";
      
@@ -19,8 +23,9 @@ if(isset($_POST['submit']))
         echo "Error: " . $req . ":-" . mysqli_error($conn);
      }
 
-     $req = "INSERT INTO `INFO_vue_parameters` (`id`, `sessionId`, `semestre`, `module`, `enseignant`) VALUES (NULL, '1', '$semestre', '$module', '$enseignant');";
-     
+     $req = "INSERT INTO `INFO_vue_parameters` (`id`, `sessionId`, `semestre`, `module`, `enseignant`, `filiere`) VALUES (NULL, '1', '$semestre', '$module', '$enseignant', '$filiere');";
+     echo $req;
+
      if (mysqli_query($conn, $req)) {
         echo "New record has been added successfully!</br>";     
         require("disconnectDB.php");
