@@ -1,5 +1,6 @@
 <?php
  require_once("config.php");
+
  $conn = mysqli_connect("tp-epua.univ-savoie.fr","$mysql_user","$mysql_passwd","$mysql_user",3308);
 
    if  ($conn === FALSE){

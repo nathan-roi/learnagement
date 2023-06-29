@@ -8,7 +8,7 @@ print("<div class=\"content\">
     <thead>");
 
 
-/*  on suppose, bien entendu, que la vue existe  */
+/*  on suppose,  que la vue existe  */
 
 $req = "SHOW COLUMNS FROM $vue_name";
 $result = mysqli_query($conn, $req);
