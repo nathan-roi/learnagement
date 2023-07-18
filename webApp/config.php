@@ -25,13 +25,15 @@
   $session_timeout = 1440;
 
 
-$mysql_server = "localhost";
+//$mysql_server = "127.0.0.1";
+$mysql_server = "mysql";
 //$mysql_user = "learnagement";
 $mysql_user = "root";
-//$mysql_passwd = "tutu";
-$mysql_passwd = "";
+//$mysql_passwd = "LMent2Change";
+$mysql_passwd = "Root2Change";
 $mysql_db = "learnagement";
-$mysql_port = "43308";
+$mysql_port = "3306";
+//$mysql_port = "43306";
 
 $sessionId = "None";
 $vue_name = "None";
