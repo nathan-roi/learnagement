@@ -21,8 +21,9 @@ services:
             - MYSQL_ROOT_PASSWORD=Root2Change
         volumes:
             - ../db/sql:/docker-entrypoint-initdb.d
+            - ../db/data:/data
             - ./conf:/etc/mysql/conf.d
-            - persistent:/var/lib/mysql
+            - learnagement_persistent_db:/var/lib/mysql
     phpmyadmin:
         image: phpmyadmin
         restart: always
@@ -31,4 +32,4 @@ services:
         environment:
             - PMA_HOST=mysql
 volumes:
-    persistent:
+    learnagement_persistent_db:
