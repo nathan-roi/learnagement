@@ -1,30 +1,55 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Hôte : mysql
+-- Généré le : lun. 06 nov. 2023 à 14:37
+-- Version du serveur : 8.0.33
+-- Version de PHP : 8.2.8
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+-- START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Base de données : `learnagement`
+--
+
 DROP VIEW IF EXISTS VUE_module;
 create view VUE_module as
 select `learnagement`.`INFO_module`.`code_module` AS `code_module`,
        `learnagement`.`INFO_module`.`nom` AS `module`,
        `learnagement`.`INFO_module`.`semestre` AS `semestre`,
-       `learnagement`.`INFO_module`.`filiere` AS `filiere`,
+       `learnagement`.`INFO_promo`.`nom_filiere` AS `filiere`,
        `learnagement`.`INFO_CMTDTP`.`lieu` AS `lieu`,
        `learnagement`.`INFO_CMTDTP`.`type` AS `type`,
        `learnagement`.`INFO_CMTDTP`.`heure` AS `heure`,
        `learnagement`.`INFO_enseignant`.`nom` AS `nom`,
        `learnagement`.`INFO_enseignant`.`prenom` AS `prenom`,
        group_concat(`learnagement`.`INFO_promo`.`nom_filiere` separator ', ') AS `Filière` 
-       from (((((`learnagement`.`INFO_module` 
+       from ((((((`learnagement`.`INFO_module` 
+	    join `learnagement`.`INFO_module_as_promo` on(`learnagement`.`INFO_module`.`id_module` = `learnagement`.`INFO_module_as_promo`.`id_module`))
+            join `learnagement`.`INFO_promo` on(`learnagement`.`INFO_module_as_promo`.`id_promo` = `learnagement`.`INFO_promo`.`id_promo`))
        	    join `learnagement`.`INFO_CMTDTP` on(`learnagement`.`INFO_module`.`id_module` = `learnagement`.`INFO_CMTDTP`.`id_module`)) 
             join `learnagement`.`INFO_vue_parameters` on(`learnagement`.`INFO_module`.`code_module` = convert(`learnagement`.`INFO_vue_parameters`.`code_module` using utf8))) 
             join `learnagement`.`INFO_CMTDTP_as_promo` on(`learnagement`.`INFO_CMTDTP`.`id_CMTDTP` = `learnagement`.`INFO_CMTDTP_as_promo`.`id_CMTDTP`)) 
-            join `learnagement`.`INFO_promo` on(`learnagement`.`INFO_CMTDTP_as_promo`.`id_promo` = `learnagement`.`INFO_promo`.`id_promo`)) 
             left join `learnagement`.`INFO_enseignant` on(`learnagement`.`INFO_CMTDTP`.`id_enseignant` = `learnagement`.`INFO_enseignant`.`id_enseignant`)) 
        group by `learnagement`.`INFO_module`.`code_module`,
                 `learnagement`.`INFO_module`.`nom`,
                 `learnagement`.`INFO_module`.`semestre`,
-                `learnagement`.`INFO_module`.`filiere`,
+                `learnagement`.`INFO_promo`.`nom_filiere`,
                 `learnagement`.`INFO_CMTDTP`.`lieu`,
                 `learnagement`.`INFO_CMTDTP`.`lieu`,
                 `learnagement`.`INFO_CMTDTP`.`type`,
                 `learnagement`.`INFO_CMTDTP`.`heure`,
-                `learnagement`.`INFO_enseignant`.`nom`;
+                `learnagement`.`INFO_enseignant`.`nom`,
+                `learnagement`.`INFO_enseignant`.`prenom`;
 
 DROP VIEW IF EXISTS VUE_MCCC;
 create view VUE_MCCC as
@@ -56,3 +81,17 @@ select concat(`learnagement`.`INFO_enseignant`.`prenom`,' ',`learnagement`.`INFO
        where `learnagement`.`INFO_module`.`id_enseignant` = `learnagement`.`INFO_enseignant`.`id_enseignant`
        group by `learnagement`.`INFO_enseignant`.`nom`,
        	        `learnagement`.`INFO_enseignant`.`prenom`;
+
+DROP VIEW IF EXISTS VUE_resume_charge;
+create view VUE_resume_charge as
+SELECT *
+FROM
+    (SELECT sum(`service statutaire`) as "service statutaire", sum(`service effectif`) as "service avec décharge"
+	FROM `INFO_enseignant`
+	WHERE `statut`="permanent" and `composante`="polytech"
+    ) service,
+    (SELECT sum(`hCM`*1.5*`nbGroupeCM`) + sum(`hTD`*`nbGroupeTD`) + sum(`hTP`*`nbGroupeTP`) + SUM(`hTPTD`*`nbGroupeTD`) as "charge à couvrir"
+	FROM INFO_module
+        JOIN INFO_module_as_promo on INFO_module.id_module = INFO_module_as_promo.id_module
+        JOIN INFO_promo ON INFO_module_as_promo.id_promo = INFO_promo.id_promo
+    ) charge;

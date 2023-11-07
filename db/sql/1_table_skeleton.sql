@@ -68,7 +68,7 @@ CREATE TABLE `INFO_enseignant` (
   `nom` varchar(25) NOT NULL,
   `mail` varchar(25) DEFAULT NULL,
   `password` varchar(100) DEFAULT NULL,
-  `statut` varchar(25) NOT NULL DEFAULT 'permanant',
+  `statut` ENUM('permanent','vacataire') NOT NULL DEFAULT 'permanent',
   `composante` varchar(25) DEFAULT NULL,
   `service statutaire` int(11) NOT NULL,
   `décharge` int(11) NOT NULL,
@@ -175,7 +175,7 @@ CREATE TABLE `INFO_promo` (
 --
 ALTER TABLE `INFO_promo`
   ADD PRIMARY KEY (`id_promo`),
-  ADD UNIQUE KEY `SECONDARY` (`nom_filiere`,`annee`,`site`,`parcour`) USING BTREE;
+  ADD UNIQUE KEY `SECONDARY` (`nom_filiere`,`statut`,`annee`,`site`,`parcour`) USING BTREE;
 
 --
 -- AUTO_INCREMENT pour la table `INFO_promo`

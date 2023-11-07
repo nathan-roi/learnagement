@@ -19,6 +19,7 @@ cd docker
 
 echo "Update docker/docker-compose.yml and webApp/config.php files with new password."
 read -p "Then press any key to continue... " -n1 -s
+echo
 
 sudo docker-compose up &
 
