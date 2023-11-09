@@ -1,7 +1,7 @@
 <?php
 
 // get parameters according to the session
-$param_req = "SELECT * FROM `INFO_vue_parameters` WHERE `sessionId` =  \"$sessionId\"";
+$param_req = "SELECT * FROM `INFO_parameters_of_views` WHERE `sessionId` =  \"$sessionId\"";
 
 
 // get all views
@@ -9,6 +9,8 @@ $vues_req = "SELECT TABLE_NAME FROM information_schema.tables WHERE TABLE_TYPE =
 
 // get all tables
 $tables_req = "SELECT TABLE_NAME FROM information_schema.tables WHERE TABLE_TYPE = \"BASE TABLE\" AND TABLE_NAME LIKE \"INFO_%\"";
+
+$modifiable_tables_req = "SELECT DISTINCT TABLE_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME IN ('modifiable') AND TABLE_SCHEMA='learnagement'";
 
 
 // get view column names
@@ -21,9 +23,10 @@ $columns_table_req = "SHOW COLUMNS FROM $table_name";
 $vue_req = " SELECT * FROM  $vue_name WHERE 1 ";
 
 // get table content
-$table_req = " SELECT * FROM  $table_name WHERE 1 ";
+$table_req = " SELECT $fields FROM  $table_name WHERE 1 ";
 
-
+// get primary Key
+$primaryK_req = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'learnagement' AND COLUMN_KEY = 'PRI' AND table_name = \"$table_name\"";
 
 // get explicit secondary Key
 $secondaryK_req = "SHOW INDEXES FROM $table_name WHERE `Key_name`=\"SECONDARY\"";

@@ -28,37 +28,26 @@ USE `learnagement`;
 -- Table de base
 -- --------------------------------------------------------
 
-
 -- --------------------------------------------------------
 
 --
--- Structure de la table `INFO_parameters_of_views`
+-- Structure de la table `INFO_seanceType`
 --
 
-CREATE TABLE `INFO_parameters_of_views` (
-  `id_parameters_of_views` int(11) NOT NULL,
-  `sessionId` varchar(50) NOT NULL,
-  `semestre` int(11) DEFAULT NULL,
-  `code_module` varchar(10) DEFAULT NULL,
-  `enseignant` varchar(25) DEFAULT NULL,
-  `filiere` varchar(11) DEFAULT NULL
+CREATE TABLE `INFO_seanceType` (
+  `type` varchar(10) NOT NULL,
+  `commentaire` varchar(50) NOT NULL
 );
 
 --
--- Index pour la table `INFO_vue_parameters`
+-- Index pour les tables déchargées
 --
-ALTER TABLE `INFO_parameters_of_views`
-  ADD PRIMARY KEY (`id_parameters_of_views`),
-  ADD UNIQUE KEY `sessionId` (`sessionId`);
 
 --
--- AUTO_INCREMENT pour la table `INFO_vue_parameters`
+-- Index pour la table `INFO_seanceType`
 --
-ALTER TABLE `INFO_parameters_of_views`
-  MODIFY `id_parameters_of_views` int(11) NOT NULL AUTO_INCREMENT;
-
-INSERT INTO `INFO_parameters_of_views` (`sessionId`)
-  VALUES (1);
+ALTER TABLE `INFO_seanceType`
+  ADD PRIMARY KEY (`type`);
 
 -- --------------------------------------------------------
 
@@ -129,6 +118,7 @@ CREATE TABLE `INFO_module` (
   `hTD` float DEFAULT NULL,
   `hTP` float DEFAULT NULL,
   `hTPTD` float DEFAULT NULL,
+  `hPROJ` float DEFAULT NULL,
   `type` ENUM('Specialite','Transverse') DEFAULT 'Specialité',
   `id_responsable` int(11) DEFAULT NULL,
   `commentaire` text DEFAULT NULL,
@@ -152,7 +142,7 @@ ALTER TABLE `INFO_module`
 -- Contraintes pour la table `INFO_module`
 --
 ALTER TABLE `INFO_module`
-  ADD CONSTRAINT `FK_enseignant` FOREIGN KEY (`id_responsable`) REFERENCES `INFO_enseignant` (`id_enseignant`);
+  ADD CONSTRAINT `FK_module_as_enseignant` FOREIGN KEY (`id_responsable`) REFERENCES `INFO_enseignant` (`id_enseignant`);
 
 
 
@@ -196,11 +186,11 @@ ALTER TABLE `INFO_promo`
 -- --------------------------------------------------------
 
 --
--- Structure de la table `INFO_CMTDTP`
+-- Structure de la table `INFO_seance_to_be_planned`
 --
 
-CREATE TABLE `INFO_CMTDTP` (
-  `id_CMTDTP` int(11) NOT NULL,
+CREATE TABLE `INFO_seance_to_be_planned` (
+  `id_seance_to_be_planned` int(11) NOT NULL,
   `lieu` varchar(25) NOT NULL,
   `type` varchar(10) NOT NULL,
   `heure` float NOT NULL,
@@ -209,58 +199,37 @@ CREATE TABLE `INFO_CMTDTP` (
 );
 
 --
--- Index pour la table `INFO_CMTDTP`
+-- Index pour la table `INFO_seance_to_be_planned`
 --
-ALTER TABLE `INFO_CMTDTP`
-  ADD PRIMARY KEY (`id_CMTDTP`),
-  ADD KEY `FK_module_CMTDTP` (`id_module`),
-  ADD KEY `FK_enseignant_CMTDTP` (`id_enseignant`);
+ALTER TABLE `INFO_seance_to_be_planned`
+  ADD PRIMARY KEY (`id_seance_to_be_planned`),
+  ADD KEY `FK_module_seance_to_be_planned` (`id_module`),
+  ADD KEY `FK_enseignant_seance_to_be_planned` (`id_enseignant`);
 
 --
--- AUTO_INCREMENT pour la table `INFO_CMTDTP`
+-- AUTO_INCREMENT pour la table `INFO_seance_to_be_planned`
 --
-ALTER TABLE `INFO_CMTDTP`
-  MODIFY `id_CMTDTP` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `INFO_seance_to_be_planned`
+  MODIFY `id_seance_to_be_planned` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- Contraintes pour la table `INFO_CMTDTP`
+-- Contraintes pour la table `INFO_seance_to_be_planned`
 --
-ALTER TABLE `INFO_CMTDTP`
-  ADD CONSTRAINT `FK_enseignant_CMTDTP` FOREIGN KEY (`id_enseignant`) REFERENCES `INFO_enseignant` (`id_enseignant`),
-  ADD CONSTRAINT `FK_module_CMTDTP` FOREIGN KEY (`id_module`) REFERENCES `INFO_module` (`id_module`);
-
-
--- --------------------------------------------------------
-
---
--- Structure de la table `INFO_seanceType`
---
-
-CREATE TABLE `INFO_seanceType` (
-  `type` varchar(10) NOT NULL,
-  `commentaire` varchar(50) NOT NULL
-);
-
---
--- Index pour les tables déchargées
---
-
---
--- Index pour la table `INFO_seanceType`
---
-ALTER TABLE `INFO_seanceType`
-  ADD PRIMARY KEY (`type`);
+ALTER TABLE `INFO_seance_to_be_planned`
+  ADD CONSTRAINT `FK_enseignant_seance_to_be_planned` FOREIGN KEY (`id_enseignant`) REFERENCES `INFO_enseignant` (`id_enseignant`),
+  ADD CONSTRAINT `FK_module_seance_to_be_planned` FOREIGN KEY (`id_module`) REFERENCES `INFO_module` (`id_module`),
+  ADD CONSTRAINT `FK_seance_to_be_planned_seanceType` FOREIGN KEY (`type`) REFERENCES `INFO_seanceType` (`type`);
 
 
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `INFO_seance`
+-- Structure de la table `INFO_seance_planned`
 --
 
-CREATE TABLE `INFO_seance` (
-  `id_seance` int(11) NOT NULL,
+CREATE TABLE `INFO_seance_planned` (
+  `id_seance_planned` int(11) NOT NULL,
   `type` varchar(10) NOT NULL,
   `date` datetime NOT NULL,
   `duree` time NOT NULL,
@@ -269,22 +238,22 @@ CREATE TABLE `INFO_seance` (
 );
 
 --
--- Index pour la table `INFO_seance`
+-- Index pour la table `INFO_seance_planned`
 --
-ALTER TABLE `INFO_seance`
-  ADD PRIMARY KEY (`id_seance`),
+ALTER TABLE `INFO_seance_planned`
+  ADD PRIMARY KEY (`id_seance_planned`),
   ADD UNIQUE KEY `date` (`date`,`id_enseignant`);
 
 --
--- AUTO_INCREMENT pour la table `INFO_seance`
+-- AUTO_INCREMENT pour la table `INFO_seance_planned`
 --
-ALTER TABLE `INFO_seance`
-  MODIFY `id_seance` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `INFO_seance_planned`
+  MODIFY `id_seance_planned` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- Contraintes pour la table  `INFO_seance`
+-- Contraintes pour la table  `INFO_seance_planned`
 --
-ALTER TABLE  `INFO_seance`
+ALTER TABLE  `INFO_seance_planned`
   ADD CONSTRAINT `FK_seance_seanceType` FOREIGN KEY (`type`) REFERENCES `INFO_seanceType` (`type`);
 
 
@@ -360,47 +329,127 @@ ALTER TABLE `INFO_module_as_promo`
 -- --------------------------------------------------------
 
 --
--- Structure de la table `INFO_CMTDTP_as_promo`
+-- Structure de la table `INFO_seance_to_be_planned_as_promo`
 --
 
-CREATE TABLE `INFO_CMTDTP_as_promo` (
-  `id_CMTDTP` int(11) NOT NULL,
+CREATE TABLE `INFO_seance_to_be_planned_as_promo` (
+  `id_seance_to_be_planned` int(11) NOT NULL,
   `id_promo` int(11) NOT NULL
 );
 
 --
--- Index pour la table `INFO_CMTDTP_as_promo`
+-- Index pour la table `INFO_seance_to_be_planned_as_promo`
 --
-ALTER TABLE `INFO_CMTDTP_as_promo`
-  ADD PRIMARY KEY (`id_CMTDTP`,`id_promo`);
+ALTER TABLE `INFO_seance_to_be_planned_as_promo`
+  ADD PRIMARY KEY (`id_seance_to_be_planned`,`id_promo`);
 
 --
--- Contraintes pour la table `INFO_CMTDTP_as_promo`
+-- Contraintes pour la table `INFO_seance_to_be_planned_as_promo`
 --
-ALTER TABLE `INFO_CMTDTP_as_promo`
-  ADD CONSTRAINT `INFO_CMTDTP_as_promo_ibfk_1` FOREIGN KEY (`id_CMTDTP`) REFERENCES `INFO_CMTDTP` (`id_CMTDTP`),
-  ADD CONSTRAINT `INFO_CMTDTP_as_promo_ibfk_2` FOREIGN KEY (`id_promo`) REFERENCES `INFO_promo` (`id_promo`);
+ALTER TABLE `INFO_seance_to_be_planned_as_promo`
+  ADD CONSTRAINT `INFO_seance_to_be_planned_as_promo_ibfk_1` FOREIGN KEY (`id_seance_to_be_planned`) REFERENCES `INFO_seance_to_be_planned` (`id_seance_to_be_planned`),
+  ADD CONSTRAINT `INFO_seance_to_be_planned_as_promo_ibfk_2` FOREIGN KEY (`id_promo`) REFERENCES `INFO_promo` (`id_promo`);
 
 
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `INFO_dependances_CMTDTP`
+-- Structure de la table `INFO_dependances_seance_to_be_planned`
 --
 
-CREATE TABLE `INFO_dependances_CMTDTP` (
+CREATE TABLE `INFO_dependances_seance_to_be_planned` (
   `precedent` int(11) NOT NULL,
   `successeur` int(11) NOT NULL
 );
 
 --
--- Index pour la table `INFO_dependances_CMTDTP`
+-- Index pour la table `INFO_dependances_seance_to_be_planned`
 --
-ALTER TABLE `INFO_dependances_CMTDTP`
+ALTER TABLE `INFO_dependances_seance_to_be_planned`
   ADD PRIMARY KEY (`precedent`,`successeur`);
 
+-- --------------------------------------------------------
 
+--
+-- Structure de la table `INFO_module_sequencage`
+--
+
+CREATE TABLE `INFO_module_sequencage` (
+  `id_module_sequencage` int NOT NULL,
+  `id_module` int NOT NULL,
+  `type` varchar(10) NOT NULL,
+  `numero_ordre` int DEFAULT NULL,
+  `durée (h)` decimal(10,1) NOT NULL,
+  `id_responsable` int(11) DEFAULT NULL,
+  `commentaire` text DEFAULT NULL,
+  `modifiable` BOOLEAN NOT NULL DEFAULT false
+)
+
+--
+-- Index pour les tables déchargées
+--
+
+--
+-- Index pour la table `INFO_module_sequencage`
+--
+ALTER TABLE `INFO_module_sequencage`
+  ADD PRIMARY KEY (`id_module_sequencage`),
+  ADD KEY `FK_module_sequencage_as_seanceType` (`type`),
+  ADD KEY `FK_module_sequencage_as_module` (`id_module`);
+
+--
+-- AUTO_INCREMENT pour les tables déchargées
+--
+
+--
+-- AUTO_INCREMENT pour la table `INFO_module_sequencage`
+--
+ALTER TABLE `INFO_module_sequencage`
+  MODIFY `id_module_sequencage` int NOT NULL AUTO_INCREMENT;
+
+--
+-- Contraintes pour les tables déchargées
+--
+
+--
+-- Contraintes pour la table `INFO_module_sequencage`
+--
+ALTER TABLE `INFO_module_sequencage`
+  ADD CONSTRAINT `FK_module_sequencage_as_module` FOREIGN KEY (`id_module`) REFERENCES `INFO_module` (`id_module`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `FK_module_sequencage_as_seanceType` FOREIGN KEY (`type`) REFERENCES `INFO_seanceType` (`type`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `FK_module_sequencage_as_enseignant` FOREIGN KEY (`id_responsable`) REFERENCES `INFO_enseignant` (`id_enseignant`);
+  
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `INFO_parameters_of_views`
+--
+
+CREATE TABLE `INFO_parameters_of_views` (
+  `id_parameters_of_views` int(11) NOT NULL,
+  `sessionId` varchar(50) NOT NULL,
+  `semestre` int(11) DEFAULT NULL,
+  `code_module` varchar(10) DEFAULT NULL,
+  `enseignant` varchar(25) DEFAULT NULL,
+  `filiere` varchar(11) DEFAULT NULL
+);
+
+--
+-- Index pour la table `INFO_vue_parameters`
+--
+ALTER TABLE `INFO_parameters_of_views`
+  ADD PRIMARY KEY (`id_parameters_of_views`),
+  ADD UNIQUE KEY `sessionId` (`sessionId`);
+
+--
+-- AUTO_INCREMENT pour la table `INFO_vue_parameters`
+--
+ALTER TABLE `INFO_parameters_of_views`
+  MODIFY `id_parameters_of_views` int(11) NOT NULL AUTO_INCREMENT;
+
+INSERT INTO `INFO_parameters_of_views` (`sessionId`)
+  VALUES (1);
 
 -- --------------------------------------------------------
 

@@ -27,27 +27,27 @@ select `learnagement`.`INFO_module`.`code_module` AS `code_module`,
        `learnagement`.`INFO_module`.`nom` AS `module`,
        `learnagement`.`INFO_module`.`semestre` AS `semestre`,
        `learnagement`.`INFO_promo`.`nom_filiere` AS `filiere`,
-       `learnagement`.`INFO_CMTDTP`.`lieu` AS `lieu`,
-       `learnagement`.`INFO_CMTDTP`.`type` AS `type`,
-       `learnagement`.`INFO_CMTDTP`.`heure` AS `heure`,
+       `learnagement`.`INFO_seance_to_be_planned`.`lieu` AS `lieu`,
+       `learnagement`.`INFO_seance_to_be_planned`.`type` AS `type`,
+       `learnagement`.`INFO_seance_to_be_planned`.`heure` AS `heure`,
        `learnagement`.`INFO_enseignant`.`nom` AS `nom`,
        `learnagement`.`INFO_enseignant`.`prenom` AS `prenom`,
        group_concat(`learnagement`.`INFO_promo`.`nom_filiere` separator ', ') AS `Filière` 
        from ((((((`learnagement`.`INFO_module` 
 	    join `learnagement`.`INFO_module_as_promo` on(`learnagement`.`INFO_module`.`id_module` = `learnagement`.`INFO_module_as_promo`.`id_module`))
             join `learnagement`.`INFO_promo` on(`learnagement`.`INFO_module_as_promo`.`id_promo` = `learnagement`.`INFO_promo`.`id_promo`))
-       	    join `learnagement`.`INFO_CMTDTP` on(`learnagement`.`INFO_module`.`id_module` = `learnagement`.`INFO_CMTDTP`.`id_module`)) 
+       	    join `learnagement`.`INFO_seance_to_be_planned` on(`learnagement`.`INFO_module`.`id_module` = `learnagement`.`INFO_seance_to_be_planned`.`id_module`)) 
             join `learnagement`.`INFO_parameters_of_views` on(`learnagement`.`INFO_module`.`code_module` = convert(`learnagement`.`INFO_parameters_of_views`.`code_module` using utf8))) 
-            join `learnagement`.`INFO_CMTDTP_as_promo` on(`learnagement`.`INFO_CMTDTP`.`id_CMTDTP` = `learnagement`.`INFO_CMTDTP_as_promo`.`id_CMTDTP`)) 
-            left join `learnagement`.`INFO_enseignant` on(`learnagement`.`INFO_CMTDTP`.`id_enseignant` = `learnagement`.`INFO_enseignant`.`id_enseignant`)) 
+            join `learnagement`.`INFO_seance_to_be_planned_as_promo` on(`learnagement`.`INFO_seance_to_be_planned`.`id_seance_to_be_planned` = `learnagement`.`INFO_seance_to_be_planned_as_promo`.`id_seance_to_be_planned`)) 
+            left join `learnagement`.`INFO_enseignant` on(`learnagement`.`INFO_seance_to_be_planned`.`id_enseignant` = `learnagement`.`INFO_enseignant`.`id_enseignant`)) 
        group by `learnagement`.`INFO_module`.`code_module`,
                 `learnagement`.`INFO_module`.`nom`,
                 `learnagement`.`INFO_module`.`semestre`,
                 `learnagement`.`INFO_promo`.`nom_filiere`,
-                `learnagement`.`INFO_CMTDTP`.`lieu`,
-                `learnagement`.`INFO_CMTDTP`.`lieu`,
-                `learnagement`.`INFO_CMTDTP`.`type`,
-                `learnagement`.`INFO_CMTDTP`.`heure`,
+                `learnagement`.`INFO_seance_to_be_planned`.`lieu`,
+                `learnagement`.`INFO_seance_to_be_planned`.`lieu`,
+                `learnagement`.`INFO_seance_to_be_planned`.`type`,
+                `learnagement`.`INFO_seance_to_be_planned`.`heure`,
                 `learnagement`.`INFO_enseignant`.`nom`,
                 `learnagement`.`INFO_enseignant`.`prenom`;
 

@@ -1,5 +1,5 @@
 <?php
-    include("requests.php");
+    require("requests.php");
 
     print("<button type=\"button\" class=\"collapsible\">$table_name</button>");
 
@@ -8,6 +8,31 @@
         <thead>
     ");
 
+
+
+    /* 
+     * get the table primary K
+     */
+
+
+    $table = mysqli_query($conn, $primaryK_req);
+    if (!$table) {
+        echo 'Impossible d\'exécuter la requête : ' . $req;
+        echo 'error '.mysqli_error();
+        exit;
+    }
+
+    /*
+     * get K
+     */
+    if (mysqli_num_rows($table) > 0) {
+      $primaryK = mysqli_fetch_row($table)[0];
+    }
+
+    mysqli_free_result($table); // libère l'espace mémoire occupé par le résultat
+
+
+	  
 
     /* 
      * get the table fields
@@ -23,15 +48,21 @@
     /*
      * display fields
      */
+    $fields = "";
     if (mysqli_num_rows($table) > 0) {
         print("<tr>");
         while ($row = mysqli_fetch_row($table)) {
+	  
+	  if($row[0] != $primaryK){
             print("<th>".$row[0]."</th>");
+	    $fields .= $row[0].",";
+	  }
         }
+	$fields = substr($fields, 0, -1);
         print("<th>Validation</th>");
         print("</tr></thead>\n");
     }
-
+require("requests.php");
     mysqli_free_result($table); // libère l'espace mémoire occupé par le résultat
 
     /*
@@ -47,7 +78,7 @@
         echo 'Impossible d\'exécuter la requête : ' . $req;
         echo 'error '.mysqli_error();
         exit;
-*/}
+	}*/
 
 
     /* 
@@ -56,7 +87,7 @@
     print("    <tbody>");
     // envoi de la requête au serveur qui retourne un résultat    
 
-    $result  =   mysqli_query($conn, $vue_req);  
+    $result  =   mysqli_query($conn, $table_req);  
     
     if ($result === FALSE){
       echo "la requ&ecirc;te a &eacute;chou&eacute; : ".mysqli_error();
@@ -74,15 +105,13 @@
 	print("</form>");
    	print("</tr>\n");
    }
-print("
-    </tbody>
-  </table>
+	  print("    </tbody>");
+	     mysqli_free_result($result); // libère l'espace mémoire occupé par le résultat
+    
+  print("</table>
 </div>");
 
-   mysqli_free_result($result); // libère l'espace mémoire occupé par le résultat 
 
- //  }else{
-//	print("Vue not found!");
-//   }
+ 
 
 ?>   

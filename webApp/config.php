@@ -38,4 +38,5 @@ $mysql_port = "3306";
 $sessionId = "None";
 $vue_name = "None";
 $table_name = "None";
+$fields = "None";
 ?>

@@ -1,57 +1,90 @@
 <?php
+    /*
+     * Session initialisation
+     */
+    session_start();
+    require_once("config.php");
+    if (isset($_SESSION['start']) && (time() - $_SESSION['start'] > $session_timeout)) {
+       session_unset(); 
+       session_destroy(); 
+       echo "you were disconnected due to a session timeout"; 
+    }
+    $_SESSION['start'] = time();
 
 
-  include("connectDB.php");
+    /*
+     * Check user connection
+     */
+    if(!isset($_SESSION["username"])){
+        /*header("Location: registration/login.php");
+        exit();*/
+        $username="anonymous";
+	$sessionId = "1";
+    }else{
+        $username=$_SESSION["username"];
+        $sessionId = session_id();
+    }
 
-  $sessionId = "1";
-  $req = "SELECT * FROM `INFO_parameters_of_views` WHERE `sessionId` = '".$sessionId."'";
-  $result = mysqli_query($conn, $req);
+    include("connectDB.php");
+    require("requests.php");
 
-if (!$result) {
-    echo 'Impossible d\'exécuter la requête : ' . $req;
-    echo 'error ' . mysqli_error($conn);
-    exit;
-}
+    /*
+     * get parameters: filters values
+     */
+    $result = mysqli_query($conn, $param_req);
 
-if (mysqli_num_rows($result) > 0) {
-    $row = mysqli_fetch_assoc($result);
-    $semestre = $row["semestre"];
-    $module = $row["code_module"];
-    $enseignant = $row["enseignant"];
-    $filiere =  $row["filiere"];
-} else {
-    // Si aucune ligne n'est retournée, définissez les valeurs des paramètres sur des valeurs par défaut ou laissez-les vides
-    $semestre = "";
-    $module = "";
-    $enseignant = "";
-    $filiere =  "";
-}
+    if (!$result) {
+      echo 'Impossible d\'exécuter la requête : ' . $req;
+      echo 'error ' . mysqli_error($conn);
+      exit;
+    }
 
-print("<!DOCTYPE html>
-<html lang=\"fr\">
-<head>
-    <link rel=\"stylesheet\" href=\"inc/css/style.css\" media=\"all\" href=\"<?php echo 'all.css?ver='.'1.2'; ?>\"/> 
-</head>
-<body>
+    if (mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        $semestre = $row["semestre"];
+        $module = $row["code_module"];
+        $enseignant = $row["enseignant"];
+        $filiere =  $row["filiere"];
+    }else{
+        // Si aucune ligne n'est retournée, définissez les valeurs des paramètres sur des valeurs par défaut ou laissez-les vides
+        $semestre = "";
+        $module = "";
+        $enseignant = "";
+        $filiere =  "";
+    }
 
 
-<div class=\"bandeau\">
-<div class=\"success\">
-  <h1>POLYTECH ANNECY</h1>
- </div>
-</div>
+    /*
+     * display head
+     */
+    print("<!DOCTYPE html>
+        <html lang=\"fr\">
+            <head>
+                <link rel=\"stylesheet\" href=\"inc/css/style.css\" media=\"all\" href=\"<?php echo 'all.css?ver='.'1.2'; ?>\"/> 
+            </head>
+            <body>
+                <div class=\"bandeau\">
+                    <div class=\"success\">
+                        <h1>POLYTECH ANNECY</h1>
+                    </div>
+                </div>
 
-<div class=\"campus\"></div>
-  <div class=\"overlay\"></div>
-  <p class=\"BIENVENUE\">Bienvenue à Learnagement</p>
-</div>
-");
+                <div class=\"campus\"></div>
+                    <div class=\"overlay\"></div>
+                        <p class=\"BIENVENUE\">Bienvenue à Learnagement</p>
+                    </div>
+    ");
 
-print("
-<div class=\"paramview\">
-  <form action=\"setViewParameters.php\" method=\"post\">
-    <input type=\"hidden\" id=\"sessionId\" name=\"sessionId\" value=\"$sessionId\" />
-      ");
+
+    /*
+     * display form of filters
+     */
+
+    print("
+        <div class=\"paramview\">
+            <form action=\"setViewParameters.php\" method=\"post\">
+                <input type=\"hidden\" id=\"sessionId\" name=\"sessionId\" value=\"$sessionId\" />
+    ");
 
   /* un bouton pour semestre*/
   print("
@@ -200,9 +233,9 @@ while ($view = mysqli_fetch_row($views)) {
 
 mysqli_close($conn);
 
-print("
-    <script>
-        var coll = document.getElementsByClassName(\"collapsible\");
+      //print(" <script src=\"/inc/js/learnagementScript.js\"></script>");
+      print("<script>
+ var coll = document.getElementsByClassName(\"collapsible\");
         var i;
 
         for (i = 0; i < coll.length; i++) {
@@ -216,8 +249,8 @@ print("
                 }
             });
 	}
-	</script>
-    ");
+	    </script>");
+      
       
 ?>
 
