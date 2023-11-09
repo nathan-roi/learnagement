@@ -21,7 +21,7 @@ $columns_table_req = "SHOW COLUMNS FROM $table_name";
 $vue_req = " SELECT * FROM  $vue_name WHERE 1 ";
 
 // get table content
-$vue_req = " SELECT * FROM  $table_name WHERE 1 ";
+$table_req = " SELECT * FROM  $table_name WHERE 1 ";
 
 
 

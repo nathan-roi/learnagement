@@ -4,7 +4,7 @@ if(isset($_POST['submit']))
 {    
      require("connectDB.php");
      $sessionId = $_POST['sessionId'];
-
+ 
      ($_POST['semestre'] == '') ? $semestre = '0' : $semestre = $_POST['semestre'];
      //$semestre = $_POST['semestre'];
      ($_POST['module'] == '') ? $module = 'NULL' : $module = $_POST['module'];
@@ -14,7 +14,7 @@ if(isset($_POST['submit']))
      ($_POST['filiere'] == '') ? $filiere = 'NULL' : $filiere = $_POST['filiere'];
      //$filiere = $_POST['filiere'];
 
-     $req = "TRUNCATE `INFO_vue_parameters`;";
+     $req = "TRUNCATE `INFO_parameters_of_views`;";
      
      if (mysqli_query($conn, $req)) {
         echo "Parameters cleaned successfully!</br>";
@@ -23,7 +23,7 @@ if(isset($_POST['submit']))
      }
 
 
-     $req = "INSERT INTO `INFO_vue_parameters` (`id`, `sessionId`, `semestre`, `module`, `enseignant`, `filiere`) VALUES (NULL, '1', '$semestre', '$module', '$enseignant', '$filiere');";
+     $req = "INSERT INTO `INFO_parameters_of_views` (`id_parameters_of_views`, `sessionId`, `semestre`, `code_module`, `enseignant`, `filiere`) VALUES (NULL, '$sessionId', '$semestre', '$module', '$enseignant', '$filiere');";
 
      if (mysqli_query($conn, $req)) {
         echo "New record has been added successfully!</br>";     

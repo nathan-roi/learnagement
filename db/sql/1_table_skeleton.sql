@@ -32,29 +32,33 @@ USE `learnagement`;
 -- --------------------------------------------------------
 
 --
--- Structure de la table `INFO_vue_parameters`
+-- Structure de la table `INFO_parameters_of_views`
 --
 
-CREATE TABLE `INFO_vue_parameters` (
-  `id_vue_parameters` int(11) NOT NULL,
+CREATE TABLE `INFO_parameters_of_views` (
+  `id_parameters_of_views` int(11) NOT NULL,
   `sessionId` varchar(50) NOT NULL,
   `semestre` int(11) DEFAULT NULL,
   `code_module` varchar(10) DEFAULT NULL,
-  `enseignant` varchar(25) DEFAULT NULL
+  `enseignant` varchar(25) DEFAULT NULL,
+  `filiere` varchar(11) DEFAULT NULL
 );
 
 --
 -- Index pour la table `INFO_vue_parameters`
 --
-ALTER TABLE `INFO_vue_parameters`
-  ADD PRIMARY KEY (`id_vue_parameters`),
+ALTER TABLE `INFO_parameters_of_views`
+  ADD PRIMARY KEY (`id_parameters_of_views`),
   ADD UNIQUE KEY `sessionId` (`sessionId`);
 
 --
 -- AUTO_INCREMENT pour la table `INFO_vue_parameters`
 --
-ALTER TABLE `INFO_vue_parameters`
-  MODIFY `id_vue_parameters` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `INFO_parameters_of_views`
+  MODIFY `id_parameters_of_views` int(11) NOT NULL AUTO_INCREMENT;
+
+INSERT INTO `INFO_parameters_of_views` (`sessionId`)
+  VALUES (1);
 
 -- --------------------------------------------------------
 
@@ -126,8 +130,9 @@ CREATE TABLE `INFO_module` (
   `hTP` float DEFAULT NULL,
   `hTPTD` float DEFAULT NULL,
   `type` ENUM('Specialite','Transverse') DEFAULT 'Specialité',
-  `id_enseignant` int(11) DEFAULT NULL,
-  `commentaire` text DEFAULT NULL
+  `id_responsable` int(11) DEFAULT NULL,
+  `commentaire` text DEFAULT NULL,
+  `modifiable` BOOLEAN NOT NULL DEFAULT false
 );
 
 --
@@ -135,8 +140,7 @@ CREATE TABLE `INFO_module` (
 --
 ALTER TABLE `INFO_module`
   ADD PRIMARY KEY (`id_module`),
-  ADD UNIQUE KEY `SECONDARY` (`code_module`) USING BTREE,
-  ADD KEY `id_responsable` (`id_enseignant`);
+  ADD UNIQUE KEY `SECONDARY` (`code_module`) USING BTREE;
 
 --
 -- AUTO_INCREMENT pour la table `INFO_module`
@@ -148,7 +152,7 @@ ALTER TABLE `INFO_module`
 -- Contraintes pour la table `INFO_module`
 --
 ALTER TABLE `INFO_module`
-  ADD CONSTRAINT `FK_enseignant` FOREIGN KEY (`id_enseignant`) REFERENCES `INFO_enseignant` (`id_enseignant`);
+  ADD CONSTRAINT `FK_enseignant` FOREIGN KEY (`id_responsable`) REFERENCES `INFO_enseignant` (`id_enseignant`);
 
 
 

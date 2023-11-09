@@ -37,7 +37,7 @@ select `learnagement`.`INFO_module`.`code_module` AS `code_module`,
 	    join `learnagement`.`INFO_module_as_promo` on(`learnagement`.`INFO_module`.`id_module` = `learnagement`.`INFO_module_as_promo`.`id_module`))
             join `learnagement`.`INFO_promo` on(`learnagement`.`INFO_module_as_promo`.`id_promo` = `learnagement`.`INFO_promo`.`id_promo`))
        	    join `learnagement`.`INFO_CMTDTP` on(`learnagement`.`INFO_module`.`id_module` = `learnagement`.`INFO_CMTDTP`.`id_module`)) 
-            join `learnagement`.`INFO_vue_parameters` on(`learnagement`.`INFO_module`.`code_module` = convert(`learnagement`.`INFO_vue_parameters`.`code_module` using utf8))) 
+            join `learnagement`.`INFO_parameters_of_views` on(`learnagement`.`INFO_module`.`code_module` = convert(`learnagement`.`INFO_parameters_of_views`.`code_module` using utf8))) 
             join `learnagement`.`INFO_CMTDTP_as_promo` on(`learnagement`.`INFO_CMTDTP`.`id_CMTDTP` = `learnagement`.`INFO_CMTDTP_as_promo`.`id_CMTDTP`)) 
             left join `learnagement`.`INFO_enseignant` on(`learnagement`.`INFO_CMTDTP`.`id_enseignant` = `learnagement`.`INFO_enseignant`.`id_enseignant`)) 
        group by `learnagement`.`INFO_module`.`code_module`,
@@ -67,7 +67,7 @@ select `learnagement`.`INFO_module`.`id_module` AS `id_module`,
        from (((`learnagement`.`INFO_module`
        	    join `learnagement`.`INFO_module_as_promo` on(`learnagement`.`INFO_module`.`id_module` = `learnagement`.`INFO_module_as_promo`.`id_module`))
        	    join `learnagement`.`INFO_promo` on(`learnagement`.`INFO_module_as_promo`.`id_promo` = `learnagement`.`INFO_promo`.`id_promo`))
-       	    join `learnagement`.`INFO_enseignant` on(`learnagement`.`INFO_module`.`id_enseignant` = `learnagement`.`INFO_enseignant`.`id_enseignant`))
+       	    join `learnagement`.`INFO_enseignant` on(`learnagement`.`INFO_module`.`id_responsable` = `learnagement`.`INFO_enseignant`.`id_enseignant`))
        where 1
        group by `learnagement`.`INFO_module`.`id_module`;
 
@@ -78,7 +78,7 @@ select concat(`learnagement`.`INFO_enseignant`.`prenom`,' ',`learnagement`.`INFO
        group_concat(distinct `learnagement`.`INFO_module`.`code_module` separator ', ') AS `modules`
        from (`learnagement`.`INFO_enseignant`
        	    join `learnagement`.`INFO_module`)
-       where `learnagement`.`INFO_module`.`id_enseignant` = `learnagement`.`INFO_enseignant`.`id_enseignant`
+       where `learnagement`.`INFO_module`.`id_responsable` = `learnagement`.`INFO_enseignant`.`id_enseignant`
        group by `learnagement`.`INFO_enseignant`.`nom`,
        	        `learnagement`.`INFO_enseignant`.`prenom`;
 

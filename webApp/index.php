@@ -1,42 +1,11 @@
 <?php
 
-/*$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "learnagement";
-$port = 43306;
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname, $port);
+  include("connectDB.php");
 
-// Check connection
-if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
-}
-echo "Connected successfully1";*/
-// on va chercher les articles à la base 
-include("connectDB.php");
-//require_once("config.php");
-
-// Connexion à la base de données'
-//$$host = "192.168.143.68";
-//$username = "learnagament";
-//$password = "tutu";
-//$database = "learnagement";
-
-//$conn = mysqli_connect($host, $username, $password, $database);
-
-//if (!$conn) {
-    //die("La connexion à la base de données a échoué : " . mysqli_connect_error());
-
-
-//if (!$conn) {
-   // echo "Erreur de connexion à la base de données : " . mysqli_connect_error();
-    //exit;
-
-//mysqli_close($conn);
-$req = "SELECT * FROM `INFO_vue_parameters` WHERE `sessionId` = '1'";
-$result = mysqli_query($conn, $req);
+  $sessionId = "1";
+  $req = "SELECT * FROM `INFO_parameters_of_views` WHERE `sessionId` = '".$sessionId."'";
+  $result = mysqli_query($conn, $req);
 
 if (!$result) {
     echo 'Impossible d\'exécuter la requête : ' . $req;
@@ -47,20 +16,21 @@ if (!$result) {
 if (mysqli_num_rows($result) > 0) {
     $row = mysqli_fetch_assoc($result);
     $semestre = $row["semestre"];
-    $module = $row["module"];
+    $module = $row["code_module"];
     $enseignant = $row["enseignant"];
+    $filiere =  $row["filiere"];
 } else {
     // Si aucune ligne n'est retournée, définissez les valeurs des paramètres sur des valeurs par défaut ou laissez-les vides
     $semestre = "";
     $module = "";
     $enseignant = "";
+    $filiere =  "";
 }
- /* un bouton pour semestre*/
+
 print("<!DOCTYPE html>
 <html lang=\"fr\">
 <head>
-    <link rel=\"stylesheet\" href=\"style.css\"
-    media=\"all\" href=\"<?php echo 'all.css?ver='.'1.2'; ?>\"/>
+    <link rel=\"stylesheet\" href=\"inc/css/style.css\" media=\"all\" href=\"<?php echo 'all.css?ver='.'1.2'; ?>\"/> 
 </head>
 <body>
 
@@ -75,47 +45,47 @@ print("<!DOCTYPE html>
   <div class=\"overlay\"></div>
   <p class=\"BIENVENUE\">Bienvenue à Learnagement</p>
 </div>
+");
 
-
-
+print("
 <div class=\"paramview\">
   <form action=\"setViewParameters.php\" method=\"post\">
-        
+    <input type=\"hidden\" id=\"sessionId\" name=\"sessionId\" value=\"$sessionId\" />
+      ");
+
+  /* un bouton pour semestre*/
+  print("
     <div class=\"form-group\">
       <div class=\"dropdown\">
-        <label for=\"semestre-select\"</label>    
+        <label for=\"semestre-select\">Semestre :</label>    
         <select name=\"semestre\" id=\"semestre-select\">
-          <option value=''> semestre</option>
-        "
-);
-            
-            $sql = "SELECT DISTINCT `semestre` FROM `INFO_module` ORDER BY `INFO_module`.`semestre` ASC";
-            $result = mysqli_query($conn, $sql);
+          <option value=\"$semestre\" > $semestre </option>
+  ");
+        
+  $sql = "SELECT DISTINCT `semestre` FROM `INFO_module` ORDER BY `INFO_module`.`semestre` ASC";
+  $result = mysqli_query($conn, $sql);
 
-            if (mysqli_num_rows($result) > 0) {
-                while ($row = mysqli_fetch_assoc($result)) {
-                    echo "<option value='" . $row['semestre'] . "'>" . $row['semestre'] . "</option>";
-                }
-            } else {
-                  echo "<option>Aucun semestre trouvé</option>";
-              }
-   
+  if (mysqli_num_rows($result) > 0) {
+    while ($row = mysqli_fetch_assoc($result)) {
+      echo "<option value='" . $row['semestre'] . "'>" . $row['semestre'] . "</option>";
+    }
+  } else {
+    echo "<option>Aucun semestre trouvé</option>";
+  }
+  print("
+         </select>
+       </div>
+     </div>
+  ");
+
 
 /*un bouton pour filière*/
-  print("
-  
-     </select>
-   </div>
- </div>
-
-
-
-        
+print("      
   <div class=\"form-group\">
     <div class=\"dropdown\">
-      <label for=\"filiere-select\"</label>
+      <label for=\"filiere-select\">Filiere :</label>
         <select name=\"filiere\" id=\"filiere-select\">
-          <option value=''>filière</option>"
+          <option value='$filiere'>$filiere</option>"
 );
             $sql = "SELECT * FROM `INFO_filiere` ORDER BY nom_filiere";
               $result = mysqli_query($conn, $sql);
@@ -139,16 +109,16 @@ print("<!DOCTYPE html>
   
   <div class=\"form-group\">
     <div class=\"dropdown\">
-      <label for=\"module-select\"</label>
+      <label for=\"module-select\">Module :</label>
         <select name=\"module\" id=\"module-select\">
-          <option value=''>module</option>"
+          <option value='$module'>$module</option>"
   );
   $sql = "SELECT * FROM `INFO_module` ORDER BY nom" ;
   $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) > 0) {
        while ($row = mysqli_fetch_assoc($result)) {
-        echo "<option value='"  . $row["code"] . "'>" . $row["code"] . " : " . $row["nom"]   . "</option>";
+        echo "<option value='"  . $row["code_module"] . "'>" . $row["code_module"] . " : " . $row["nom"]   . "</option>";
                     
          }
     } else {
@@ -165,9 +135,9 @@ print("<!DOCTYPE html>
           
 <div class=\"form-group\">
     <div class=\"dropdown\">
-       <label for=\"enseignant-select\"</label>
+       <label for=\"enseignant-select\">Enseignant :</label>
           <select name=\"enseignant\" id=\"enseignant-select\">  
-            <option value=''>enseignant</option>"
+            <option value='$enseignant'>$enseignant</option>"
 
 );
 
@@ -219,6 +189,7 @@ print("
 
 
 while ($view = mysqli_fetch_row($views)) {
+  print("-".implode(" ",$view));
     $vue_name = $view[0];
    include("get_vue.php");
 }
@@ -228,6 +199,26 @@ while ($view = mysqli_fetch_row($views)) {
  
 
 mysqli_close($conn);
+
+print("
+    <script>
+        var coll = document.getElementsByClassName(\"collapsible\");
+        var i;
+
+        for (i = 0; i < coll.length; i++) {
+            coll[i].addEventListener(\"click\", function() {
+                this.classList.toggle(\"active\");
+                var content = this.nextElementSibling;
+                if (content.style.display === \"block\") {
+                    content.style.display = \"none\";
+                } else {
+                    content.style.display = \"block\";
+                }
+            });
+	}
+	</script>
+    ");
+      
 ?>
 
 
