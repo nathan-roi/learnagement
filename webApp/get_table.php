@@ -45,47 +45,56 @@
         exit;
     }
 
-    /*
-     * display fields
-     */
-    $fields = "";
+    $fields_array = [];
+    $fields_type = [];
     if (mysqli_num_rows($table) > 0) {
         print("<tr>");
         while ($row = mysqli_fetch_row($table)) {
-	  
+	  /*foreach($row as $k=>$v){
+	    print("$k => $v ");
+	    }
+	  print("<br/>");*/
 	  if($row[0] != $primaryK){
-            print("<th>".$row[0]."</th>");
-	    $fields .= $row[0].",";
-	  }
+            print("<th>".$row[3]."</th>");
+	    array_push($fields_array, $row[3]);
+	    array_push($fields_type, $row[7]);
+	    }
         }
-	$fields = substr($fields, 0, -1);
+	//$fields = substr($fields, 0, -1);
+	$fields = implode(",", $fields_array);
         print("<th>Validation</th>");
         print("</tr></thead>\n");
     }
-require("requests.php");
+    require("requests.php");
     mysqli_free_result($table); // libère l'espace mémoire occupé par le résultat
-
-    /*
-     * get the table primary K 
-     */
-
 
     /*
      * get the table foreign Ks 
      */
-/*$forefnKs = mysqli_query($conn, $foreignK_req);
-    if (!$result) {
+    $forefnK_fields_array = [];
+    $forefnKs = mysqli_query($conn, $foreignK_req);
+    if (!$forefnKs) {
         echo 'Impossible d\'exécuter la requête : ' . $req;
         echo 'error '.mysqli_error();
         exit;
-	}*/
+    }
+    if (mysqli_num_rows($forefnKs) > 0) {
+      while ($forefnK = mysqli_fetch_row($forefnKs)) {
+	array_push($forefnK_fields_array, $forefnK[1]);
+      }
+    }
+
+    /*
+     * get foreign Ks explicit values: SECONDARY K in reference table
+     */
 
 
+	  
+	  
     /* 
      * get the table data
      */
-    print("    <tbody>");
-    // envoi de la requête au serveur qui retourne un résultat    
+    print("    <tbody>");   
 
     $result  =   mysqli_query($conn, $table_req);  
     
@@ -98,8 +107,15 @@ require("requests.php");
    	print("<tr>");
 	print("<form action='' method='get' class='form-row'>");
    	foreach($ligne as $k=>$v){
-	    //print("<td>".$v."</td>");
-	    print("<td><input type='text' name='$k' value='$v'></td>");
+	  if($fields_type[$k] == "text"){
+	    print("<td><textarea name='$fields_array[$k]'>$v</textarea></td>");
+	  }else if(in_array($fields_array[$k], $forefnK_fields_array)){
+	      print("<td><select name='$fields_array[$k]' value=\"$v\">");
+	      print("<option value=\"$v\">$v</option>");
+	      print("</select></td>");
+	  }else{
+	    print("<td><input type='text' name='$fields_array[$k]' value=\"$v\"></td>");
+	  }
 	}
 	print("<td><input type='submit' value='valid'></td>");
 	print("</form>");
