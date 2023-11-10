@@ -39,4 +39,6 @@ $sessionId = "None";
 $vue_name = "None";
 $table_name = "None";
 $fields = "None";
+$reference_table_name="";
+$primaryk_and_secondaryK="";
 ?>

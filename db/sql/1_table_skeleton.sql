@@ -43,12 +43,15 @@ CREATE TABLE `INFO_seanceType` (
 -- Index pour les tables déchargées
 --
 
+ALTER TABLE INFO_seanceType
+ADD CONSTRAINT SECONDARY UNIQUE (`type`);
+
 --
 -- Index pour la table `INFO_seanceType`
 --
 ALTER TABLE `INFO_seanceType`
   ADD PRIMARY KEY (`type`);
-
+  
 -- --------------------------------------------------------
 
 --

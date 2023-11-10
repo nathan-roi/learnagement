@@ -36,5 +36,8 @@ $secondaryK_req = "SHOW INDEXES FROM $table_name WHERE `Key_name`=\"SECONDARY\""
 $foreignK_req = "SELECT TABLE_NAME,COLUMN_NAME,CONSTRAINT_NAME, REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE REFERENCED_TABLE_SCHEMA = \"$mysql_db\" AND TABLE_NAME = \"$table_name\"";
 
 // get secondary K fields
-$secondaryk_fields_req = "SELECT group_concat(column_name  separator ', ') FROM information_schema.statistics WHERE table_schema = \"$mysql_db\" AND table_name= \"$table_name\" AND INDEX_NAME = \"SECONDARY\"";
+$secondaryk_fields_req = "SELECT group_concat(column_name  separator ', ') FROM information_schema.statistics WHERE table_schema = \"$mysql_db\" AND table_name= \"$reference_table_name\" AND (INDEX_NAME = \"PRIMARY\" OR INDEX_NAME = \"SECONDARY\")";
+
+// get secondary K values
+$secondaryk_values_req = "SELECT $primaryk_and_secondaryK FROM $reference_table_name ORDER BY 1"; 
 ?>
