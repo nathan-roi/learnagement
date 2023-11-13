@@ -1,11 +1,16 @@
 <?php
+  // get login informations
+  $login_req = "SELECT id_enseignant, prenom, nom, password FROM INFO_enseignant WHERE mail = \"$userlogin\"";
 
-// get parameters according to the session
-$param_req = "SELECT * FROM `INFO_parameters_of_views` WHERE `sessionId` =  \"$sessionId\"";
+  // get parameters fields
+ $param_fields_req = "SHOW COLUMNS FROM INFO_parameters_of_views";
+
+  // get parameters according to the session
+  $param_req = "SELECT * FROM `INFO_parameters_of_views` WHERE `sessionId` =  \"$sessionId\"";
 
 
 // get all views
-$vues_req = "SELECT TABLE_NAME FROM information_schema.tables WHERE TABLE_TYPE = \"VIEW\" AND TABLE_NAME LIKE \"INFO_vue_%\"";
+$vues_req = "SELECT TABLE_NAME FROM information_schema.tables WHERE TABLE_TYPE = \"VIEW\" AND TABLE_NAME LIKE \"VUE_%\"";
 
 // get all tables
 $tables_req = "SELECT TABLE_NAME FROM information_schema.tables WHERE TABLE_TYPE = \"BASE TABLE\" AND TABLE_NAME LIKE \"INFO_%\"";

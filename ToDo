@@ -1,3 +1,4 @@
 - remove src after re-integration into webApp
 - remove prefix of db table
 - normalize name
+- refactor to avoid check SQL injection

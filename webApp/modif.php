@@ -32,6 +32,9 @@
 
     require("requests.php");
 
+
+print("<section>"); 
+
     /*
      * get all modifiable tables
      */
@@ -41,6 +44,7 @@
        echo 'error '.mysqli_error();
        exit;
      }
+
 
      /*
       * get each table
@@ -66,6 +70,10 @@
     }else{
         print("<a href=\"registration/login.php\">Connexion</a>");
     }
+
+
+
+print("</section>"); 
 
   print("
     <script>

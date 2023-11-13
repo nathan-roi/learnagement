@@ -28,6 +28,25 @@ USE `learnagement`;
 -- Table de base
 -- --------------------------------------------------------
 
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `INFO_semestre`
+--
+
+CREATE TABLE `INFO_semestre` (
+  `id_semestre` tinyint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+--
+-- Index pour la table `INFO_semestre`
+--
+ALTER TABLE `INFO_semestre`
+  ADD PRIMARY KEY (`id_semestre`),
+  ADD UNIQUE KEY `SECONDARY` (`id_semestre`) USING BTREE;
+
 -- --------------------------------------------------------
 
 --
@@ -62,6 +81,7 @@ CREATE TABLE `INFO_enseignant` (
   `id_enseignant` int(11) NOT NULL,
   `prenom` varchar(25) NOT NULL,
   `nom` varchar(25) NOT NULL,
+  `fullName` varchar(50) DEFAULT NULL,
   `mail` varchar(25) DEFAULT NULL,
   `password` varchar(100) DEFAULT NULL,
   `statut` ENUM('permanent','vacataire') NOT NULL DEFAULT 'permanent',
@@ -79,7 +99,7 @@ CREATE TABLE `INFO_enseignant` (
 ALTER TABLE `INFO_enseignant`
   ADD PRIMARY KEY (`id_enseignant`),
   ADD UNIQUE KEY `mail` (`mail`),
-  ADD UNIQUE KEY `SECONDARY` (`nom`,`prenom`) USING BTREE;
+  ADD UNIQUE KEY `SECONDARY` (`fullName`) USING BTREE;
 
 --
 -- AUTO_INCREMENT pour la table `INFO_enseignant`
@@ -87,6 +107,12 @@ ALTER TABLE `INFO_enseignant`
 ALTER TABLE `INFO_enseignant`
   MODIFY `id_enseignant` int(11) NOT NULL AUTO_INCREMENT;
 
+-- CREATE TRIGGER InsertEnseignant AFTER INSERT ON INFO_enseignant
+-- FOR EACH ROW
+-- BEGIN
+--   UPDATE INFO_enseignant
+--   SET fullName = (SELECT concat_ws("_", prenom, nom));
+-- END;
 
 -- --------------------------------------------------------
 
@@ -94,6 +120,7 @@ ALTER TABLE `INFO_enseignant`
 -- Structure de la table `INFO_filiere`
 --
 
+-- WARNING PRIMARY K NAME IS NOT STANDARDIZED !!!
 CREATE TABLE `INFO_filiere` (
   `nom_filiere` varchar(11) NOT NULL,
   `nom_long` varchar(50) DEFAULT NULL
@@ -103,7 +130,8 @@ CREATE TABLE `INFO_filiere` (
 -- Index pour la table `INFO_filiere`
 --
 ALTER TABLE `INFO_filiere`
-  ADD PRIMARY KEY (`nom_filiere`);
+  ADD PRIMARY KEY (`nom_filiere`),
+  ADD UNIQUE KEY `SECONDARY` (`nom_filiere`) USING BTREE;
 
 
 -- --------------------------------------------------------
@@ -116,7 +144,7 @@ CREATE TABLE `INFO_module` (
   `id_module` int(11) NOT NULL,
   `code_module` varchar(10) NOT NULL,
   `nom` varchar(50) NOT NULL,
-  `semestre` int(11) NOT NULL,
+  `id_semestre` tinyint(2) NOT NULL,
   `hCM` float DEFAULT NULL,
   `hTD` float DEFAULT NULL,
   `hTP` float DEFAULT NULL,
@@ -145,7 +173,8 @@ ALTER TABLE `INFO_module`
 -- Contraintes pour la table `INFO_module`
 --
 ALTER TABLE `INFO_module`
-  ADD CONSTRAINT `FK_module_as_enseignant` FOREIGN KEY (`id_responsable`) REFERENCES `INFO_enseignant` (`id_enseignant`);
+  ADD CONSTRAINT `FK_module_as_enseignant` FOREIGN KEY (`id_responsable`) REFERENCES `INFO_enseignant` (`id_enseignant`),
+  ADD CONSTRAINT `FK_module_as_semestre` FOREIGN KEY (`id_semestre`) REFERENCES `INFO_semestre` (`id_semestre`);
 
 
 
@@ -235,7 +264,7 @@ CREATE TABLE `INFO_seance_planned` (
   `id_seance_planned` int(11) NOT NULL,
   `type` varchar(10) NOT NULL,
   `date` datetime NOT NULL,
-  `duree` time NOT NULL,
+  `duree_h` time NOT NULL,
   `id_module` int(11) NOT NULL,
   `id_enseignant` int(11) NOT NULL
 );
@@ -383,11 +412,11 @@ CREATE TABLE `INFO_module_sequencage` (
   `id_module` int NOT NULL,
   `type` varchar(10) NOT NULL,
   `numero_ordre` int DEFAULT NULL,
-  `durée (h)` decimal(10,1) NOT NULL,
+  `duree_h` decimal(10,1) NOT NULL,
   `id_responsable` int(11) DEFAULT NULL,
   `commentaire` text DEFAULT NULL,
   `modifiable` BOOLEAN NOT NULL DEFAULT false
-)
+);
 
 --
 -- Index pour les tables déchargées
@@ -431,11 +460,11 @@ ALTER TABLE `INFO_module_sequencage`
 
 CREATE TABLE `INFO_parameters_of_views` (
   `id_parameters_of_views` int(11) NOT NULL,
-  `sessionId` varchar(50) NOT NULL,
-  `semestre` int(11) DEFAULT NULL,
-  `code_module` varchar(10) DEFAULT NULL,
-  `enseignant` varchar(25) DEFAULT NULL,
-  `filiere` varchar(11) DEFAULT NULL
+  `sessionId` int(11) NOT NULL,
+  `id_semestre` tinyint(2) DEFAULT NULL,
+  `code_module` int(11) DEFAULT NULL,
+  `fullname` int(11) DEFAULT NULL,
+  `nom_filiere` varchar(11) DEFAULT NULL
 );
 
 --
@@ -452,9 +481,16 @@ ALTER TABLE `INFO_parameters_of_views`
   MODIFY `id_parameters_of_views` int(11) NOT NULL AUTO_INCREMENT;
 
 INSERT INTO `INFO_parameters_of_views` (`sessionId`)
-  VALUES (1);
+  VALUES (0);
 
--- --------------------------------------------------------
+
+ALTER TABLE `INFO_parameters_of_views`
+    ADD CONSTRAINT `FK_parameters_of_views_as_semestre` FOREIGN KEY (`id_semestre`) REFERENCES `INFO_semestre`(`id_semestre`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+    ADD CONSTRAINT `FK_parameters_of_views_as_module` FOREIGN KEY (`code_module`) REFERENCES `INFO_module`(`id_module`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+    ADD CONSTRAINT `FK_parameters_of_views_as_enseignant` FOREIGN KEY (`fullName`) REFERENCES `INFO_enseignant`(`id_enseignant`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+    ADD CONSTRAINT `FK_parameters_of_views_as_filiere` FOREIGN KEY (`nom_filiere`) REFERENCES `INFO_filiere`(`nom_filiere`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+-- ------------------------------------------------------
 
 COMMIT;
 

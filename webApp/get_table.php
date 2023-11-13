@@ -3,7 +3,9 @@
 
     print("<button type=\"button\" class=\"collapsible\">$table_name</button>");
 
-    print("<div class=\"content\">
+    print("
+<article>
+<div class=\"content\">
       <table>
         <thead>
     ");
@@ -54,7 +56,7 @@
 	    print("$k => $v ");
 	    }
 	  print("<br/>");*/
-	  if($row[3] != $primaryK){ // do not display K
+	  if($row[3] != $primaryK && $row[3] != "modifiable"){ // do not display K and "modifiable" field
             print("<th>".$row[3]."</th>");
 	  }
 	  array_push($fields_array, $row[3]);
@@ -106,8 +108,8 @@
     /* 
      * get the table data
      */
-    print("    <tbody>");   
-
+    print("    <tbody>");
+	  
     $result  =   mysqli_query($conn, $table_req);  
     
     if ($result === FALSE){
@@ -119,8 +121,12 @@
    	print("<tr>");
 	print("<form action='' method='get' class='form-row'>");
    	foreach($ligne as $k=>$v){
+	  // do not display modifiable field
+	  if($fields_array[$k] == "modifiable"){
+	    $modifiable = $v;
+	    
 	  // big text fields
-	  if($fields_type[$k] == "text"){
+	  }else if($fields_type[$k] == "text"){
 	    print("<td><textarea name='$fields_array[$k]'>$v</textarea></td>");
 
 	  // foreignK
@@ -144,14 +150,22 @@
 	    print("<td><input type='text' name='$fields_array[$k]' value=\"$v\"></td>");
 	  }
 	}
-	print("<td><input type='submit' value='update'></td>");
+	if($modifiable){
+	  print("<td><input type='submit' value='update'></td>");
+	}else{
+	  print("<td><input type='submit' value='update' disabled></td>");
+	}
 	print("</form>");
    	print("</tr>\n");
    }
 	  print("<tr><form>");
 	  foreach($fields_array as $k=>$v){
+	  // do not display modifiable field
+	  if($fields_array[$k] == "modifiable"){
+	    $modifiable = 0;
+	    
 	  // big text fields
-	  if($fields_type[$k] == "text"){
+	  }else if($fields_type[$k] == "text"){
 	    print("<td><textarea name='$fields_array[$k]'>$v</textarea></td>");
 
 	  // foreignK
@@ -178,5 +192,6 @@
 	     mysqli_free_result($result); // libère l'espace mémoire occupé par le résultat
     
   print("</table>
-</div>");
+</div>
+</article>");
 ?>   
