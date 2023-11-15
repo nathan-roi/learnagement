@@ -36,13 +36,14 @@
       // Verification success! User has logged-in!
       // Create sessions, so we know the user is logged in, they basically act like cookies but remember the data on the server.
       session_regenerate_id();
-      $_SESSION['loggedin'] = TRUE;
+      $_SESSION['loggedin'] = True;
       $_SESSION['userLogin'] = $_POST['username'];
       $_SESSION['userId'] = $id;
       $_SESSION['userFirstname'] = $firstname;
       $_SESSION['userLastname'] = $lastname;
       $_SESSION['start'] = time();
-      echo 'Welcome ' . $_SESSION['userFirstname'] . ' ' . $_SESSION['userLastname'] . '!';
+      header("Location: index.php");
+      exit();
     }else {
       // Incorrect password
       echo 'Incorrect  password!';

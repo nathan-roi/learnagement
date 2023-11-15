@@ -1,3 +1,6 @@
+<?php
+  session_start();
+?>
 <!DOCTYPE html>
 <html>
   <head>
@@ -5,15 +8,22 @@
     <title>Learnagement</title>
     <link href="inc/css/style.css" rel="stylesheet" type="text/css">
   </head>
-  <body class="loggedin">
+  <body class="loggedin" onload="setCollapsible();">
     <header>
       <h1>Learnagement</h1>
     </header>
     <nav class="navtop">
       <div>
-        <a href="profile.php"><i class="fas fa-user-circle"></i>Profile</a>
-        <a href="login.php"><i class="fas fa-sign-in-alt"></i>Login</a>
-        <a href="logout.php"><i class="fas fa-sign-out-alt"></i>Logout</a>
+        <a href="#" onclick="setMain('view.php');">View</a>
+        <a href="#" onclick="setMain('modif.php');">Manage</a>
+   <?php
+    if(isset($_SESSION['loggedin'])){
+     print("<a href=\"profile.php\"><i class=\"fas fa-user-circle\"></i>" . $_SESSION['userFirstname'] . " " . $_SESSION['userLastname'] . "</a>\n");
+     print("<a href=\"logout.php\"><i class=\"fas fa-sign-out-alt\"></i>Logout</a>\n");
+   }else{
+     print("<a href=\"login.php\"><i class=\"fas fa-sign-in-alt\"></i>Login</a>\n");
+       }
+   ?>
       </div>
     </nav>
     <aside>
@@ -25,5 +35,41 @@
     <footer>
     footer
     </footer>
+
+    <script type="text/javascript">
+
+   function setCollapsible(){
+   var coll = document.getElementsByClassName("collapsible");
+   var i;
+   
+   for (i = 0; i < coll.length; i++) {
+     coll[i].addEventListener("click", function() {
+	 this.classList.toggle("active");
+	 var content = this.nextElementSibling;
+	 if (content.style.display === "block") {
+	   content.style.display = "none";
+	 } else {
+	   content.style.display = "block";
+	 }
+       });
+   }
+ }
+
+   function setMain(fileName){
+    
+   
+   var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+   xhr.open('get', fileName, true);
+   xhr.onreadystatechange = function() {
+     if (xhr.readyState == 4 && xhr.status == 200) { 
+       document.getElementsByTagName('main')[0].innerHTML = xhr.responseText;
+       setCollapsible();
+     } 
+   }
+   xhr.send();
+   
+ }
+</script>
   </body>
+    
 </html>

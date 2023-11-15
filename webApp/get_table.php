@@ -4,8 +4,7 @@
     print("<button type=\"button\" class=\"collapsible\">$table_name</button>");
 
     print("
-<article>
-<div class=\"content\">
+<article class=\"content\">
       <table>
         <thead>
     ");
@@ -120,6 +119,7 @@
    while($ligne = mysqli_fetch_row ($result)){
    	print("<tr>");
 	print("<form action='' method='get' class='form-row'>");
+	$id_resp=-1;
    	foreach($ligne as $k=>$v){
 	  // do not display modifiable field
 	  if($fields_array[$k] == "modifiable"){
@@ -135,6 +135,7 @@
 	      foreach($forefnK_fields_values_dic[$fields_array[$k]] as $key => $value){
 		if($key == $v){
 	            print("<option selected=\"selected\" value=\"$key\">$value</option>");
+		    $id_resp = $key;
 		}else{
 	            print("<option value=\"$key\">$value</option>");
 		}
@@ -150,7 +151,7 @@
 	    print("<td><input type='text' name='$fields_array[$k]' value=\"$v\"></td>");
 	  }
 	}
-	if($modifiable){
+	if($modifiable && isset($_SESSION['loggedin']) && $_SESSION['userId'] == $id_resp){
 	  print("<td><input type='submit' value='update'></td>");
 	}else{
 	  print("<td><input type='submit' value='update' disabled></td>");
@@ -192,6 +193,5 @@
 	     mysqli_free_result($result); // libère l'espace mémoire occupé par le résultat
     
   print("</table>
-</div>
 </article>");
 ?>   

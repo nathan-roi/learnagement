@@ -4,8 +4,7 @@
     print("<button type=\"button\" class=\"collapsible\">$vue_name</button>");
 
     print("
-<article>
-    <div class=\"content\">
+<article class=\"content\">
       <table>
         <thead>");
 
@@ -49,7 +48,6 @@
     print("
         </tbody>
       </table>
-    </div>
 	  </article>");
 
     mysqli_free_result($result); // libère l'espace mémoire occupé par le résultat 
