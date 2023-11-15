@@ -118,8 +118,8 @@
     
    while($ligne = mysqli_fetch_row ($result)){
    	print("<tr>");
-	print("<form action='' method='get' class='form-row'>");
 	$id_resp=-1;
+	$pk = 0;
    	foreach($ligne as $k=>$v){
 	  // do not display modifiable field
 	  if($fields_array[$k] == "modifiable"){
@@ -127,11 +127,11 @@
 	    
 	  // big text fields
 	  }else if($fields_type[$k] == "text"){
-	    print("<td><textarea name='$fields_array[$k]'>$v</textarea></td>");
+	    print("<td><textarea form='$pk' name='$fields_array[$k]'>$v</textarea></td>");
 
 	  // foreignK
 	  }else if(in_array($fields_array[$k], $forefnK_fields_array)){
-	      print("<td><select name='$fields_array[$k]'>");
+	      print("<td><select form='$pk' name='$fields_array[$k]'>");
 	      foreach($forefnK_fields_values_dic[$fields_array[$k]] as $key => $value){
 		if($key == $v){
 	            print("<option selected=\"selected\" value=\"$key\">$value</option>");
@@ -144,19 +144,21 @@
 	      
 	  // primaryK
 	  }else if($k == 0){
-	    print("<input type='hidden' name='$fields_array[$k]' value=\"$v\">");
+	    $pk=$v;
+	    print("<form id='$pk' action='update_table.php' method='post' class='form-row'></form>");
+	    print("<input form='$pk' type='hidden' name='$fields_array[$k]' value=\"$v\">");
+	    print("<input form='$pk' type='hidden' name='table' value=\"$table_name\">");
 	    
 	  // others
 	  }else{
-	    print("<td><input type='text' name='$fields_array[$k]' value=\"$v\"></td>");
+	    print("<td><input form='$pk' type='text' name='$fields_array[$k]' value=\"$v\"></td>");
 	  }
 	}
 	if($modifiable && isset($_SESSION['loggedin']) && $_SESSION['userId'] == $id_resp){
-	  print("<td><input type='submit' value='update'></td>");
+	  print("<td><input form='$pk' type='submit' value='update'></td>");
 	}else{
-	  print("<td><input type='submit' value='update' disabled></td>");
+	  print("<td><input form='$pk' type='submit' value='update' disabled></td>");
 	}
-	print("</form>");
    	print("</tr>\n");
    }
 	  print("<tr><form>");
