@@ -43,8 +43,8 @@ Tables :
 
 * INFO_etudiant
 * INFO_promo
-* INFO_groupe_etudiant
-* INFO_etudiant_as_groupe_etudiant
+* INFO_groupeEtudiant
+* INFO_etudiant_as_groupeEtudiant
 * INFO_module
 * INFO_module_as_promo
 * INFO_seance

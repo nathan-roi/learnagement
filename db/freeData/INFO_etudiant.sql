@@ -26,7 +26,7 @@ SET time_zone = "+00:00";
 --
 -- Structure de la table `INFO_etudiant`
 --
-
+/*
 CREATE TABLE `INFO_etudiant` (
   `id_etudiant` int(11) NOT NULL,
   `nom` varchar(25) NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE `INFO_etudiant` (
   `numero_groupe_elementaire` int(11) NOT NULL,
   `id_promo` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
+*/
 --
 -- Déchargement des données de la table `INFO_etudiant`
 --
@@ -64,39 +64,6 @@ INSERT INTO `INFO_etudiant` (`id_etudiant`, `nom`, `prenom`, `numero_groupe_elem
 (28, 'LIPPI', 'FRANCOISE', 2, 5),
 (29, 'BEQUET', 'STEPHANE', 2, 5),
 (30, 'BEURDELEY THOMAS', 'ARNAUD', 2, 5);
-
---
--- Index pour les tables déchargées
---
-
---
--- Index pour la table `INFO_etudiant`
---
-ALTER TABLE `INFO_etudiant`
-  ADD PRIMARY KEY (`id_etudiant`),
-  ADD UNIQUE KEY `SECONDARY` (`nom`,`prenom`) USING BTREE,
-  ADD KEY `FK_etudiant_id_promo` (`id_promo`);
-
---
--- AUTO_INCREMENT pour les tables déchargées
---
-
---
--- AUTO_INCREMENT pour la table `INFO_etudiant`
---
-ALTER TABLE `INFO_etudiant`
-  MODIFY `id_etudiant` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
-
---
--- Contraintes pour les tables déchargées
---
-
---
--- Contraintes pour la table `INFO_etudiant`
---
-ALTER TABLE `INFO_etudiant`
-  ADD CONSTRAINT `FK_etudiant_id_promo` FOREIGN KEY (`id_promo`) REFERENCES `INFO_promo` (`id_promo`);
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -1,51 +1,57 @@
 <?php
-//echo "<button type=\"button\" class=\"collapsible\">$vue_name</button>";
-echo "<button type=\"button\" >$vue_name</button>";
-//echo "<div class=\"content\">
-echo "<div>
-    <table>
-        <thead>";
+    include("requests.php");
 
-// Obtenir les colonnes de la vue
-$req = "SHOW COLUMNS FROM $vue_name";
-$result = mysqli_query($conn, $req);
+    print("<button type=\"button\" class=\"collapsible\">$vue_name</button>");
 
-if (!$result) {
-    echo 'Impossible d\'exécuter la requête : ' . $req;
-    echo 'error ' . mysqli_error($conn);
-    exit;
-}
-//Réalisation d'un tableau
-if (mysqli_num_rows($result) > 0) {
-    echo "<tr>";
-    while ($row = mysqli_fetch_assoc($result)) {
-        echo "<th>" . $row['Field'] . "</th>\n";
+    print("
+<article class=\"content\">
+      <table>
+        <thead>");
+
+
+    /*  on suppose, bien entendu, que la vue existe  */
+
+    $result = mysqli_query($conn, $columns_vue_req);
+    if (!$result) {
+      echo 'Impossible d\'exécuter la requête : ' . $req;
+      echo 'error '.mysqli_error();
+      exit;
     }
-    echo "</tr></thead>";
-}
 
-mysqli_free_result($result);
-
-echo "<tbody>";
-// Exécuter la requête pour récupérer les données de la vue
-$req = "SELECT * FROM $view[0]";
-$result = mysqli_query($conn, $req);
-
-if ($result === FALSE) {
-    echo "La requête a échoué : " . mysqli_error($conn);
-    exit;
-}
-
-while ($row = mysqli_fetch_assoc($result)) {
-    echo "<tr>";
-    foreach ($row as $value) {
-        echo "<td>" . $value . "</td>\n";
+    if (mysqli_num_rows($result) > 0) {
+        print("<tr>");
+        while ($row = mysqli_fetch_row($result)) {
+            print("<th>".$row[0]."</th>");
+        }
+        print("</tr></thead>\n");
     }
-    echo "</tr>";
-}
 
+    mysqli_free_result($result); // libère l'espace mémoire occupé par le résultat
 
-echo "</tbody>
-    </table>
-</div>";
-?>
+    print("    <tbody>");
+    // envoi de la requête au serveur qui retourne un résultat    
+	  //print($vue_name." ".$columns_vue_req." ".$vue_req);
+    $result  =   mysqli_query($conn, $vue_req);  
+    
+    if ($result === FALSE){
+      echo "la requ&ecirc;te a &eacute;chou&eacute; : ".mysqli_error();
+      exit; // inutile de poursuivre le traitement dans ce cas
+    } 
+    
+    while($ligne = mysqli_fetch_row ($result)){
+   	print("<tr>");
+   	foreach($ligne as $k=>$v){
+	    print("<td>".$v."</td>");
+	}
+   	print("</tr>\n");
+    }
+    print("
+        </tbody>
+      </table>
+	  </article>");
+
+    mysqli_free_result($result); // libère l'espace mémoire occupé par le résultat 
+
+ //  }else{
+//	print("Vue not found!");
+//   }

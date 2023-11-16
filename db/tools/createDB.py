@@ -16,8 +16,26 @@ def executeScriptsFromFile(cursor, filename):
         except IOError as e:
             print("Command skipped: ", e)
 
-sqlSkeleton = "sql/skeleton.sql"
+# SQL file to create the tables
+sqlTableSkeleton = "db/sql/table_skeleton.sql"
+
+# SQL file to create the views
+sqlViewSkeleton = "db/sql/table_skeleton.sql"
+
+# SQL free data file
+# Be careful the order is important due to foreign keys
+freeData=[
+    "INFO_filiere.sql",
+    "INFO_enseignant.sql",
+    "INFO_etudiant.sql",
+    "INFO_promo.sql",
+    "INFO_module.sql",
+    "INFO_module_as_promo.sql"
+          ]
+
 with mysql.connector.connect(**config.connection_params) as db :
     with db.cursor() as c:
-        executeScriptsFromFile(c, sqlSkeleton)
-
+        executeScriptsFromFile(c, sqlTableSkeleton)
+        executeScriptsFromFile(c, sqlViewSkeleton)
+        for sqlFile in freeData:
+            executeScriptsFromFile(c, sqlFile)
