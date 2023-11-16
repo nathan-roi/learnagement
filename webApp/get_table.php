@@ -110,11 +110,11 @@ while($ligne = mysqli_fetch_row ($result)){
 	    
       // big text fields
     }else if($fields_type[$k] == "text"){
-      print("<td><textarea form='$pk' name='$fields_array[$k]'>$v</textarea></td>");
+      print("<td><textarea form='$table_name$pk' name='$fields_array[$k]'>$v</textarea></td>");
 
       // foreignK
     }else if(in_array($fields_array[$k], $forefnK_fields_array)){
-      print("<td><select form='$pk' name='$fields_array[$k]'>");
+      print("<td><select form='$table_name$pk' name='$fields_array[$k]'>");
       foreach($forefnK_fields_values_dic[$fields_array[$k]] as $key => $value){
 	if($key == $v){
 	  print("<option selected=\"selected\" value=\"$key\">$value</option>");
@@ -128,24 +128,29 @@ while($ligne = mysqli_fetch_row ($result)){
       // primaryK
     }else if($k == 0){
       $pk=$v;
-      print("<form id='$pk' action='update_table.php' method='post' class='form-row'></form>");
-      print("<input form='$pk' type='hidden' name='$fields_array[$k]' value=\"$v\">");
-      print("<input form='$pk' type='hidden' name='table' value=\"$table_name\">");
+      print("<form id='$table_name$pk' action='update_table.php' method='post' class='form-row'></form>");
+      print("<input form='$table_name$pk' type='hidden' name='$fields_array[$k]' value=\"$v\">");
+      print("<input form='$table_name$pk' type='hidden' name='table' value=\"$table_name\">");
 	    
       // others
     }else{
-      print("<td><input form='$pk' type='text' name='$fields_array[$k]' value=\"$v\"></td>");
+      print("<td><input form='$table_name$pk' type='text' name='$fields_array[$k]' value=\"$v\"></td>");
     }
   }
   if($modifiable && isset($_SESSION['loggedin']) && $_SESSION['userId'] == $id_resp){
-    print("<td><input form='$pk' type='submit' value='update'></td>");
+    print("<td><input form='$table_name$pk' type='submit' value='update'></td>");
   }else{
-    print("<td><input form='$pk' type='submit' value='update' disabled></td>");
+    print("<td><input form='$table_name$pk' type='submit' value='update' disabled></td>");
   }
   print("</tr>\n");
  }
-print("<tr><form id='" . $pk . "_insert' action='insert_into_table.php' method='post' class='form-row'></form>");
-      print("<input form='" . $pk . "_insert' type='hidden' name='table' value=\"$table_name\">");
+
+
+      /*
+       * add line to insert new data
+       */
+print("<tr><form id='" . $table_name . "_insert' action='insert_into_table.php' method='post' class='form-row'></form>");
+      print("<input form='" . $table_name . "_insert' type='hidden' name='table' value=\"$table_name\">");
 foreach($fields_array as $k=>$v){
   // do not display modifiable field
   if($fields_array[$k] == "modifiable"){
@@ -153,12 +158,12 @@ foreach($fields_array as $k=>$v){
 	    
     // big text fields
   }else if($fields_type[$k] == "text"){
-    print("<td><textarea form='" . $pk . "_insert' name='$fields_array[$k]'>$v</textarea></td>");
+    print("<td><textarea form='" . $table_name . "_insert' name='$fields_array[$k]'>$v</textarea></td>");
 
     // foreignK
   }else if(in_array($fields_array[$k], $forefnK_fields_array)){
-    print("<td><select form='" . $pk . "_insert' name='$fields_array[$k]'>");
-    print("<option value=\"\">$fields_array[$k]</option>");
+    print("<td><select form='" . $table_name . "_insert' name='$fields_array[$k]'>");
+    print("<option value=\"$fields_array[$k]\">$fields_array[$k]</option>");
     foreach($forefnK_fields_values_dic[$fields_array[$k]] as $key => $value){
       print("<option value=\"$key\">$value</option>");
     }
@@ -166,14 +171,14 @@ foreach($fields_array as $k=>$v){
 	      
     // primaryK
   }else if($k == 0){
-    print("<input form='" . $pk . "_insert' type='hidden' name='$fields_array[$k]' value=\"$v\">");
-	    
+    //print("<input form='" . $table_name . "_insert' type='hidden' name='$fields_array[$k]' value=\"$v\">");
+    print(""); // primary K is autoincremented
     // others
   }else{
-    print("<td><input form='" . $pk . "_insert' type='text' name='$fields_array[$k]' value=\"$v\"></td>");
+    print("<td><input form='" . $table_name . "_insert' type='text' name='$fields_array[$k]' value=\"$v\"></td>");
   }
 }
-print("<td><input form='" . $pk . "_insert' type='submit' value='insert'></td>");
+print("<td><input form='" . $table_name . "_insert' type='submit' value='insert'></td>");
 print("</tr>\n");
 print("    </tbody>");
 mysqli_free_result($result); // libère l'espace mémoire occupé par le résultat

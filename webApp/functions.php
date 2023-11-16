@@ -95,10 +95,33 @@ function getForeignKeys($conn, $table_name){
   $foreignKeys = [];
   if (mysqli_num_rows($result) > 0) {
     while ($foreignKey = mysqli_fetch_row($result)) {
-      $foreignKeys += [$forefnK[1] => $forefnK[3]]; // add entry FK => ref table
+      $foreignKeys += [$foreignKey[1] => $foreignKey[3]]; // add entry FK => ref table
     }
   }
   return $foreignKeys;
+}
+
+/**
+ *
+ */
+function getFields($conn, $table_name){
+  $fieldsName_req = "SHOW COLUMNS FROM $table_name";
+
+  $result = mysqli_query($conn, $fieldsName_req);
+  
+  if (!$result) {
+    echo 'Impossible d\'exécuter la requête : ' . $foreignK_req;
+    echo 'error '.mysqli_error();
+    exit;
+  }
+
+  $fields = [];
+  if (mysqli_num_rows($result) > 0) {
+    while ($row = mysqli_fetch_row($result)) {
+      array_push($fields, $row[0]);
+    }
+  }
+  return $fields;
 }
 
 /**
@@ -108,27 +131,37 @@ function getKeysValuesResponsibles($conn, $table_name){
 
   global $mysql_db;
 
-  $primaryKeyField = getPrimaryKeyField($conn, $table_name); // string of primary key field
+  $fields = getFields($conn, $table_name);
 
-  //$secondaryKeyFields = getSecondaryKeyFields($conn, $table_name); // array of string of secondary key fields
-
-  $keysValuesResponsibles_req = "SELECT $primaryKeyField , id_responsable FROM $table_name";
-
-  $result = mysqli_query($conn, $keysValuesResponsibles_req);
-  if (!$result) {
-    echo 'Impossible d\'exécuter la requête : ' . $keysValuesResponsibles_req;
-    echo 'error '.mysqli_error();
-    exit;
-  }
+  //dispDict($fields);
   
   $keysValuesResponsibles = [];
-  if (mysqli_num_rows($result) > 0) {
-    while ($row = mysqli_fetch_row($result)) {
-      $keysValuesResponsibles += [$row[$primaryKeyField] => $row["id_responsable"]]; // add entry FK => ref table
-    }
-  }
+  if(in_array("id_responsable", $fields)){
+  
+      $primaryKeyField = getPrimaryKeyField($conn, $table_name); // string of primary key field
 
-  return $keysValuesResponsibles;
+      //$secondaryKeyFields = getSecondaryKeyFields($conn, $table_name); // array of string of secondary key fields
+      
+      $keysValuesResponsibles_req = "SELECT $primaryKeyField , id_responsable FROM $table_name";
+
+      $result = mysqli_query($conn, $keysValuesResponsibles_req);
+      if (!$result) {
+	echo 'Impossible d\'exécuter la requête : ' . $keysValuesResponsibles_req;
+	echo 'error '.mysqli_error();
+	exit;
+      }
+  
+      
+      if (mysqli_num_rows($result) > 0) {
+	while ($row = mysqli_fetch_row($result)) {
+	  
+ 
+	  //dispDict($row);
+	  $keysValuesResponsibles += [$row[0] => $row[1]]; // add entry FK => ref table
+	}
+      }
+    }
+    return $keysValuesResponsibles;
 }
 
 /**
@@ -138,9 +171,13 @@ function getResponsibleIdsToInsert($conn, $table_name){
 
   $foreignKeys = getForeignKeys($conn, $table_name);
 
+  //dispDict($foreignKeys);
+
   $inheritenceResponsability = [];
   foreach($foreignKeys as $foreignKey => $table){
     $keysValuesResponsibles = getKeysValuesResponsibles($conn, $table);
+    //print("$foreignKey => $table :</br>");
+    //dispDict($keysValuesResponsibles);
     if(!empty($keysValuesResponsibles)){
       $inheritenceResponsability += [ $foreignKey => $keysValuesResponsibles];
     }
@@ -148,5 +185,15 @@ function getResponsibleIdsToInsert($conn, $table_name){
   return  $inheritenceResponsability;
 }
 
-  
+
+function dispDict($d){
+  return(0); //comment to debug, uncomment for prod
+  print("</br></br>");
+  foreach($d as $k => $v){
+    if(gettype($v) == "string")
+      print($k . "=>" . $v ."</br>\n");
+    else if(gettype($v) == "array")
+      print($k . "=>" . dispDict($v) ."</br>\n");
+  }
+}
 ?>
