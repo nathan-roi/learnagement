@@ -1,5 +1,31 @@
-
 <?php
+  /* 
+   * get the table primary K field
+   */
+function getPrimaryKeyField($conn, $table_name){
+  
+  $primaryKeyField_req = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'learnagement' AND COLUMN_KEY = 'PRI' AND table_name = \"$table_name\"";
+
+
+    $table = mysqli_query($conn, $primaryKeyField_req);
+    if (!$table) {
+        echo 'Impossible d\'exécuter la requête : ' . $req;
+        echo 'error '.mysqli_error();
+        exit;
+    }
+
+    /*
+     * get K
+     */
+    if (mysqli_num_rows($table) > 0) {
+      $primaryK = mysqli_fetch_row($table)[0];
+    }
+
+    mysqli_free_result($table); // libère l'espace mémoire occupé par le résultat
+
+    return $primaryK;
+  }
+
 function getSecondaryKs($table){
     require_once("config.php");
   $table_name = $table;

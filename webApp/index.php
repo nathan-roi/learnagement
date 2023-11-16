@@ -8,20 +8,20 @@
     <title>Learnagement</title>
     <link href="inc/css/style.css" rel="stylesheet" type="text/css">
   </head>
-  <body class="loggedin" onload="setCollapsible();">
+  <body class="loggedin" onload="setMain(getCookie('mainPage')); setCollapsible();">
     <header>
       <h1>Learnagement</h1>
     </header>
     <nav class="navtop">
       <div>
         <a href="#" onclick="setMain('view.php');">View</a>
-        <a href="#" onclick="setMain('modif.php');">Manage</a>
    <?php
     if(isset($_SESSION['loggedin'])){
-     print("<a href=\"profile.php\"><i class=\"fas fa-user-circle\"></i>" . $_SESSION['userFirstname'] . " " . $_SESSION['userLastname'] . "</a>\n");
-     print("<a href=\"logout.php\"><i class=\"fas fa-sign-out-alt\"></i>Logout</a>\n");
+      print("<a href=\"#\" onclick=\"setMain('modif.php');\">Manage</a>\n");
+      print("<a href=\"profile.php\"><i class=\"fas fa-user-circle\"></i>" . $_SESSION['userFirstname'] . " " . $_SESSION['userLastname'] . "</a>\n");
+      print("<a href=\"logout.php\"><i class=\"fas fa-sign-out-alt\"></i>Logout</a>\n");
    }else{
-     print("<a href=\"login.php\"><i class=\"fas fa-sign-in-alt\"></i>Login</a>\n");
+      print("<a href=\"login.php\"><i class=\"fas fa-sign-in-alt\"></i>Login</a>\n");
        }
    ?>
       </div>
@@ -37,6 +37,13 @@
     </footer>
 
     <script type="text/javascript">
+
+    function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+
 
    function setCollapsible(){
    var coll = document.getElementsByClassName("collapsible");
@@ -67,7 +74,7 @@
      } 
    }
    xhr.send();
-   
+   document.cookie = 'mainPage='.concat('', fileName).concat('',"; SameSite=Strict");
  }
 </script>
   </body>

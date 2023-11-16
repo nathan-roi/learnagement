@@ -54,21 +54,4 @@ print("<section>");
      	   $table_name = $table[0];
     	   include("get_table.php");
      }
-
-
-    /*
-     * disconnect db
-     */
-    require("disconnectDB.php");
-
-
-    /*
-     * diconect user
-     */
-    if($username != "anonymous"){
-        print("<a href=\"registration/logout.php\">Déconnexion</a>");
-    }else{
-        print("<a href=\"registration/login.php\">Connexion</a>");
-    }
-    
 ?>
