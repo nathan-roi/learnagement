@@ -1,33 +1,45 @@
 <?php
-  /* 
+    require_once("config.php");
+  /**
    * get the table primary K field
+   *
+   * @param
+   *
+   * @param string $table_name table 
+   *
+   * @return string Return the primary key
    */
 function getPrimaryKeyField($conn, $table_name){
+
+  global $mysql_db;
   
-  $primaryKeyField_req = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'learnagement' AND COLUMN_KEY = 'PRI' AND table_name = \"$table_name\"";
+  $primaryKeyField_req = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = \"$mysql_db\" AND COLUMN_KEY = 'PRI' AND table_name = \"$table_name\"";
 
-
-    $table = mysqli_query($conn, $primaryKeyField_req);
-    if (!$table) {
-        echo 'Impossible d\'exécuter la requête : ' . $req;
-        echo 'error '.mysqli_error();
-        exit;
-    }
-
-    /*
-     * get K
-     */
-    if (mysqli_num_rows($table) > 0) {
-      $primaryK = mysqli_fetch_row($table)[0];
-    }
-
-    mysqli_free_result($table); // libère l'espace mémoire occupé par le résultat
-
-    return $primaryK;
+  $table = mysqli_query($conn, $primaryKeyField_req);
+  if (!$table) {
+    echo 'Impossible d\'exécuter la requête : ' . $req;
+    echo 'error '.mysqli_error();
+    exit;
   }
 
+  /*
+   * get K
+   */
+  if (mysqli_num_rows($table) > 0) {
+    $primaryKField = mysqli_fetch_row($table)[0];
+  }
+
+  mysqli_free_result($table); // free result memory space
+
+  return $primaryKField;
+  }
+
+
+/**
+ *
+ */
 function getSecondaryKs($table){
-    require_once("config.php");
+  require_once("config.php");
   $table_name = $table;
   require("requests.php");
 
@@ -63,4 +75,78 @@ function getSecondaryKs($table){
   return $forefnK_fields_values_dic;
 }
 
+
+/**
+ * @return array Return the dictionnary FK => table of reference for a given table
+ */
+function getForeignKeys($conn, $table_name){
+
+  global $mysql_db;
+
+  $foreignK_req = "SELECT TABLE_NAME,COLUMN_NAME,CONSTRAINT_NAME, REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE REFERENCED_TABLE_SCHEMA = \"$mysql_db\" AND TABLE_NAME = \"$table_name\"";
+
+  $result = mysqli_query($conn, $foreignK_req);
+  if (!$result) {
+    echo 'Impossible d\'exécuter la requête : ' . $foreignK_req;
+    echo 'error '.mysqli_error();
+    exit;
+  }
+
+  $foreignKeys = [];
+  if (mysqli_num_rows($result) > 0) {
+    while ($foreignKey = mysqli_fetch_row($result)) {
+      $foreignKeys += [$forefnK[1] => $forefnK[3]]; // add entry FK => ref table
+    }
+  }
+  return $foreignKeys;
+}
+
+/**
+ *
+ */
+function getKeysValuesResponsibles($conn, $table_name){
+
+  global $mysql_db;
+
+  $primaryKeyField = getPrimaryKeyField($conn, $table_name); // string of primary key field
+
+  //$secondaryKeyFields = getSecondaryKeyFields($conn, $table_name); // array of string of secondary key fields
+
+  $keysValuesResponsibles_req = "SELECT $primaryKeyField , id_responsable FROM $table_name";
+
+  $result = mysqli_query($conn, $keysValuesResponsibles_req);
+  if (!$result) {
+    echo 'Impossible d\'exécuter la requête : ' . $keysValuesResponsibles_req;
+    echo 'error '.mysqli_error();
+    exit;
+  }
+  
+  $keysValuesResponsibles = [];
+  if (mysqli_num_rows($result) > 0) {
+    while ($row = mysqli_fetch_row($result)) {
+      $keysValuesResponsibles += [$row[$primaryKeyField] => $row["id_responsable"]]; // add entry FK => ref table
+    }
+  }
+
+  return $keysValuesResponsibles;
+}
+
+/**
+ *
+ */
+function getResponsibleIdsToInsert($conn, $table_name){
+
+  $foreignKeys = getForeignKeys($conn, $table_name);
+
+  $inheritenceResponsability = [];
+  foreach($foreignKeys as $foreignKey => $table){
+    $keysValuesResponsibles = getKeysValuesResponsibles($conn, $table);
+    if(!empty($keysValuesResponsibles)){
+      $inheritenceResponsability += [ $foreignKey => $keysValuesResponsibles];
+    }
+  }
+  return  $inheritenceResponsability;
+}
+
+  
 ?>

@@ -30,7 +30,7 @@
 
     print("    <tbody>");
     // envoi de la requête au serveur qui retourne un résultat    
-	  print($vue_name." ".$columns_vue_req." ".$vue_req);
+	  //print($vue_name." ".$columns_vue_req." ".$vue_req);
     $result  =   mysqli_query($conn, $vue_req);  
     
     if ($result === FALSE){
