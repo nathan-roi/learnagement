@@ -11,7 +11,7 @@ if (isset($_POST['table'])) {
 
  
   dispDict($_POST);
-  //dispDict($responsibleIdsToInsert);
+  dispDict($responsibleIdsToInsert);
   
   $fields = [];
   //$values = [];
@@ -39,7 +39,7 @@ if (isset($_POST['table'])) {
   if($insertAllowed){
     $query = "INSERT INTO " . $_POST['table'] . "(" . implode(", ", array_keys($fields)) . ") VALUES ( " . implode(", ", $fields) . ")";
 
-    print($query);
+    //print($query);
     
     mysqli_query($conn, $query);
     header('location: index.php');

@@ -38,7 +38,11 @@ if (mysqli_num_rows($table) > 0) {
       print("$k => $v ");
       }
       print("<br/>");*/
-    if($row[3] != $primaryK && $row[3] != "modifiable"){ // do not display K and "modifiable" field
+    if($row[3] == $primaryK && !isLinkingTable($conn, $table_name)){
+      print(""); // do not display K for base Table (not linking table)
+    }else if ($row[3] == "modifiable"){
+      print(""); //do not display "modifiable" field
+    }else{
       print("<th>".$row[3]."</th>");
     }
     array_push($fields_array, $row[3]);
@@ -102,13 +106,41 @@ if ($result === FALSE){
 while($ligne = mysqli_fetch_row ($result)){
   print("<tr>");
   $id_resp=-1;
-  $pk = 0;
+  $pk = -1;
+  $pk0 = -1;
+  $pk1 = -1;
+  $pk0k = NULL;
+  $pk1k = NULL;
   foreach($ligne as $k=>$v){
+    
+    if(($k == 0) && (!isLinkingTable($conn, $table_name))){
+      $pk=$v;
+      print("<form id='$table_name$pk' action='update_table.php' method='post' class='form-row'></form>");
+      print("<input form='$table_name$pk' type='hidden' name='table' value=\"$table_name\">");
+      // save primary key of base table (cannot be modified), tagged with '__old_' to be easily find in the $POST array 
+      print("<input form='$table_name$pk' type='hidden' name='__old_$fields_array[$k]' value=\"$v\">");
+
+    }else if(($k == 0) && (isLinkingTable($conn, $table_name))){
+	//save old 1st foreign key of primary key for linking table
+      $pk0v=$v;      
+      $pk0k=$k;      
+    }else if((isLinkingTable($conn, $table_name)) && ($k == 1)){
+      $pk1v = $v;      
+      $pk1k=$k; 
+      $pk = $pk0v . "_" . $pk1v;
+      
+      print("<form id='$table_name$pk' action='update_table.php' method='post' class='form-row'></form>");
+      print("<input form='$table_name$pk' type='hidden' name='table' value=\"$table_name\">");
+      //save old 1st foreign key of primary key for linking table
+      print("<input form='$table_name$pk' type='hidden' name='__old_$fields_array[$pk0k]' value=\"$pk0v\">");
+      //save old 2nd foreign key of primary key for linking table
+      print("<input form='$table_name$pk' type='hidden' name='__old_$fields_array[$pk1k]' value=\"$pk1v\">");
+    }
     // do not display modifiable field
     if($fields_array[$k] == "modifiable"){
       $modifiable = $v;
 	    
-      // big text fields
+      // big text fields (cannot be primary or foreign K)
     }else if($fields_type[$k] == "text"){
       print("<td><textarea form='$table_name$pk' name='$fields_array[$k]'>$v</textarea></td>");
 
@@ -124,16 +156,7 @@ while($ligne = mysqli_fetch_row ($result)){
 	}
       }
       print("</select></td>");
-	      
-      // primaryK
-    }else if($k == 0){
-      $pk=$v;
-      print("<form id='$table_name$pk' action='update_table.php' method='post' class='form-row'></form>");
-      print("<input form='$table_name$pk' type='hidden' name='$fields_array[$k]' value=\"$v\">");
-      print("<input form='$table_name$pk' type='hidden' name='table' value=\"$table_name\">");
-	    
-      // others
-    }else{
+    }else if (isLinkingTable($conn, $table_name) || ($k != 0)){ // display other fields except primary key of base table (not linking table)
       print("<td><input form='$table_name$pk' type='text' name='$fields_array[$k]' value=\"$v\"></td>");
     }
   }

@@ -1,15 +1,16 @@
 <?php
     require_once("config.php");
-  /**
-   * get the table primary K field
+
+ /**
+   * get the table primary K fields
    *
    * @param
    *
    * @param string $table_name table 
    *
-   * @return string Return the primary key
+   * @return array Return the primary key as array of string
    */
-function getPrimaryKeyField($conn, $table_name){
+function getPrimaryKeyFields($conn, $table_name){
 
   global $mysql_db;
   
@@ -25,13 +26,31 @@ function getPrimaryKeyField($conn, $table_name){
   /*
    * get K
    */
+  $primaryKFields = [];
   if (mysqli_num_rows($table) > 0) {
-    $primaryKField = mysqli_fetch_row($table)[0];
+    while($fieldRow = mysqli_fetch_row($table)){
+      array_push($primaryKFields, $fieldRow[0]);
+    }
   }
 
   mysqli_free_result($table); // free result memory space
 
-  return $primaryKField;
+  return $primaryKFields;
+  }
+
+
+  /**
+   * @deprecated get the table primary K field (use getPrimaryKeyFields instead)
+   *
+   * @param
+   *
+   * @param string $table_name table 
+   *
+   * @return string Return the primary key
+   */
+function getPrimaryKeyField($conn, $table_name){
+
+  return getPrimaryKeyFields($conn, $table_name)[0];
   }
 
 
@@ -166,6 +185,8 @@ function getKeysValuesResponsibles($conn, $table_name){
 
 /**
  *
+ *
+ * reurn a dictionary  foreignK => id_responsible
  */
 function getResponsibleIdsToInsert($conn, $table_name){
 
@@ -185,6 +206,17 @@ function getResponsibleIdsToInsert($conn, $table_name){
   return  $inheritenceResponsability;
 }
 
+
+/**
+ *
+ *
+ * @return Boolean Return true if the table is a linking table (more than one field in the primary key)
+ */
+function isLinkingTable($conn, $table_name){
+  $primayK = getPrimaryKeyFields($conn, $table_name);
+
+  return count($primayK) > 1;
+}
 
 function dispDict($d){
   return(0); //comment to debug, uncomment for prod
