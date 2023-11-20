@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : mysql
--- Généré le : ven. 17 nov. 2023 à 14:56
+-- Généré le : lun. 20 nov. 2023 à 21:19
 -- Version du serveur : 8.0.33
 -- Version de PHP : 8.2.8
 
@@ -58,7 +58,7 @@ CREATE TABLE `INFO_dependance_sequence` (
   `id_squence_prev` int NOT NULL,
   `id_squence_next` int NOT NULL,
   `id_responsable` int NOT NULL,
-  `modifiable` tinyint(1) NOT NULL
+  `modifiable` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -246,17 +246,17 @@ CREATE TABLE `INFO_semestre` (
 -- (Voir ci-dessous la vue réelle)
 --
 CREATE TABLE `VUE_MCCC` (
-`id_module` int
-,`code_module` varchar(10)
-,`nom` varchar(50)
-,`semestre` tinyint
+`code_module` varchar(10)
+,`commentaire` text
+,`filieres` text
 ,`hCM` float
 ,`hTD` float
 ,`hTP` float
 ,`hTPTD` float
-,`filieres` text
+,`id_module` int
+,`nom` varchar(50)
 ,`responsable` varchar(51)
-,`commentaire` text
+,`semestre` tinyint
 );
 
 -- --------------------------------------------------------
@@ -267,15 +267,15 @@ CREATE TABLE `VUE_MCCC` (
 --
 CREATE TABLE `VUE_module` (
 `code_module` varchar(10)
-,`module` varchar(50)
-,`semestre` tinyint
 ,`filiere` varchar(11)
-,`lieu` varchar(25)
-,`type` varchar(10)
+,`Filière` text
 ,`heure` float
+,`lieu` varchar(25)
+,`module` varchar(50)
 ,`nom` varchar(25)
 ,`prenom` varchar(25)
-,`Filière` text
+,`semestre` tinyint
+,`type` varchar(10)
 );
 
 -- --------------------------------------------------------
@@ -285,9 +285,9 @@ CREATE TABLE `VUE_module` (
 -- (Voir ci-dessous la vue réelle)
 --
 CREATE TABLE `VUE_responsable` (
-`responsable` varchar(51)
+`modules` text
 ,`responsabilite` bigint
-,`modules` text
+,`responsable` varchar(51)
 );
 
 -- --------------------------------------------------------
@@ -297,9 +297,9 @@ CREATE TABLE `VUE_responsable` (
 -- (Voir ci-dessous la vue réelle)
 --
 CREATE TABLE `VUE_resume_charge` (
-`service statutaire` decimal(32,0)
+`charge à couvrir` double
 ,`service avec décharge` double
-,`charge à couvrir` double
+,`service statutaire` decimal(32,0)
 );
 
 -- --------------------------------------------------------

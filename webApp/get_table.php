@@ -42,6 +42,8 @@ if (mysqli_num_rows($table) > 0) {
       print(""); // do not display K for base Table (not linking table)
     }else if ($row[3] == "modifiable"){
       print(""); //do not display "modifiable" field
+    }else if ($row[3] == "id_responsable"){
+      print(""); //do not display "modifiable" field
     }else{
       print("<th>".$row[3]."</th>");
     }
@@ -50,7 +52,7 @@ if (mysqli_num_rows($table) > 0) {
   }
   //$fields = substr($fields, 0, -1);
   $fields = implode(",", $fields_array);
-  print("<th>Validation</th>");
+  print("<th>Action</th>");
   print("</tr></thead>\n");
  }
 require("requests.php"); //update requests with required fields
@@ -137,10 +139,16 @@ while($ligne = mysqli_fetch_row ($result)){
       //save old 2nd foreign key of primary key for linking table
       print("<input form='$table_name$pk' type='hidden' name='__old_$fields_array[$pk1k]' value=\"$pk1v\">");
     }
+    
     // do not display modifiable field
     if($fields_array[$k] == "modifiable"){
       $modifiable = $v;
-	    
+
+      // do not display responsible
+    }else if($fields_array[$k] == "id_responsable"){
+      print("<input form='" . $table_name . "_insert' type='hidden' name='$fields_array[$k]' value=\"$_SESSION[userId]\">");
+      $id_resp = $v;
+      
       // big text fields (cannot be primary or foreign K)
     }else if($fields_type[$k] == "text"){
       print("<td><textarea form='$table_name$pk' name='$fields_array[$k]'>$v</textarea></td>");
@@ -148,10 +156,11 @@ while($ligne = mysqli_fetch_row ($result)){
       // foreignK
     }else if(in_array($fields_array[$k], $forefnK_fields_array)){
       print("<td><select form='$table_name$pk' name='$fields_array[$k]'>");
+      // foreach possible FK $key is FK value (K in reference table) and $value is secondary K in the reference table 
       foreach($forefnK_fields_values_dic[$fields_array[$k]] as $key => $value){
 	if($key == $v){
 	  print("<option selected=\"selected\" value=\"$key\">$value</option>");
-	  $id_resp = $key;
+	  //$id_resp = $key;
 	}else{
 	  print("<option value=\"$key\">$value</option>");
 	}
@@ -179,7 +188,8 @@ foreach($fields_array as $k=>$v){
   // do not display modifiable field
   if($fields_array[$k] == "modifiable"){
     $modifiable = 0;
-	    
+  }else if($fields_array[$k] == "id_responsable"){
+      print("<input form='" . $table_name . "_insert' type='hidden' name='$fields_array[$k]' value=\"$_SESSION[userId]\">");    
     // big text fields
   }else if($fields_type[$k] == "text"){
     print("<td><textarea form='" . $table_name . "_insert' name='$fields_array[$k]'>$v</textarea></td>");
