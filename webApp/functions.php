@@ -143,6 +143,22 @@ function getFields($conn, $table_name){
   return $fields;
 }
 
+
+function getTableData($conn, $table_name, $fields, $id_responsable){
+  // get table content
+  $table_req = " SELECT $fields FROM  $table_name WHERE id_responsable='$id_responsable' ";
+
+$result  =   mysqli_query($conn, $table_req);  
+    
+if ($result === FALSE){
+  echo "la requ&ecirc;te a &eacute;chou&eacute; : ".mysqli_error();
+  exit; // inutile de poursuivre le traitement dans ce cas
+ }
+
+ return $result;
+  
+}
+
 /**
  *
  */

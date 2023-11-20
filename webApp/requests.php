@@ -28,8 +28,6 @@ $columns_table_req = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEM
 // get view content
 $vue_req = " SELECT * FROM  $vue_name WHERE 1 ";
 
-// get table content
-$table_req = " SELECT $fields FROM  $table_name WHERE 1 ";
 
 // get primary Key
 $primaryK_req = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'learnagement' AND COLUMN_KEY = 'PRI' AND table_name = \"$table_name\"";

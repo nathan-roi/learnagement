@@ -96,12 +96,13 @@ if (mysqli_num_rows($forefnKs) > 0) {
  */
 print("    <tbody>");
 	  
-$result  =   mysqli_query($conn, $table_req);  
+      /*$result  =   mysqli_query($conn, $table_req);  
     
 if ($result === FALSE){
   echo "la requ&ecirc;te a &eacute;chou&eacute; : ".mysqli_error();
   exit; // inutile de poursuivre le traitement dans ce cas
- } 
+  } */
+      $result = getTableData($conn, $table_name, $fields, $_SESSION['userId']);
     
 while($ligne = mysqli_fetch_row ($result)){
   print("<tr>");
