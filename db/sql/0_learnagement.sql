@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : mysql
--- Généré le : lun. 20 nov. 2023 à 21:19
+-- Généré le : mer. 22 nov. 2023 à 22:54
 -- Version du serveur : 8.0.33
 -- Version de PHP : 8.2.8
 
@@ -97,6 +97,30 @@ CREATE TABLE `INFO_filiere` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `INFO_groupe`
+--
+
+CREATE TABLE `INFO_groupe` (
+  `id_groupe` int NOT NULL,
+  `nom_groupe` varchar(20) NOT NULL,
+  `id_promo` int NOT NULL,
+  `groupe_type` varchar(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `INFO_groupe_type`
+--
+
+CREATE TABLE `INFO_groupe_type` (
+  `groupe_type` varchar(10) NOT NULL,
+  `commentaire` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `INFO_module`
 --
 
@@ -136,7 +160,8 @@ CREATE TABLE `INFO_module_as_promo` (
 CREATE TABLE `INFO_module_sequencage` (
   `id_module_sequencage` int NOT NULL,
   `id_module` int NOT NULL,
-  `type` varchar(10) NOT NULL,
+  `seanceType` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `groupe_type` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'CM',
   `numero_ordre` int DEFAULT NULL,
   `duree_h` decimal(10,1) NOT NULL,
   `id_responsable` int DEFAULT NULL,
@@ -185,7 +210,7 @@ CREATE TABLE `INFO_promo` (
 
 CREATE TABLE `INFO_seanceType` (
   `type` varchar(10) NOT NULL,
-  `commentaire` varchar(50) NOT NULL
+  `commentaire` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -305,6 +330,22 @@ CREATE TABLE `VUE_resume_charge` (
 -- --------------------------------------------------------
 
 --
+-- Doublure de structure pour la vue `VUE_seance`
+-- (Voir ci-dessous la vue réelle)
+--
+CREATE TABLE `VUE_seance` (
+`code_module` varchar(10)
+,`groupe_type` varchar(10)
+,`nom_filiere` varchar(11)
+,`nom_groupe` varchar(20)
+,`seanceType` varchar(10)
+,`site` varchar(25)
+,`statut` enum('FISE','FISA','FISEA','FISECP')
+);
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la vue `VUE_MCCC`
 --
 DROP TABLE IF EXISTS `VUE_MCCC`;
@@ -337,6 +378,15 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 DROP TABLE IF EXISTS `VUE_resume_charge`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `VUE_resume_charge`  AS SELECT `service`.`service statutaire` AS `service statutaire`, `service`.`service avec décharge` AS `service avec décharge`, `charge`.`charge à couvrir` AS `charge à couvrir` FROM ((select sum(`INFO_enseignant`.`service statutaire`) AS `service statutaire`,sum(`INFO_enseignant`.`service effectif`) AS `service avec décharge` from `INFO_enseignant` where ((`INFO_enseignant`.`statut` = 'permanent') and (`INFO_enseignant`.`composante` = 'polytech'))) `service` join (select (((sum(((`INFO_module`.`hCM` * 1.5) * `INFO_promo`.`nbGroupeCM`)) + sum((`INFO_module`.`hTD` * `INFO_promo`.`nbGroupeTD`))) + sum((`INFO_module`.`hTP` * `INFO_promo`.`nbGroupeTP`))) + sum((`INFO_module`.`hTPTD` * `INFO_promo`.`nbGroupeTD`))) AS `charge à couvrir` from ((`INFO_module` join `INFO_module_as_promo` on((`INFO_module`.`id_module` = `INFO_module_as_promo`.`id_module`))) join `INFO_promo` on((`INFO_module_as_promo`.`id_promo` = `INFO_promo`.`id_promo`)))) `charge`) ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la vue `VUE_seance`
+--
+DROP TABLE IF EXISTS `VUE_seance`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `VUE_seance`  AS SELECT `INFO_module`.`code_module` AS `code_module`, `INFO_promo`.`nom_filiere` AS `nom_filiere`, `INFO_promo`.`statut` AS `statut`, `INFO_promo`.`site` AS `site`, `INFO_groupe`.`nom_groupe` AS `nom_groupe`, `INFO_groupe`.`groupe_type` AS `groupe_type`, `INFO_module_sequencage`.`seanceType` AS `seanceType` FROM (((((`INFO_module` join `INFO_module_as_promo` on((`INFO_module`.`id_module` = `INFO_module_as_promo`.`id_module`))) join `INFO_promo` on((`INFO_module_as_promo`.`id_promo` = `INFO_promo`.`id_promo`))) join `INFO_groupe` on((`INFO_promo`.`id_promo` = `INFO_groupe`.`id_promo`))) join `INFO_module_sequencage` on(((`INFO_module`.`id_module` = `INFO_module_sequencage`.`id_module`) and (`INFO_module_sequencage`.`groupe_type` = `INFO_groupe`.`groupe_type`)))) join `INFO_parameters_of_views` on((((`INFO_parameters_of_views`.`code_module` = `INFO_module`.`id_module`) and (`INFO_parameters_of_views`.`nom_filiere` = `INFO_promo`.`nom_filiere`)) or ((`INFO_parameters_of_views`.`code_module` is null) and (`INFO_parameters_of_views`.`nom_filiere` = `INFO_promo`.`nom_filiere`)) or ((`INFO_parameters_of_views`.`code_module` = `INFO_module`.`id_module`) and (`INFO_parameters_of_views`.`nom_filiere` is null)) or ((`INFO_parameters_of_views`.`code_module` is null) and (`INFO_parameters_of_views`.`nom_filiere` is null))))) WHERE (0 <> 1) ;
 
 --
 -- Index pour les tables déchargées
@@ -382,6 +432,22 @@ ALTER TABLE `INFO_filiere`
   ADD UNIQUE KEY `SECONDARY` (`nom_filiere`) USING BTREE;
 
 --
+-- Index pour la table `INFO_groupe`
+--
+ALTER TABLE `INFO_groupe`
+  ADD PRIMARY KEY (`id_groupe`),
+  ADD UNIQUE KEY `SECONDARY` (`nom_groupe`),
+  ADD KEY `FK_groupe_as_promo` (`id_promo`),
+  ADD KEY `FK_groupe_as_groupe_type` (`groupe_type`);
+
+--
+-- Index pour la table `INFO_groupe_type`
+--
+ALTER TABLE `INFO_groupe_type`
+  ADD PRIMARY KEY (`groupe_type`),
+  ADD UNIQUE KEY `SECONDARY` (`groupe_type`) USING BTREE;
+
+--
 -- Index pour la table `INFO_module`
 --
 ALTER TABLE `INFO_module`
@@ -402,10 +468,11 @@ ALTER TABLE `INFO_module_as_promo`
 --
 ALTER TABLE `INFO_module_sequencage`
   ADD PRIMARY KEY (`id_module_sequencage`),
-  ADD UNIQUE KEY `SECONDARY` (`id_module`,`type`,`numero_ordre`) USING BTREE,
-  ADD KEY `FK_module_sequencage_as_seanceType` (`type`),
+  ADD UNIQUE KEY `SECONDARY` (`id_module`,`seanceType`,`numero_ordre`) USING BTREE,
+  ADD KEY `FK_module_sequencage_as_seanceType` (`seanceType`),
   ADD KEY `FK_module_sequencage_as_module` (`id_module`),
-  ADD KEY `FK_module_sequencage_as_enseignant` (`id_responsable`);
+  ADD KEY `FK_module_sequencage_as_enseignant` (`id_responsable`),
+  ADD KEY `FK_module_sequencage_as_groupe_type` (`groupe_type`);
 
 --
 -- Index pour la table `INFO_parameters_of_views`
@@ -474,6 +541,12 @@ ALTER TABLE `INFO_enseignant`
   MODIFY `id_enseignant` int NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT pour la table `INFO_groupe`
+--
+ALTER TABLE `INFO_groupe`
+  MODIFY `id_groupe` int NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT pour la table `INFO_module`
 --
 ALTER TABLE `INFO_module`
@@ -531,6 +604,13 @@ ALTER TABLE `INFO_dependance_sequence`
   ADD CONSTRAINT `FK_dependance_sequence_as_module_sequencage_prev` FOREIGN KEY (`id_squence_prev`) REFERENCES `INFO_module_sequencage` (`id_module_sequencage`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
+-- Contraintes pour la table `INFO_groupe`
+--
+ALTER TABLE `INFO_groupe`
+  ADD CONSTRAINT `FK_groupe_as_groupe_type` FOREIGN KEY (`groupe_type`) REFERENCES `INFO_groupe_type` (`groupe_type`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `FK_groupe_as_promo` FOREIGN KEY (`id_promo`) REFERENCES `INFO_promo` (`id_promo`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
 -- Contraintes pour la table `INFO_module`
 --
 ALTER TABLE `INFO_module`
@@ -549,8 +629,9 @@ ALTER TABLE `INFO_module_as_promo`
 --
 ALTER TABLE `INFO_module_sequencage`
   ADD CONSTRAINT `FK_module_sequencage_as_enseignant` FOREIGN KEY (`id_responsable`) REFERENCES `INFO_enseignant` (`id_enseignant`),
+  ADD CONSTRAINT `FK_module_sequencage_as_groupe_type` FOREIGN KEY (`groupe_type`) REFERENCES `INFO_groupe_type` (`groupe_type`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `FK_module_sequencage_as_module` FOREIGN KEY (`id_module`) REFERENCES `INFO_module` (`id_module`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `FK_module_sequencage_as_seanceType` FOREIGN KEY (`type`) REFERENCES `INFO_seanceType` (`type`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `FK_module_sequencage_as_seanceType` FOREIGN KEY (`seanceType`) REFERENCES `INFO_seanceType` (`type`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
 -- Contraintes pour la table `INFO_parameters_of_views`

@@ -3,7 +3,7 @@
 if(isset($_POST['submit']))
 {    
      require("connectDB.php");
-     $sessionId = $_POST['sessionId'];
+     $sessionId = "\"".$_POST['sessionId']."\"";
  
      ($_POST['id_semestre'] == '') ? $semestre = 'NULL' : $semestre = $_POST['id_semestre'];
      //$semestre = $_POST['semestre'];
@@ -17,22 +17,23 @@ if(isset($_POST['submit']))
      $req = "TRUNCATE `INFO_parameters_of_views`;";
      
      if (mysqli_query($conn, $req)) {
-        echo "Parameters cleaned successfully!</br>";
+       //echo "Parameters cleaned successfully!</br>";
+
+
+	$req = "INSERT INTO `INFO_parameters_of_views` (`id_parameters_of_views`, `sessionId`, `id_semestre`, `code_module`, `fullname`, `nom_filiere`) VALUES (NULL," . $sessionId . "," . $semestre . "," . $module . "," . $enseignant . ", " . $filiere . ");";
+
+	//print($req);
+	if (mysqli_query($conn, $req)) {
+	  /*echo "New record has been added successfully!</br>";     
+	  require("disconnectDB.php");
+	  print("<meta http-equiv=\"refresh\" content=\"1;url=index.php\" />");*/
+	  header('location: index.php');
+	} else {
+	  echo "Error: " . $req . ":-" . mysqli_error($conn);   
+	  require("disconnectDB.php");
+	}
      } else {
         echo "Error: " . $req . ":-" . mysqli_error($conn);
-     }
-
-
-     $req = "INSERT INTO `INFO_parameters_of_views` (`id_parameters_of_views`, `sessionId`, `id_semestre`, `code_module`, `fullname`, `nom_filiere`) VALUES (NULL," . $sessionId . "," . $semestre . "," . $module . "," . $enseignant . ", " . $filiere . ");";
-
-     print($req);
-     if (mysqli_query($conn, $req)) {
-        echo "New record has been added successfully!</br>";     
-        require("disconnectDB.php");
-        print("<meta http-equiv=\"refresh\" content=\"1;url=index.php\" />");
-     } else {
-        echo "Error: " . $req . ":-" . mysqli_error($conn);   
-        require("disconnectDB.php");
      }
 }
 ?>
