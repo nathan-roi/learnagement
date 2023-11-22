@@ -47,7 +47,7 @@ print("<section>");
 */
 
 while ($view = mysqli_fetch_row($views)) {
-  print("-".implode(" ",$view));
+  //print("-".implode(" ",$view));
     $vue_name = $view[0];
    include("get_vue.php");
 }

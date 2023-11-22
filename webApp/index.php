@@ -21,6 +21,10 @@
       print("<a href=\"profile.php\"><i class=\"fas fa-user-circle\"></i>" . $_SESSION['userFirstname'] . " " . $_SESSION['userLastname'] . "</a>\n");
       print("<a href=\"logout.php\"><i class=\"fas fa-sign-out-alt\"></i>Logout</a>\n");
    }else{
+      // set view as main page
+      print("<script>
+	    document.cookie = 'mainPage='.concat('', 'view.php').concat('','; SameSite=Strict');
+	    </script>");
       print("<a href=\"login.php\"><i class=\"fas fa-sign-in-alt\"></i>Login</a>\n");
        }
    ?>
@@ -39,10 +43,10 @@
     <script type="text/javascript">
 
     function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-  }
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    }
 
 
    function setCollapsible(){

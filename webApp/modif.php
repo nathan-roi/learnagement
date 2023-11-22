@@ -4,6 +4,8 @@
      */
     session_start();
     require_once("config.php");
+
+if(isset($_SESSION['loggedin'])){
     if (isset($_SESSION['start']) && (time() - $_SESSION['start'] > $session_timeout)) {
        session_unset(); 
        session_destroy(); 
@@ -50,8 +52,11 @@ print("<section>");
       * get each table
       */
      while ($table = mysqli_fetch_row($tables)) {
-       print($table[0]);
+       //print($table[0]);
      	   $table_name = $table[0];
     	   include("get_table.php");
      }
+ }else{
+  header('location: login.php');
+ }
 ?>

@@ -104,6 +104,7 @@ if ($result === FALSE){
   echo "la requ&ecirc;te a &eacute;chou&eacute; : ".mysqli_error();
   exit; // inutile de poursuivre le traitement dans ce cas
   } */
+
       $result = getTableData($conn, $table_name, $fields, $_SESSION['userId']);
     
 while($ligne = mysqli_fetch_row ($result)){
