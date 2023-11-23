@@ -244,4 +244,26 @@ function dispDict($d){
       print($k . "=>" . dispDict($v) ."</br>\n");
   }
 }
+
+
+/**
+ *
+ */
+function initFilter($conn, $userId, $sessionId){
+
+  if($userId != "NULL"){
+    $userId = "\"" . $userId . "\"";
+  }
+  
+  $req = "INSERT INTO `INFO_parameters_of_views` (`id_parameters_of_views`, `userId`, `sessionId`, `id_semestre`, `code_module`, `fullname`, `nom_filiere`) VALUES (NULL," . $userId . ",\"" . $sessionId . "\",NULL,NULL,NULL, NULL )";
+
+  //print($req);
+  $result = mysqli_query($conn, $req);
+
+  if (!$result) {
+    echo 'Impossible d\'exécuter la requête : ' . $req;
+    echo 'error ' . mysqli_error($conn);
+    exit;
+  }
+}
 ?>

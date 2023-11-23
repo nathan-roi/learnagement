@@ -1,6 +1,7 @@
 <?php
   session_start();
   require_once("config.php");
+  require_once("functions.php");
   include("connectDB.php");
 
   // Now we check if the data from the login form was submitted, isset() will check if the data exists.
@@ -36,12 +37,16 @@
       // Verification success! User has logged-in!
       // Create sessions, so we know the user is logged in, they basically act like cookies but remember the data on the server.
       session_regenerate_id();
-      $_SESSION['loggedin'] = True;
+      $sessionId = session_id();
+      $_SESSION['loggedin'] = true;
       $_SESSION['userLogin'] = $_POST['username'];
       $_SESSION['userId'] = $id;
       $_SESSION['userFirstname'] = $firstname;
       $_SESSION['userLastname'] = $lastname;
       $_SESSION['start'] = time();
+    
+      initFilter($conn, $id, $sessionId);
+      
       header("Location: index.php");
       exit();
     }else {

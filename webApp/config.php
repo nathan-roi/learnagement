@@ -22,7 +22,7 @@
 
 
 // Session timeout in second
-  $session_timeout = 1440;
+  $session_timeout = 300;
 
 
 //$mysql_server = "127.0.0.1";

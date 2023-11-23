@@ -1,64 +1,40 @@
 <?php
+require_once("config.php");
+require_once("functions.php");
+   
+$sessionId = session_id();
 
-    require_once("config.php");
-    require_once("functions.php");
-    if (isset($_SESSION['start']) && (time() - $_SESSION['start'] > $session_timeout)) {
-       session_unset(); 
-       session_destroy(); 
-       echo "you were disconnected due to a session timeout"; 
-    }
-    $_SESSION['start'] = time();
-
-
-    /*
-     * Check user connection
-     */
-    if(!isset($_SESSION["loggedin"])){
-        /*header("Location: registration/login.php");
-        exit();*/
-        $username="anonymous";
-	$sessionId = "0";
-    }else{
-      //$username=$_SESSION["username"];
-        $sessionId = session_id();
-    }
 
     include("connectDB.php");
-    require("requests.php");
 
-    /*
-     * get parameters fields
-     */
-    $result = mysqli_query($conn, $param_fields_req);
+// get parameters according to the session
+$param_req = "SELECT * FROM `INFO_parameters_of_views` WHERE `sessionId` =  \"$sessionId\"";
 
-    if (!$result) {
-      echo 'Impossible d\'exécuter la requête : ' . $req;
-      echo 'error ' . mysqli_error($conn);
-      exit;
-    }
-    $parameter_fields = [];
-    if (mysqli_num_rows($result) > 0) {
-      while ($row = mysqli_fetch_assoc($result)) {
-	if($row['Field'] != "id_parameters_of_views" && $row['Field'] != "sessionId"){
-          array_push($parameter_fields, $row['Field']);
-	}
-      }
-    }else{
-      print("No filter parameters found!");
-    }
+/*
+ * get parameters fields
+ */
+$result = mysqli_query($conn, $param_req);
+
+if (!$result) {
+  echo 'Impossible d\'exécuter la requête : ' . $req;
+  echo 'error ' . mysqli_error($conn);
+  exit;
+ }
+$parameter_fields = [];
+$fields = mysqli_fetch_fields($result); 
+
+foreach($fields as $field){
+  if($field->name != "id_parameters_of_views" && $field->name != "sessionId" && $field->name != "userId"){
+    array_push($parameter_fields, $field->name);
+  }
+}
+
+/*
+ * get parameters: filters values
+ */
 
 
-    /*
-     * get parameters: filters values
-     */
-    $result = mysqli_query($conn, $param_req);
-
-    if (!$result) {
-      echo 'Impossible d\'exécuter la requête : ' . $req;
-      echo 'error ' . mysqli_error($conn);
-      exit;
-    }
-    $parameter_values=[];
+$parameter_values=[];
     if (mysqli_num_rows($result) > 0) {
         $parameter_values = mysqli_fetch_assoc($result);
     }
@@ -102,7 +78,6 @@ $table_name = "INFO_parameters_of_views";
  print("
         <div class=\"paramview\">
             <form action=\"setViewParameters.php\" method=\"post\">
-                <input type=\"hidden\" id=\"sessionId\" name=\"sessionId\" value=\"$sessionId\" />
     ");
 
     foreach($parameter_fields as $parameter_field){

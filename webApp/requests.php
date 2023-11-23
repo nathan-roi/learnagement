@@ -2,11 +2,6 @@
   // get login informations
   $login_req = "SELECT id_enseignant, prenom, nom, password FROM INFO_enseignant WHERE mail = \"$userlogin\"";
 
-  // get parameters fields
- $param_fields_req = "SHOW COLUMNS FROM INFO_parameters_of_views";
-
-  // get parameters according to the session
-  $param_req = "SELECT * FROM `INFO_parameters_of_views` WHERE `sessionId` =  \"$sessionId\"";
 
 
 // get all views

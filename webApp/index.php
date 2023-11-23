@@ -1,6 +1,20 @@
 <?php
-  session_start();
+session_start();
+require_once("config.php");
+require_once("functions.php");
+if(!isset($_SESSION["loggedin"])){
+  $_SESSION['loggedin'] = false;
+  $_SESSION['start'] = time();
+  
+  $sessionId = session_id();
+  include("connectDB.php");
+  
+  initFilter($conn, "NULL", $sessionId);
+ 
+ }
+$_SESSION['timeout'] = $session_timeout;
 ?>
+  
 <!DOCTYPE html>
 <html>
   <head>
@@ -14,11 +28,11 @@
     </header>
     <nav class="navtop">
       <div>
-        <a href="#" onclick="setMain('view.php');">View</a>
+    <a href="#" onclick="setMain('view.php');">View</a>
    <?php
-    if(isset($_SESSION['loggedin'])){
+    if($_SESSION['loggedin']){
       print("<a href=\"#\" onclick=\"setMain('modif.php');\">Manage</a>\n");
-      print("<a href=\"profile.php\"><i class=\"fas fa-user-circle\"></i>" . $_SESSION['userFirstname'] . " " . $_SESSION['userLastname'] . "</a>\n");
+      print("<a href=\"profil.php\"><i class=\"fas fa-user-circle\"></i>" . $_SESSION['userFirstname'] . " " . $_SESSION['userLastname'] . "</a>\n");
       print("<a href=\"logout.php\"><i class=\"fas fa-sign-out-alt\"></i>Logout</a>\n");
    }else{
       // set view as main page
