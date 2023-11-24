@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : mysql
--- Généré le : mer. 22 nov. 2023 à 22:54
+-- Généré le : ven. 24 nov. 2023 à 18:24
 -- Version du serveur : 8.0.33
 -- Version de PHP : 8.2.8
 
@@ -121,6 +121,18 @@ CREATE TABLE `INFO_groupe_type` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `INFO_learning_unit`
+--
+
+CREATE TABLE `INFO_learning_unit` (
+  `id_learning_unit` int NOT NULL,
+  `learning_unit_code` varchar(10) NOT NULL,
+  `learning_unit_name` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `INFO_module`
 --
 
@@ -129,6 +141,7 @@ CREATE TABLE `INFO_module` (
   `code_module` varchar(10) NOT NULL,
   `nom` varchar(50) NOT NULL,
   `id_semestre` tinyint NOT NULL,
+  `id_learning_unit` int DEFAULT NULL,
   `hCM` float DEFAULT NULL,
   `hTD` float DEFAULT NULL,
   `hTP` float DEFAULT NULL,
@@ -177,7 +190,8 @@ CREATE TABLE `INFO_module_sequencage` (
 
 CREATE TABLE `INFO_parameters_of_views` (
   `id_parameters_of_views` int NOT NULL,
-  `sessionId` int NOT NULL,
+  `userId` int DEFAULT NULL,
+  `sessionId` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `id_semestre` tinyint DEFAULT NULL,
   `code_module` int DEFAULT NULL,
   `fullname` int DEFAULT NULL,
@@ -267,22 +281,15 @@ CREATE TABLE `INFO_semestre` (
 -- --------------------------------------------------------
 
 --
--- Doublure de structure pour la vue `VUE_MCCC`
--- (Voir ci-dessous la vue réelle)
+-- Structure de la table `INFO_view`
 --
-CREATE TABLE `VUE_MCCC` (
-`code_module` varchar(10)
-,`commentaire` text
-,`filieres` text
-,`hCM` float
-,`hTD` float
-,`hTP` float
-,`hTPTD` float
-,`id_module` int
-,`nom` varchar(50)
-,`responsable` varchar(51)
-,`semestre` tinyint
-);
+
+CREATE TABLE `INFO_view` (
+  `id_view` int NOT NULL,
+  `sortIndex` int NOT NULL,
+  `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `request` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -292,65 +299,16 @@ CREATE TABLE `VUE_MCCC` (
 --
 CREATE TABLE `VUE_module` (
 `code_module` varchar(10)
-,`filiere` varchar(11)
-,`Filière` text
-,`heure` float
-,`lieu` varchar(25)
 ,`module` varchar(50)
+,`semestre` tinyint
+,`filiere` varchar(11)
+,`lieu` varchar(25)
+,`type` varchar(10)
+,`heure` float
 ,`nom` varchar(25)
 ,`prenom` varchar(25)
-,`semestre` tinyint
-,`type` varchar(10)
+,`Filière` text
 );
-
--- --------------------------------------------------------
-
---
--- Doublure de structure pour la vue `VUE_responsable`
--- (Voir ci-dessous la vue réelle)
---
-CREATE TABLE `VUE_responsable` (
-`modules` text
-,`responsabilite` bigint
-,`responsable` varchar(51)
-);
-
--- --------------------------------------------------------
-
---
--- Doublure de structure pour la vue `VUE_resume_charge`
--- (Voir ci-dessous la vue réelle)
---
-CREATE TABLE `VUE_resume_charge` (
-`charge à couvrir` double
-,`service avec décharge` double
-,`service statutaire` decimal(32,0)
-);
-
--- --------------------------------------------------------
-
---
--- Doublure de structure pour la vue `VUE_seance`
--- (Voir ci-dessous la vue réelle)
---
-CREATE TABLE `VUE_seance` (
-`code_module` varchar(10)
-,`groupe_type` varchar(10)
-,`nom_filiere` varchar(11)
-,`nom_groupe` varchar(20)
-,`seanceType` varchar(10)
-,`site` varchar(25)
-,`statut` enum('FISE','FISA','FISEA','FISECP')
-);
-
--- --------------------------------------------------------
-
---
--- Structure de la vue `VUE_MCCC`
---
-DROP TABLE IF EXISTS `VUE_MCCC`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `VUE_MCCC`  AS SELECT `INFO_module`.`id_module` AS `id_module`, `INFO_module`.`code_module` AS `code_module`, `INFO_module`.`nom` AS `nom`, `INFO_module`.`id_semestre` AS `semestre`, `INFO_module`.`hCM` AS `hCM`, `INFO_module`.`hTD` AS `hTD`, `INFO_module`.`hTP` AS `hTP`, `INFO_module`.`hTPTD` AS `hTPTD`, group_concat(`INFO_promo`.`nom_filiere` separator ', ') AS `filieres`, concat(`INFO_enseignant`.`prenom`,' ',`INFO_enseignant`.`nom`) AS `responsable`, `INFO_module`.`commentaire` AS `commentaire` FROM (((`INFO_module` join `INFO_module_as_promo` on((`INFO_module`.`id_module` = `INFO_module_as_promo`.`id_module`))) join `INFO_promo` on((`INFO_module_as_promo`.`id_promo` = `INFO_promo`.`id_promo`))) join `INFO_enseignant` on((`INFO_module`.`id_responsable` = `INFO_enseignant`.`id_enseignant`))) WHERE (0 <> 1) GROUP BY `INFO_module`.`id_module` ;
 
 -- --------------------------------------------------------
 
@@ -360,33 +318,6 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 DROP TABLE IF EXISTS `VUE_module`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `VUE_module`  AS SELECT `INFO_module`.`code_module` AS `code_module`, `INFO_module`.`nom` AS `module`, `INFO_module`.`id_semestre` AS `semestre`, `INFO_promo`.`nom_filiere` AS `filiere`, `INFO_seance_to_be_planned`.`lieu` AS `lieu`, `INFO_seance_to_be_planned`.`type` AS `type`, `INFO_seance_to_be_planned`.`heure` AS `heure`, `INFO_enseignant`.`nom` AS `nom`, `INFO_enseignant`.`prenom` AS `prenom`, group_concat(`INFO_promo`.`nom_filiere` separator ', ') AS `Filière` FROM ((((((`INFO_module` join `INFO_module_as_promo` on((`INFO_module`.`id_module` = `INFO_module_as_promo`.`id_module`))) join `INFO_promo` on((`INFO_module_as_promo`.`id_promo` = `INFO_promo`.`id_promo`))) join `INFO_seance_to_be_planned` on((`INFO_module`.`id_module` = `INFO_seance_to_be_planned`.`id_module`))) join `INFO_parameters_of_views` on((`INFO_module`.`code_module` = convert(`INFO_parameters_of_views`.`code_module` using utf8mb3)))) join `INFO_seance_to_be_planned_as_promo` on((`INFO_seance_to_be_planned`.`id_seance_to_be_planned` = `INFO_seance_to_be_planned_as_promo`.`id_seance_to_be_planned`))) left join `INFO_enseignant` on((`INFO_seance_to_be_planned`.`id_enseignant` = `INFO_enseignant`.`id_enseignant`))) GROUP BY `INFO_module`.`code_module`, `INFO_module`.`nom`, `INFO_module`.`id_semestre`, `INFO_promo`.`nom_filiere`, `INFO_seance_to_be_planned`.`lieu`, `INFO_seance_to_be_planned`.`lieu`, `INFO_seance_to_be_planned`.`type`, `INFO_seance_to_be_planned`.`heure`, `INFO_enseignant`.`nom`, `INFO_enseignant`.`prenom` ;
-
--- --------------------------------------------------------
-
---
--- Structure de la vue `VUE_responsable`
---
-DROP TABLE IF EXISTS `VUE_responsable`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `VUE_responsable`  AS SELECT concat(`INFO_enseignant`.`prenom`,' ',`INFO_enseignant`.`nom`) AS `responsable`, count(`INFO_module`.`id_module`) AS `responsabilite`, group_concat(distinct `INFO_module`.`code_module` separator ', ') AS `modules` FROM (`INFO_enseignant` join `INFO_module`) WHERE (`INFO_module`.`id_responsable` = `INFO_enseignant`.`id_enseignant`) GROUP BY `INFO_enseignant`.`nom`, `INFO_enseignant`.`prenom` ;
-
--- --------------------------------------------------------
-
---
--- Structure de la vue `VUE_resume_charge`
---
-DROP TABLE IF EXISTS `VUE_resume_charge`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `VUE_resume_charge`  AS SELECT `service`.`service statutaire` AS `service statutaire`, `service`.`service avec décharge` AS `service avec décharge`, `charge`.`charge à couvrir` AS `charge à couvrir` FROM ((select sum(`INFO_enseignant`.`service statutaire`) AS `service statutaire`,sum(`INFO_enseignant`.`service effectif`) AS `service avec décharge` from `INFO_enseignant` where ((`INFO_enseignant`.`statut` = 'permanent') and (`INFO_enseignant`.`composante` = 'polytech'))) `service` join (select (((sum(((`INFO_module`.`hCM` * 1.5) * `INFO_promo`.`nbGroupeCM`)) + sum((`INFO_module`.`hTD` * `INFO_promo`.`nbGroupeTD`))) + sum((`INFO_module`.`hTP` * `INFO_promo`.`nbGroupeTP`))) + sum((`INFO_module`.`hTPTD` * `INFO_promo`.`nbGroupeTD`))) AS `charge à couvrir` from ((`INFO_module` join `INFO_module_as_promo` on((`INFO_module`.`id_module` = `INFO_module_as_promo`.`id_module`))) join `INFO_promo` on((`INFO_module_as_promo`.`id_promo` = `INFO_promo`.`id_promo`)))) `charge`) ;
-
--- --------------------------------------------------------
-
---
--- Structure de la vue `VUE_seance`
---
-DROP TABLE IF EXISTS `VUE_seance`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `VUE_seance`  AS SELECT `INFO_module`.`code_module` AS `code_module`, `INFO_promo`.`nom_filiere` AS `nom_filiere`, `INFO_promo`.`statut` AS `statut`, `INFO_promo`.`site` AS `site`, `INFO_groupe`.`nom_groupe` AS `nom_groupe`, `INFO_groupe`.`groupe_type` AS `groupe_type`, `INFO_module_sequencage`.`seanceType` AS `seanceType` FROM (((((`INFO_module` join `INFO_module_as_promo` on((`INFO_module`.`id_module` = `INFO_module_as_promo`.`id_module`))) join `INFO_promo` on((`INFO_module_as_promo`.`id_promo` = `INFO_promo`.`id_promo`))) join `INFO_groupe` on((`INFO_promo`.`id_promo` = `INFO_groupe`.`id_promo`))) join `INFO_module_sequencage` on(((`INFO_module`.`id_module` = `INFO_module_sequencage`.`id_module`) and (`INFO_module_sequencage`.`groupe_type` = `INFO_groupe`.`groupe_type`)))) join `INFO_parameters_of_views` on((((`INFO_parameters_of_views`.`code_module` = `INFO_module`.`id_module`) and (`INFO_parameters_of_views`.`nom_filiere` = `INFO_promo`.`nom_filiere`)) or ((`INFO_parameters_of_views`.`code_module` is null) and (`INFO_parameters_of_views`.`nom_filiere` = `INFO_promo`.`nom_filiere`)) or ((`INFO_parameters_of_views`.`code_module` = `INFO_module`.`id_module`) and (`INFO_parameters_of_views`.`nom_filiere` is null)) or ((`INFO_parameters_of_views`.`code_module` is null) and (`INFO_parameters_of_views`.`nom_filiere` is null))))) WHERE (0 <> 1) ;
 
 --
 -- Index pour les tables déchargées
@@ -448,13 +379,21 @@ ALTER TABLE `INFO_groupe_type`
   ADD UNIQUE KEY `SECONDARY` (`groupe_type`) USING BTREE;
 
 --
+-- Index pour la table `INFO_learning_unit`
+--
+ALTER TABLE `INFO_learning_unit`
+  ADD PRIMARY KEY (`id_learning_unit`),
+  ADD UNIQUE KEY `SECONDARY` (`learning_unit_code`);
+
+--
 -- Index pour la table `INFO_module`
 --
 ALTER TABLE `INFO_module`
   ADD PRIMARY KEY (`id_module`),
   ADD UNIQUE KEY `SECONDARY` (`code_module`) USING BTREE,
   ADD KEY `FK_module_as_enseignant` (`id_responsable`),
-  ADD KEY `FK_module_as_semestre` (`id_semestre`);
+  ADD KEY `FK_module_as_semestre` (`id_semestre`),
+  ADD KEY `FK_module_as_learning_unit` (`id_learning_unit`);
 
 --
 -- Index pour la table `INFO_module_as_promo`
@@ -531,6 +470,13 @@ ALTER TABLE `INFO_semestre`
   ADD UNIQUE KEY `SECONDARY` (`id_semestre`) USING BTREE;
 
 --
+-- Index pour la table `INFO_view`
+--
+ALTER TABLE `INFO_view`
+  ADD PRIMARY KEY (`id_view`),
+  ADD UNIQUE KEY `SECONDARY` (`name`);
+
+--
 -- AUTO_INCREMENT pour les tables déchargées
 --
 
@@ -545,6 +491,12 @@ ALTER TABLE `INFO_enseignant`
 --
 ALTER TABLE `INFO_groupe`
   MODIFY `id_groupe` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `INFO_learning_unit`
+--
+ALTER TABLE `INFO_learning_unit`
+  MODIFY `id_learning_unit` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `INFO_module`
@@ -583,6 +535,12 @@ ALTER TABLE `INFO_seance_to_be_planned`
   MODIFY `id_seance_to_be_planned` int NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT pour la table `INFO_view`
+--
+ALTER TABLE `INFO_view`
+  MODIFY `id_view` int NOT NULL AUTO_INCREMENT;
+
+--
 -- Contraintes pour les tables déchargées
 --
 
@@ -615,6 +573,7 @@ ALTER TABLE `INFO_groupe`
 --
 ALTER TABLE `INFO_module`
   ADD CONSTRAINT `FK_module_as_enseignant` FOREIGN KEY (`id_responsable`) REFERENCES `INFO_enseignant` (`id_enseignant`),
+  ADD CONSTRAINT `FK_module_as_learning_unit` FOREIGN KEY (`id_learning_unit`) REFERENCES `INFO_learning_unit` (`id_learning_unit`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `FK_module_as_semestre` FOREIGN KEY (`id_semestre`) REFERENCES `INFO_semestre` (`id_semestre`);
 
 --
