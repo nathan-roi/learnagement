@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : mysql
--- Généré le : ven. 24 nov. 2023 à 18:24
+-- Généré le : ven. 08 déc. 2023 à 21:27
 -- Version du serveur : 8.0.33
 -- Version de PHP : 8.2.8
 
@@ -64,6 +64,17 @@ CREATE TABLE `INFO_dependance_sequence` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `INFO_discipline`
+--
+
+CREATE TABLE `INFO_discipline` (
+  `id_discipline` int NOT NULL,
+  `nom` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `INFO_enseignant`
 --
 
@@ -75,6 +86,7 @@ CREATE TABLE `INFO_enseignant` (
   `mail` varchar(25) DEFAULT NULL,
   `password` varchar(100) DEFAULT NULL,
   `statut` enum('permanent','vacataire') NOT NULL DEFAULT 'permanent',
+  `id_discipline` int DEFAULT NULL,
   `composante` varchar(25) DEFAULT NULL,
   `service statutaire` int NOT NULL,
   `décharge` int NOT NULL,
@@ -140,6 +152,7 @@ CREATE TABLE `INFO_module` (
   `id_module` int NOT NULL,
   `code_module` varchar(10) NOT NULL,
   `nom` varchar(50) NOT NULL,
+  `id_discipline` int DEFAULT NULL,
   `id_semestre` tinyint NOT NULL,
   `id_learning_unit` int DEFAULT NULL,
   `hCM` float DEFAULT NULL,
@@ -147,6 +160,7 @@ CREATE TABLE `INFO_module` (
   `hTP` float DEFAULT NULL,
   `hTPTD` float DEFAULT NULL,
   `hPROJ` float DEFAULT NULL,
+  `hPersonnelle` float DEFAULT NULL,
   `type` enum('Specialite','Transverse') DEFAULT 'Specialite',
   `id_responsable` int DEFAULT NULL,
   `commentaire` text,
@@ -194,6 +208,7 @@ CREATE TABLE `INFO_parameters_of_views` (
   `sessionId` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `id_semestre` tinyint DEFAULT NULL,
   `code_module` int DEFAULT NULL,
+  `id_discipline` int DEFAULT NULL,
   `fullname` int DEFAULT NULL,
   `nom_filiere` varchar(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -287,37 +302,9 @@ CREATE TABLE `INFO_semestre` (
 CREATE TABLE `INFO_view` (
   `id_view` int NOT NULL,
   `sortIndex` int NOT NULL,
-  `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `request` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
--- Doublure de structure pour la vue `VUE_module`
--- (Voir ci-dessous la vue réelle)
---
-CREATE TABLE `VUE_module` (
-`code_module` varchar(10)
-,`module` varchar(50)
-,`semestre` tinyint
-,`filiere` varchar(11)
-,`lieu` varchar(25)
-,`type` varchar(10)
-,`heure` float
-,`nom` varchar(25)
-,`prenom` varchar(25)
-,`Filière` text
-);
-
--- --------------------------------------------------------
-
---
--- Structure de la vue `VUE_module`
---
-DROP TABLE IF EXISTS `VUE_module`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `VUE_module`  AS SELECT `INFO_module`.`code_module` AS `code_module`, `INFO_module`.`nom` AS `module`, `INFO_module`.`id_semestre` AS `semestre`, `INFO_promo`.`nom_filiere` AS `filiere`, `INFO_seance_to_be_planned`.`lieu` AS `lieu`, `INFO_seance_to_be_planned`.`type` AS `type`, `INFO_seance_to_be_planned`.`heure` AS `heure`, `INFO_enseignant`.`nom` AS `nom`, `INFO_enseignant`.`prenom` AS `prenom`, group_concat(`INFO_promo`.`nom_filiere` separator ', ') AS `Filière` FROM ((((((`INFO_module` join `INFO_module_as_promo` on((`INFO_module`.`id_module` = `INFO_module_as_promo`.`id_module`))) join `INFO_promo` on((`INFO_module_as_promo`.`id_promo` = `INFO_promo`.`id_promo`))) join `INFO_seance_to_be_planned` on((`INFO_module`.`id_module` = `INFO_seance_to_be_planned`.`id_module`))) join `INFO_parameters_of_views` on((`INFO_module`.`code_module` = convert(`INFO_parameters_of_views`.`code_module` using utf8mb3)))) join `INFO_seance_to_be_planned_as_promo` on((`INFO_seance_to_be_planned`.`id_seance_to_be_planned` = `INFO_seance_to_be_planned_as_promo`.`id_seance_to_be_planned`))) left join `INFO_enseignant` on((`INFO_seance_to_be_planned`.`id_enseignant` = `INFO_enseignant`.`id_enseignant`))) GROUP BY `INFO_module`.`code_module`, `INFO_module`.`nom`, `INFO_module`.`id_semestre`, `INFO_promo`.`nom_filiere`, `INFO_seance_to_be_planned`.`lieu`, `INFO_seance_to_be_planned`.`lieu`, `INFO_seance_to_be_planned`.`type`, `INFO_seance_to_be_planned`.`heure`, `INFO_enseignant`.`nom`, `INFO_enseignant`.`prenom` ;
 
 --
 -- Index pour les tables déchargées
@@ -348,12 +335,20 @@ ALTER TABLE `INFO_dependance_sequence`
   ADD KEY `FK_dependance_sequence_as_enseignant` (`id_responsable`);
 
 --
+-- Index pour la table `INFO_discipline`
+--
+ALTER TABLE `INFO_discipline`
+  ADD PRIMARY KEY (`id_discipline`),
+  ADD UNIQUE KEY `SECONDARY` (`nom`);
+
+--
 -- Index pour la table `INFO_enseignant`
 --
 ALTER TABLE `INFO_enseignant`
   ADD PRIMARY KEY (`id_enseignant`),
   ADD UNIQUE KEY `mail` (`mail`),
-  ADD UNIQUE KEY `SECONDARY` (`fullName`) USING BTREE;
+  ADD UNIQUE KEY `SECONDARY` (`fullName`) USING BTREE,
+  ADD KEY `FK_enseignant_as_discipline` (`id_discipline`);
 
 --
 -- Index pour la table `INFO_filiere`
@@ -393,7 +388,8 @@ ALTER TABLE `INFO_module`
   ADD UNIQUE KEY `SECONDARY` (`code_module`) USING BTREE,
   ADD KEY `FK_module_as_enseignant` (`id_responsable`),
   ADD KEY `FK_module_as_semestre` (`id_semestre`),
-  ADD KEY `FK_module_as_learning_unit` (`id_learning_unit`);
+  ADD KEY `FK_module_as_learning_unit` (`id_learning_unit`),
+  ADD KEY `FK_module_as_discipline` (`id_discipline`);
 
 --
 -- Index pour la table `INFO_module_as_promo`
@@ -422,7 +418,8 @@ ALTER TABLE `INFO_parameters_of_views`
   ADD KEY `FK_parameters_of_views_as_semestre` (`id_semestre`),
   ADD KEY `FK_parameters_of_views_as_module` (`code_module`),
   ADD KEY `FK_parameters_of_views_as_enseignant` (`fullname`),
-  ADD KEY `FK_parameters_of_views_as_filiere` (`nom_filiere`);
+  ADD KEY `FK_parameters_of_views_as_filiere` (`nom_filiere`),
+  ADD KEY `FK_parameters_of_views_as_discipline` (`id_discipline`);
 
 --
 -- Index pour la table `INFO_promo`
@@ -479,6 +476,12 @@ ALTER TABLE `INFO_view`
 --
 -- AUTO_INCREMENT pour les tables déchargées
 --
+
+--
+-- AUTO_INCREMENT pour la table `INFO_discipline`
+--
+ALTER TABLE `INFO_discipline`
+  MODIFY `id_discipline` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `INFO_enseignant`
@@ -562,6 +565,12 @@ ALTER TABLE `INFO_dependance_sequence`
   ADD CONSTRAINT `FK_dependance_sequence_as_module_sequencage_prev` FOREIGN KEY (`id_squence_prev`) REFERENCES `INFO_module_sequencage` (`id_module_sequencage`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
+-- Contraintes pour la table `INFO_enseignant`
+--
+ALTER TABLE `INFO_enseignant`
+  ADD CONSTRAINT `FK_enseignant_as_discipline` FOREIGN KEY (`id_discipline`) REFERENCES `INFO_discipline` (`id_discipline`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
 -- Contraintes pour la table `INFO_groupe`
 --
 ALTER TABLE `INFO_groupe`
@@ -572,6 +581,7 @@ ALTER TABLE `INFO_groupe`
 -- Contraintes pour la table `INFO_module`
 --
 ALTER TABLE `INFO_module`
+  ADD CONSTRAINT `FK_module_as_discipline` FOREIGN KEY (`id_discipline`) REFERENCES `INFO_discipline` (`id_discipline`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `FK_module_as_enseignant` FOREIGN KEY (`id_responsable`) REFERENCES `INFO_enseignant` (`id_enseignant`),
   ADD CONSTRAINT `FK_module_as_learning_unit` FOREIGN KEY (`id_learning_unit`) REFERENCES `INFO_learning_unit` (`id_learning_unit`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `FK_module_as_semestre` FOREIGN KEY (`id_semestre`) REFERENCES `INFO_semestre` (`id_semestre`);
@@ -596,6 +606,7 @@ ALTER TABLE `INFO_module_sequencage`
 -- Contraintes pour la table `INFO_parameters_of_views`
 --
 ALTER TABLE `INFO_parameters_of_views`
+  ADD CONSTRAINT `FK_parameters_of_views_as_discipline` FOREIGN KEY (`id_discipline`) REFERENCES `INFO_discipline` (`id_discipline`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `FK_parameters_of_views_as_enseignant` FOREIGN KEY (`fullname`) REFERENCES `INFO_enseignant` (`id_enseignant`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `FK_parameters_of_views_as_filiere` FOREIGN KEY (`nom_filiere`) REFERENCES `INFO_filiere` (`nom_filiere`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `FK_parameters_of_views_as_module` FOREIGN KEY (`code_module`) REFERENCES `INFO_module` (`id_module`) ON DELETE RESTRICT ON UPDATE RESTRICT,

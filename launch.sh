@@ -1,5 +1,8 @@
 #!/bin/bash
 
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
 
 ##########
 # create links to populate with private data
@@ -16,10 +19,19 @@ cd ..
 
 
 cd docker
-
-echo "Update docker/docker-compose.yml and webApp/config.php files with new password."
-read -p "Then press any key to continue... " -n1 -s
-echo
+if [ ! -f docker-compose.yml ]
+then
+    cp docker-compose.yml.example docker-compose.yml
+    printf "${GREEN}Update docker/docker-compose.yml and webApp/config.php files with new password.${NC}"
+    echo
+    read -p "Then press any key to continue... " -n1 -s
+    echo
+fi
+if cmp --silent -- docker-compose.yml.example docker-compose.yml
+then
+    printf "${RED}WARNING default password seems to be used !!!${NC}"
+    echo
+fi
 
 sudo docker-compose up &
 

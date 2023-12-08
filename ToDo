@@ -1,6 +1,7 @@
 - remove src after re-integration into webApp
 - remove prefix of db table
 - normalize name
+- refoctor setViewParameters.php to make it generic
 - refactor PHP SQL request using functions with parameters to know explicitely the parameters of a request when it's get.
 - refactor using Object PHP
 - refactor to avoid check SQL injection
