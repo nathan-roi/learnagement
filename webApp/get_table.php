@@ -172,9 +172,15 @@ while($ligne = mysqli_fetch_row ($result)){
     }
   }
   if($modifiable && isset($_SESSION['loggedin']) && $_SESSION['userId'] == $id_resp){
-    print("<td><input form='$table_name$pk' type='submit' value='update'></td>");
+    print("<td>");
+    print("<button form='$table_name$pk' type='submit' name='action' value='update'>Update</button>");
+    print("<button form='$table_name$pk' type='submit' name='action' value='delete'>Delete</button>");
+    print("</td>");
   }else{
-    print("<td><input form='$table_name$pk' type='submit' value='update' disabled></td>");
+    print("<td>");
+    print("<button form='$table_name$pk' type='submit' name='action' value='update' disabled>Update</button>");
+    print("<button form='$table_name$pk' type='submit' name='action' value='delete' disabled>Delete</button>");
+    print("</td>");
   }
   print("</tr>\n");
  }
