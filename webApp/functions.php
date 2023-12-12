@@ -51,11 +51,39 @@ function getPrimaryKeyFields($conn, $table_name){
 function getPrimaryKeyField($conn, $table_name){
 
   return getPrimaryKeyFields($conn, $table_name)[0];
+}
+
+/**
+   * get the table primary K values
+   *
+   * @param
+   *
+   * @param string $table_name table 
+   *
+   * @return array Return the primary key values as array of string
+   */
+function getPrimaryKeyValues($conn, $table_name){
+  $primaryKFields = implode( ", ", getPrimaryKeyFields($conn, $table_name));
+  
+  $primaryKeyValues_req = "SELECT $primaryKFields FROM $table_name";
+  $result = mysqli_query($conn, $primaryKeyValues_req);
+  if (!$result) {
+    echo 'Impossible d\'exécuter la requête : ' . $primaryKeyValues_req;
+    echo 'error '.mysqli_error();
+    exit;
   }
+  $primaryKeyValues = [];
+  if (mysqli_num_rows($result) > 0) {
+    while ($row = mysqli_fetch_row($result)) {
+      array_push($primaryKeyValues,$row[0]);
+    }
+  }
+  return $primaryKeyValues;
+}
 
 
 /**
- *
+ * NOT USE YET
  */
 function getSecondaryKs($table){
   require_once("config.php");
@@ -94,6 +122,65 @@ function getSecondaryKs($table){
   return $forefnK_fields_values_dic;
 }
 
+/**
+ * return explicit secondary K values as a string for a given primary K.
+ */
+function getSecondaryKeyValue($conn, $reference_table_name, $primary_value){
+
+  global $mysql_db;
+
+  // get primary K fields
+  $primaryKFields = getPrimaryKeyFields($conn, $reference_table_name);
+  // Theoriticaly there is only one field
+  
+  //get foreign Ks fields
+  $foreignKsFields = getForeignKeys($conn, $reference_table_name);
+   
+  // get secondary K fields
+  $secondaryk_fields_req = "SELECT column_name FROM information_schema.statistics WHERE table_schema = \"$mysql_db\" AND table_name = \"$reference_table_name\" AND INDEX_NAME = \"SECONDARY\"";
+
+  $result = mysqli_query($conn, $secondaryk_fields_req);
+
+  $secondaryKFields = [];
+  if (mysqli_num_rows($result) > 0) {
+    while ($row = mysqli_fetch_row($result)) {
+      array_push($secondaryKFields, $row[0]);
+    }
+  }
+    
+  $secondaryKString = implode(", ", $secondaryKFields);
+    
+  // get secondary K values
+  $secondaryk_values_req = "SELECT $secondaryKString FROM $reference_table_name WHERE $primaryKFields[0] = \"$primary_value\"";
+  
+  $result = mysqli_query($conn, $secondaryk_values_req);
+  $secondaryKValues = [];
+  if (mysqli_num_rows($result) > 0) {
+    $secondaryKValues = mysqli_fetch_row($result); //get secondary K values of given primary K
+  }
+  
+  foreach($secondaryKFields as $index => $secondaryKField){
+    if (in_array($secondaryKField, array_keys($foreignKsFields))){
+      $secondaryKValues[$index] = getSecondaryKeyValue($conn, $foreignKsFields[$secondaryKField], $secondaryKValues[$index]);
+    }
+  }
+  
+  return implode(", ", $secondaryKValues);
+}
+
+/**
+ * return explicit secondary K values for all primary Ks as dictionary primaryKValue => secondaryKvalue.
+ */
+function getPrimarySecondaryKeyValues($conn, $reference_table_name){
+
+  $primaryKValues = getPrimaryKeyValues($conn, $reference_table_name);
+  
+  $primarySecondaryKeyValues = [];
+  foreach($primaryKValues as $primaryKValue){
+    $primarySecondaryKeyValues[$primaryKValue] = getSecondaryKeyValue($conn, $reference_table_name, $primaryKValue);
+  }
+  return $primarySecondaryKeyValues;
+}
 
 /**
  * @return array Return the dictionnary FK => table of reference for a given table
@@ -235,14 +322,14 @@ function isLinkingTable($conn, $table_name){
 }
 
 function dispDict($d){
-  return(0); //comment to debug, uncomment for prod
+  //return(0); //comment to debug, uncomment for prod
   print("</br></br>");
   foreach($d as $k => $v){
     if(gettype($v) == "string")
       print($k . "=>" . $v ."</br>\n");
     else if(gettype($v) == "array")
       print($k . "=>" . dispDict($v) ."</br>\n");
-  }
+  }debug_print_backtrace();
 }
 
 

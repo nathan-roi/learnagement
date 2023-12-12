@@ -73,15 +73,20 @@ if (mysqli_num_rows($forefnKs) > 0) {
   while ($forefnK = mysqli_fetch_row($forefnKs)) {
     array_push($forefnK_fields_array, $forefnK[1]);
     $reference_table_name = $forefnK[3];
-    require("requests.php"); //update requests with required reference_table_name
+    
+    /*require("requests.php"); //update requests with required reference_table_name
     $primaryk_and_secondaryK = mysqli_query($conn, $secondaryk_fields_req);
     $primaryk_and_secondaryK =  implode(", ",mysqli_fetch_row($primaryk_and_secondaryK));
     require("requests.php"); //update requests with required primaryk_and_secondaryK
     $primaryk_and_secondaryK_values = mysqli_query($conn, $secondaryk_values_req);
+
     $psK_values_dic = [];
     while ($psK_value = mysqli_fetch_row($primaryk_and_secondaryK_values)) {
       $psK_values_dic += [$psK_value[0] => implode(" ", array_slice($psK_value, 1))];
-    }
+   }*/
+    
+    $psK_values_dic = getPrimarySecondaryKeyValues($conn, $reference_table_name);
+    
     $forefnK_fields_values_dic += [$forefnK[1] => $psK_values_dic];
   }
  }
@@ -199,7 +204,7 @@ foreach($fields_array as $k=>$v){
       print("<input form='" . $table_name . "_insert' type='hidden' name='$fields_array[$k]' value=\"$_SESSION[userId]\">");    
     // big text fields
   }else if($fields_type[$k] == "text"){
-    print("<td><textarea form='" . $table_name . "_insert' name='$fields_array[$k]'>$v</textarea></td>");
+    print("<td><textarea form='" . $table_name . "_insert' name='$fields_array[$k]' placeholder=\"$v\"></textarea></td>");
 
     // foreignK
   }else if(in_array($fields_array[$k], $forefnK_fields_array)){
@@ -216,7 +221,7 @@ foreach($fields_array as $k=>$v){
     print(""); // primary K is autoincremented
     // others
   }else{
-    print("<td><input form='" . $table_name . "_insert' type='text' name='$fields_array[$k]' value=\"$v\"></td>");
+    print("<td><input form='" . $table_name . "_insert' type='text' name='$fields_array[$k]' placeholder=\"$v\"></td>");
   }
 }
 print("<td><input form='" . $table_name . "_insert' type='submit' value='insert'></td>");
