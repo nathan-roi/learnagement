@@ -43,7 +43,7 @@ if (mysqli_num_rows($table) > 0) {
     }else if ($row[3] == "modifiable"){
       print(""); //do not display "modifiable" field
     }else if ($row[3] == "id_responsable"){
-      print(""); //do not display "modifiable" field
+      print(""); //do not display "responsible" field
     }else{
       print("<th>".$row[3]."</th>");
     }

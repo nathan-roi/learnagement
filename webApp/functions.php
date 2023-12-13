@@ -179,6 +179,8 @@ function getPrimarySecondaryKeyValues($conn, $reference_table_name){
   foreach($primaryKValues as $primaryKValue){
     $primarySecondaryKeyValues[$primaryKValue] = getSecondaryKeyValue($conn, $reference_table_name, $primaryKValue);
   }
+  //dispDict($primarySecondaryKeyValues);
+  asort($primarySecondaryKeyValues);
   return $primarySecondaryKeyValues;
 }
 
@@ -322,7 +324,7 @@ function isLinkingTable($conn, $table_name){
 }
 
 function dispDict($d){
-  //return(0); //comment to debug, uncomment for prod
+  return(0); //comment to debug, uncomment for prod
   print("</br></br>");
   foreach($d as $k => $v){
     if(gettype($v) == "string")

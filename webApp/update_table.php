@@ -39,7 +39,7 @@ if (isset($_POST['table'])) {
       $query = "DELETE FROM ". $_POST['table'] . " WHERE " . $pk[0] . " = " . $_POST[$pk0];
     }
  }
-  print($query);
+  //print($query);
   mysqli_query($conn, $query);
   header('location: index.php');
 }

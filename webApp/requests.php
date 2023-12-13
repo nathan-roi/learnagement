@@ -37,5 +37,5 @@ $foreignK_req = "SELECT TABLE_NAME,COLUMN_NAME,CONSTRAINT_NAME, REFERENCED_TABLE
 $secondaryk_fields_req = "SELECT group_concat(column_name  separator ', ') FROM information_schema.statistics WHERE table_schema = \"$mysql_db\" AND table_name= \"$reference_table_name\" AND (INDEX_NAME = \"PRIMARY\" OR INDEX_NAME = \"SECONDARY\")";
 
 // get secondary K values
-$secondaryk_values_req = "SELECT $primaryk_and_secondaryK FROM $reference_table_name ORDER BY 1"; 
+$secondaryk_values_req = "SELECT $primaryk_and_secondaryK FROM $reference_table_name ORDER BY $primaryk_and_secondaryK"; 
 ?>
