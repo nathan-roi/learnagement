@@ -2,7 +2,7 @@
     require_once("config.php");
 
  /**
-   * get the table primary K fields
+  * get the table primary K fields. Only 1 for base table, 2 for linking table
    *
    * @param
    *
@@ -179,7 +179,7 @@ function getPrimarySecondaryKeyValues($conn, $reference_table_name){
   foreach($primaryKValues as $primaryKValue){
     $primarySecondaryKeyValues[$primaryKValue] = getSecondaryKeyValue($conn, $reference_table_name, $primaryKValue);
   }
-  //dispDict($primarySecondaryKeyValues);
+  //dispDict("primarySecondaryKeyValues", $primarySecondaryKeyValues);
   asort($primarySecondaryKeyValues);
   return $primarySecondaryKeyValues;
 }
@@ -210,7 +210,7 @@ function getForeignKeys($conn, $table_name){
 }
 
 /**
- *
+ * @return array of field names ordered according db server order
  */
 function getFields($conn, $table_name){
   $fieldsName_req = "SHOW COLUMNS FROM $table_name";
@@ -257,7 +257,7 @@ function getKeysValuesResponsibles($conn, $table_name){
 
   $fields = getFields($conn, $table_name);
 
-  //dispDict($fields);
+  //dispDict("fields", $fields);
   
   $keysValuesResponsibles = [];
   if(in_array("id_responsable", $fields)){
@@ -280,7 +280,7 @@ function getKeysValuesResponsibles($conn, $table_name){
 	while ($row = mysqli_fetch_row($result)) {
 	  
  
-	  //dispDict($row);
+	  //dispDict("row", $row);
 	  $keysValuesResponsibles += [$row[0] => $row[1]]; // add entry FK => ref table
 	}
       }
@@ -290,6 +290,7 @@ function getKeysValuesResponsibles($conn, $table_name){
 
 /**
  *
+ 
  *
  * reurn a dictionary  foreignK => id_responsible
  */
@@ -297,13 +298,13 @@ function getResponsibleIdsToInsert($conn, $table_name){
 
   $foreignKeys = getForeignKeys($conn, $table_name);
 
-  //dispDict($foreignKeys);
+  //dispDict("foreignKeys", $foreignKeys);
 
   $inheritenceResponsability = [];
   foreach($foreignKeys as $foreignKey => $table){
     $keysValuesResponsibles = getKeysValuesResponsibles($conn, $table);
     //print("$foreignKey => $table :</br>");
-    //dispDict($keysValuesResponsibles);
+    //dispDict("keysValuesResponsibles", $keysValuesResponsibles);
     if(!empty($keysValuesResponsibles)){
       $inheritenceResponsability += [ $foreignKey => $keysValuesResponsibles];
     }
@@ -311,6 +312,75 @@ function getResponsibleIdsToInsert($conn, $table_name){
   return  $inheritenceResponsability;
 }
 
+
+/*
+ *
+ */
+function __getReponsibles($conn, $table_name, $primaryK_value){
+  $fields = getFields($conn, $table_name);
+  dispDict("fields", $fields);
+  $responsibles = [];
+
+  $primaryKField = getPrimaryKeyFields($conn, $table_name)[0]; //$table_name is logicaly a base table, so there is only one primary K 
+  if(in_array("id_responsable", $fields)){ // If the table defines a responsible for each tuple
+    $req="SELECT id_responsable FROM $table_name WHERE $primaryKField =" . __quoteValue($primaryK_value);
+    //print("</br> $req </br>");
+    $result = mysqli_query($conn, $req);
+    if (!$result) {
+      echo 'Impossible d\'exécuter la requête : ' . $req;
+      echo 'error '.mysqli_error();
+      exit;
+    }
+    
+    if (mysqli_num_rows($result) > 0) {
+      $responsibles += mysqli_fetch_row($result);
+    }
+  }else{ // If the table does not define a responsible for each tuple, look for a responsible in foreign table
+    $req="SELECT * FROM $table_name WHERE $primaryKField = " . __quoteValue($primaryK_value);
+    //print("</br> $req </br>");
+    $result = mysqli_query($conn, $req);
+    if (!$result) {
+      echo 'Impossible d\'exécuter la requête : ' . $req;
+      echo 'error '.mysqli_error();
+      exit;
+    }
+    
+    if (mysqli_num_rows($result) > 0) {
+      $dict_fields_values = mysqli_fetch_assoc($result);
+      $responsibles += getForeignResponsibleIds($conn, $table_name, $dict_fields_values);
+    }
+  }
+
+  return $responsibles;
+}
+/**
+ * Get recursively the responsible ids from foreign tables for a given tuple.
+ * The recursivity is cross recursivity with "__getResponsible()".
+ *
+ * @return list of foreign responsible ids for a given tuple of a table
+ */
+function getForeignResponsibleIds($conn, $table_name, $dict_fields_values){
+  //dispDict("dict_fields_values", $dict_fields_values);
+  
+  $foreignKeys = getForeignKeys($conn, $table_name);
+  dispDict("foreignKeys", $foreignKeys);
+  
+  $reponsibleIds = [];
+  foreach($foreignKeys as $foreignKey => $foreignTable){
+    //print("</br>$foreignKey -> $foreignTable , \n");
+    //print($dict_fields_values[$foreignKey] . "\n</br>");print("---\n");
+    $reponsibleIds += __getReponsibles($conn, $foreignTable, $dict_fields_values[$foreignKey]);
+  }
+
+  return $reponsibleIds;
+}
+
+/**
+ *
+ */
+function isInsertAllowed($conn, $table_name, $dict_fields_values, $userId){
+  return in_array($userId, getForeignResponsibleIds($conn, $table_name, $dict_fields_values));
+}
 
 /**
  *
@@ -323,15 +393,25 @@ function isLinkingTable($conn, $table_name){
   return count($primayK) > 1;
 }
 
-function dispDict($d){
+/*
+* @return return quoted value 
+*/
+function __quoteValue($value){
+  if($value[0] != "\"" && $value[strlen($value)-1] != "\""){
+    return "\"$value\"";
+  }
+  return $value;
+}
+
+function dispDict($dicName, $d){
   return(0); //comment to debug, uncomment for prod
-  print("</br></br>");
+  print("</br>$dicName:</br>");
   foreach($d as $k => $v){
     if(gettype($v) == "string")
       print($k . "=>" . $v ."</br>\n");
     else if(gettype($v) == "array")
-      print($k . "=>" . dispDict($v) ."</br>\n");
-  }debug_print_backtrace();
+      print($k . "=>" . dispDict($dicName."_SUB", $v) ."</br>\n");
+  }print("</br>");
 }
 
 

@@ -5,3 +5,4 @@
 - refactor PHP SQL request using functions with parameters to know explicitely the parameters of a request when it's get.
 - refactor using Object PHP
 - refactor to avoid check SQL injection
+- extract the DAG of table dependecies and check if it's a DAG

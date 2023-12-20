@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : mysql
--- Généré le : ven. 08 déc. 2023 à 21:27
+-- Généré le : mer. 20 déc. 2023 à 09:52
 -- Version du serveur : 8.0.33
 -- Version de PHP : 8.2.8
 
@@ -260,27 +260,28 @@ CREATE TABLE `INFO_seance_planned` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `INFO_seance_to_be_planned`
+-- Structure de la table `INFO_seance_to_be_affected`
 --
 
-CREATE TABLE `INFO_seance_to_be_planned` (
-  `id_seance_to_be_planned` int NOT NULL,
-  `lieu` varchar(25) NOT NULL,
-  `type` varchar(10) NOT NULL,
-  `heure` float NOT NULL,
-  `id_enseignant` int DEFAULT NULL,
-  `id_module` int NOT NULL
+CREATE TABLE `INFO_seance_to_be_affected` (
+  `id_seance_to_be_affected` int NOT NULL,
+  `id_module` int NOT NULL,
+  `seance_type` varchar(10) NOT NULL,
+  `numero_ordre` int NOT NULL,
+  `id_groupe` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `INFO_seance_to_be_planned_as_promo`
+-- Structure de la table `INFO_seance_to_be_affected_as_enseignant`
 --
 
-CREATE TABLE `INFO_seance_to_be_planned_as_promo` (
-  `id_seance_to_be_planned` int NOT NULL,
-  `id_promo` int NOT NULL
+CREATE TABLE `INFO_seance_to_be_affected_as_enseignant` (
+  `id_seance_to_be_affected` int NOT NULL,
+  `id_enseignant` int NOT NULL,
+  `id_responsable` int NOT NULL,
+  `modifiable` int NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -305,6 +306,28 @@ CREATE TABLE `INFO_view` (
   `name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `request` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Doublure de structure pour la vue `Seance_to_be_planned_generator`
+-- (Voir ci-dessous la vue réelle)
+--
+CREATE TABLE `Seance_to_be_planned_generator` (
+`code_module` varchar(10)
+,`nom_groupe` varchar(20)
+,`numero_ordre` int
+,`seanceType` varchar(10)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la vue `Seance_to_be_planned_generator`
+--
+DROP TABLE IF EXISTS `Seance_to_be_planned_generator`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `Seance_to_be_planned_generator`  AS SELECT `INFO_module`.`code_module` AS `code_module`, `INFO_module_sequencage`.`seanceType` AS `seanceType`, `INFO_module_sequencage`.`numero_ordre` AS `numero_ordre`, `INFO_groupe`.`nom_groupe` AS `nom_groupe` FROM ((((`INFO_module` join `INFO_module_as_promo` on((`INFO_module`.`id_module` = `INFO_module_as_promo`.`id_module`))) join `INFO_promo` on((`INFO_module_as_promo`.`id_promo` = `INFO_promo`.`id_promo`))) join `INFO_groupe` on((`INFO_promo`.`id_promo` = `INFO_groupe`.`id_promo`))) join `INFO_module_sequencage` on(((`INFO_module`.`id_module` = `INFO_module_sequencage`.`id_module`) and (`INFO_groupe`.`groupe_type` = `INFO_module_sequencage`.`groupe_type`)))) ;
 
 --
 -- Index pour les tables déchargées
@@ -444,20 +467,22 @@ ALTER TABLE `INFO_seance_planned`
   ADD KEY `FK_seance_seanceType` (`type`);
 
 --
--- Index pour la table `INFO_seance_to_be_planned`
+-- Index pour la table `INFO_seance_to_be_affected`
 --
-ALTER TABLE `INFO_seance_to_be_planned`
-  ADD PRIMARY KEY (`id_seance_to_be_planned`),
-  ADD KEY `FK_module_seance_to_be_planned` (`id_module`),
-  ADD KEY `FK_enseignant_seance_to_be_planned` (`id_enseignant`),
-  ADD KEY `FK_seance_to_be_planned_seanceType` (`type`);
+ALTER TABLE `INFO_seance_to_be_affected`
+  ADD PRIMARY KEY (`id_seance_to_be_affected`),
+  ADD UNIQUE KEY `SECONDARY` (`id_module`,`seance_type`,`numero_ordre`,`id_groupe`) USING BTREE,
+  ADD KEY `FK_seance_to_be_affected_as_groupe` (`id_groupe`),
+  ADD KEY `FK_seance_to_be_affected_as_seance_type` (`seance_type`);
 
 --
--- Index pour la table `INFO_seance_to_be_planned_as_promo`
+-- Index pour la table `INFO_seance_to_be_affected_as_enseignant`
 --
-ALTER TABLE `INFO_seance_to_be_planned_as_promo`
-  ADD PRIMARY KEY (`id_seance_to_be_planned`,`id_promo`),
-  ADD KEY `INFO_seance_to_be_planned_as_promo_ibfk_2` (`id_promo`);
+ALTER TABLE `INFO_seance_to_be_affected_as_enseignant`
+  ADD PRIMARY KEY (`id_seance_to_be_affected`,`id_enseignant`),
+  ADD UNIQUE KEY `SECONDARY` (`id_seance_to_be_affected`) USING BTREE,
+  ADD KEY `FK_seance_to_be_affected_as_enseignant_as_enseignant` (`id_enseignant`),
+  ADD KEY `FK_seance_to_be_affected_as_enseignant_as_responsable` (`id_responsable`);
 
 --
 -- Index pour la table `INFO_semestre`
@@ -532,10 +557,10 @@ ALTER TABLE `INFO_seance_planned`
   MODIFY `id_seance_planned` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT pour la table `INFO_seance_to_be_planned`
+-- AUTO_INCREMENT pour la table `INFO_seance_to_be_affected`
 --
-ALTER TABLE `INFO_seance_to_be_planned`
-  MODIFY `id_seance_to_be_planned` int NOT NULL AUTO_INCREMENT;
+ALTER TABLE `INFO_seance_to_be_affected`
+  MODIFY `id_seance_to_be_affected` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `INFO_view`
@@ -625,19 +650,20 @@ ALTER TABLE `INFO_seance_planned`
   ADD CONSTRAINT `FK_seance_seanceType` FOREIGN KEY (`type`) REFERENCES `INFO_seanceType` (`type`);
 
 --
--- Contraintes pour la table `INFO_seance_to_be_planned`
+-- Contraintes pour la table `INFO_seance_to_be_affected`
 --
-ALTER TABLE `INFO_seance_to_be_planned`
-  ADD CONSTRAINT `FK_enseignant_seance_to_be_planned` FOREIGN KEY (`id_enseignant`) REFERENCES `INFO_enseignant` (`id_enseignant`),
-  ADD CONSTRAINT `FK_module_seance_to_be_planned` FOREIGN KEY (`id_module`) REFERENCES `INFO_module` (`id_module`),
-  ADD CONSTRAINT `FK_seance_to_be_planned_seanceType` FOREIGN KEY (`type`) REFERENCES `INFO_seanceType` (`type`);
+ALTER TABLE `INFO_seance_to_be_affected`
+  ADD CONSTRAINT `FK_seance_to_be_affected_as_groupe` FOREIGN KEY (`id_groupe`) REFERENCES `INFO_groupe` (`id_groupe`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `FK_seance_to_be_affected_as_module` FOREIGN KEY (`id_module`) REFERENCES `INFO_module` (`id_module`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `FK_seance_to_be_affected_as_seance_type` FOREIGN KEY (`seance_type`) REFERENCES `INFO_seanceType` (`type`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
--- Contraintes pour la table `INFO_seance_to_be_planned_as_promo`
+-- Contraintes pour la table `INFO_seance_to_be_affected_as_enseignant`
 --
-ALTER TABLE `INFO_seance_to_be_planned_as_promo`
-  ADD CONSTRAINT `INFO_seance_to_be_planned_as_promo_ibfk_1` FOREIGN KEY (`id_seance_to_be_planned`) REFERENCES `INFO_seance_to_be_planned` (`id_seance_to_be_planned`),
-  ADD CONSTRAINT `INFO_seance_to_be_planned_as_promo_ibfk_2` FOREIGN KEY (`id_promo`) REFERENCES `INFO_promo` (`id_promo`);
+ALTER TABLE `INFO_seance_to_be_affected_as_enseignant`
+  ADD CONSTRAINT `FK_seance_to_be_affected_as_enseignant_as_enseignant` FOREIGN KEY (`id_enseignant`) REFERENCES `INFO_enseignant` (`id_enseignant`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `FK_seance_to_be_affected_as_enseignant_as_responsable` FOREIGN KEY (`id_responsable`) REFERENCES `INFO_enseignant` (`id_enseignant`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `FK_seance_to_be_affected_as_enseignant_as_seance_to_be_affected` FOREIGN KEY (`id_seance_to_be_affected`) REFERENCES `INFO_seance_to_be_affected` (`id_seance_to_be_affected`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

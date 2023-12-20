@@ -7,28 +7,32 @@ require_once("functions.php");
 
 if (isset($_POST['table'])) {
   
-  $responsibleIdsToInsert = getResponsibleIdsToInsert($conn, $_POST['table']);
+  //$responsibleIdsToInsert = getResponsibleIdsToInsert($conn, $_POST['table']);
 
- 
-  dispDict($_POST);
-  dispDict($responsibleIdsToInsert);
+  //dispDict("_POST", $_POST);
+  //dispDict("responsibleIdsToInsert", $responsibleIdsToInsert);
   
-  $fields = [];
-  //$values = [];
   $insertAllowed = false;
-  $resp = $_POST['id_responsable'];
+
+  $fieldsAndValues = [];
   foreach($_POST as $field => $value){
     if($field != "table"){
-      $fields += [$field => "\"$value\""];
-      //array_push($values, "\"$value\"");
-      if(array_key_exists($field, $responsibleIdsToInsert)){
+      $fieldsAndValues += [$field => "\"$value\""];
+      /*      if(array_key_exists($field, $responsibleIdsToInsert)){
 	if(in_array($resp, $responsibleIdsToInsert[$field])){
 	  $insertAllowed = true;
 	}
-      }
+	}*/
     }
   }
 
+  $resp = $_POST['id_responsable'];
+  $responsibleIdsToInsert = getForeignResponsibleIds($conn, $_POST['table'], $fieldsAndValues);
+  dispDict("responsibleIdsToInsert", $responsibleIdsToInsert);
+  if(in_array($resp, $responsibleIdsToInsert)){
+    $insertAllowed = true;
+  }
+ 
   if(!isset($_SESSION['loggedin']) || !$_SESSION['userId'] == $resp){
     $insertAllowed = false;
     print("Insert not allowed: No or bad loggin!");
@@ -37,7 +41,7 @@ if (isset($_POST['table'])) {
     
   
   if($insertAllowed){
-    $query = "INSERT INTO " . $_POST['table'] . "(" . implode(", ", array_keys($fields)) . ") VALUES ( " . implode(", ", $fields) . ")";
+    $query = "INSERT INTO " . $_POST['table'] . "(" . implode(", ", array_keys($fieldsAndValues)) . ") VALUES ( " . implode(", ", $fieldsAndValues) . ")";
 
     //print($query);
     
