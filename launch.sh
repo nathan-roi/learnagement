@@ -33,7 +33,7 @@ then
     echo
 fi
 
-sudo docker-compose up &
+sudo docker-compose up
 
 sleep 5
 
