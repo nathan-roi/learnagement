@@ -34,15 +34,17 @@ $_SESSION['timeout'] = $session_timeout;
       print("<a href=\"#\" onclick=\"setMain('modif.php');\">Manage</a>\n");
       print("<a href=\"profil.php\"><i class=\"fas fa-user-circle\"></i>" . $_SESSION['userFirstname'] . " " . $_SESSION['userLastname'] . "</a>\n");
       print("<a href=\"logout.php\"><i class=\"fas fa-sign-out-alt\"></i>Logout</a>\n");
-   }else{
+    }else{
       // set view as main page
       print("<script>
 	    document.cookie = 'mainPage='.concat('', 'view.php').concat('','; SameSite=Strict');
 	    </script>");
       print("<a href=\"login.php\"><i class=\"fas fa-sign-in-alt\"></i>Login</a>\n");
-       }
+    }
    ?>
-      </div>
+    <a href="activateAccount.php">Activate Account</a>
+
+	   </div>
     </nav>
     <aside>
       <?php include("filter.php"); ?> 

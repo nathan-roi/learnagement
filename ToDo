@@ -6,3 +6,4 @@
 - refactor using Object PHP
 - refactor to avoid check SQL injection
 - extract the DAG of table dependecies and check if it's a DAG
+- refactor and secure login system
