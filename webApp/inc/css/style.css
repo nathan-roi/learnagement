@@ -1,5 +1,21 @@
-body {
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
   background: white;
+  display: table;
+  width: 100%;
+}
+
+footer {
+   display: table-row;
+   position: fixed;
+   bottom: 0;  /* on le colle en bas */
+   width: 100%;
+   height: 25px;   /* Hauteur du pied de page */
 }
 
 table {
@@ -9,16 +25,18 @@ table {
   border: 3px solid purple;
 }
 table tr:nth-child(odd){
-  background-color:#f2f2f2;
+  background-color: #f2f2f2;
 }
 table tr:nth-child(even){
-  background-color:#fafafa;
+  background-color: #fafafa;
 }
 thead{
   border-collapse: collapse;
   border: 3px solid purple;
 }
-tr { border: none; }
+tr {
+    border: none;
+}
 th, td {
   padding: 10px;
   border-right: solid 1px #f00; 

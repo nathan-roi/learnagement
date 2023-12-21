@@ -11,11 +11,11 @@
   }
 
   $userlogin = $_POST['username'];
-  require("requests.php");
 
   /*
    * get user id and hashed password
    */
+  $login_req = "SELECT id_enseignant, prenom, nom, password FROM INFO_enseignant WHERE mail = \"$userlogin\"";
   $result = mysqli_query($conn, $login_req);
 
   if (!$result) {

@@ -1,10 +1,12 @@
+- remove docker-compose.yml and config.php from git to secure system
 - remove src after re-integration into webApp
 - remove prefix of db table
 - normalize name
 - refoctor setViewParameters.php to make it generic
 - refactor PHP SQL request using functions with parameters to know explicitely the parameters of a request when it's get.
-- refactor using Object PHP
+- refactor to remove requests.php
 - refactor to avoid check SQL injection
-- extract the DAG of table dependecies and check if it's a DAG
 - refactor and secure login system
 - test default password check in launch.sh
+- refactor using Object PHP
+- extract the DAG of table dependecies and check if it's a DAG

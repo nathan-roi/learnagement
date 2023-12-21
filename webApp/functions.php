@@ -8,7 +8,7 @@
    *
    * @param string $table_name table 
    *
-   * @return array Return the primary key as array of string
+   * @return array Return the primary key fields as array of string
    */
 function getPrimaryKeyFields($conn, $table_name){
 
@@ -232,20 +232,59 @@ function getFields($conn, $table_name){
   return $fields;
 }
 
+/*
+ * retrun dictionary paramField => paramValue
+ */
+function getParameters($conn){
+  $sessionId = session_id();
+  
+  $param_req = "SELECT * FROM `INFO_parameters_of_views` WHERE `sessionId` =  \"$sessionId\"";
+  
+  /*
+   * get parameters fields
+   */
+  $result = mysqli_query($conn, $param_req);
+  
+  if (!$result) {
+    echo 'Impossible d\'exécuter la requête : ' . $req;
+    echo 'error ' . mysqli_error($conn);
+    exit;
+  }
+  $parameters = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+  return $parameters[0];
+}
 
 function getTableData($conn, $table_name, $fields, $id_responsable){
-  // get table content
-  $table_req = " SELECT $fields FROM  $table_name WHERE id_responsable='$id_responsable' ";
 
-$result  =   mysqli_query($conn, $table_req);  
-    
-if ($result === FALSE){
-  echo "la requ&ecirc;te a &eacute;chou&eacute; : ".mysqli_error();
-  exit; // inutile de poursuivre le traitement dans ce cas
- }
-
- return $result;
+  $table_fields = getFields($conn, $table_name);
+  dispDict("table_fields", $table_fields);
   
+  $parameters = getParameters($conn);
+  dispDict("parameters", $parameters);
+  dispDict("parametersK", array_keys($parameters));
+  
+  $filterFields =  array_intersect($table_fields, array_keys($parameters));
+  dispDict("filterFields", $filterFields);
+
+  
+  // get table content
+  $table_req = " SELECT $fields FROM  $table_name WHERE id_responsable='$id_responsable'";
+  foreach($filterFields as $filterField){
+    if($parameters[$filterField] != ""){
+      $table_req = $table_req . " AND $filterField = \"$parameters[$filterField]\"";
+    }
+  }
+  //print($table_req);
+  
+  $result  =   mysqli_query($conn, $table_req);  
+    
+  if ($result === FALSE){
+    echo "la requ&ecirc;te a &eacute;chou&eacute; : ".mysqli_error();
+    exit; // inutile de poursuivre le traitement dans ce cas
+  }
+
+  return $result; 
 }
 
 /**
@@ -420,11 +459,12 @@ function dispDict($dicName, $d){
  */
 function initFilter($conn, $userId, $sessionId){
 
+  // duote userId if not null
   if($userId != "NULL"){
     $userId = "\"" . $userId . "\"";
   }
   
-  $req = "INSERT INTO `INFO_parameters_of_views` (`id_parameters_of_views`, `userId`, `sessionId`, `id_semestre`, `code_module`, `fullname`, `nom_filiere`) VALUES (NULL," . $userId . ",\"" . $sessionId . "\",NULL,NULL,NULL, NULL )";
+  $req = "INSERT INTO `INFO_parameters_of_views` (`id_parameters_of_views`, `userId`, `sessionId`) VALUES (NULL," . $userId . ",\"" . $sessionId . "\")";
 
   //print($req);
   $result = mysqli_query($conn, $req);

@@ -5,7 +5,7 @@ require_once("functions.php");
 $sessionId = session_id();
 
 
-    include("connectDB.php");
+include("connectDB.php");
 
 // get parameters according to the session
 $param_req = "SELECT * FROM `INFO_parameters_of_views` WHERE `sessionId` =  \"$sessionId\"";
@@ -35,47 +35,25 @@ foreach($fields as $field){
 
 
 $parameter_values=[];
-    if (mysqli_num_rows($result) > 0) {
-        $parameter_values = mysqli_fetch_assoc($result);
-    }
+if (mysqli_num_rows($result) > 0) {
+  $parameter_values = mysqli_fetch_assoc($result);
+ }
 
-//$forefnK_fields_values_dic = getSecondaryKs("INFO_parameters_of_views");
 /*
-     * get the table foreign Ks 
-     */
-
-$table_name = "INFO_parameters_of_views";
-  require("requests.php");
-    $forefnK_fields_array = [];
-    $forefnK_fields_values_dic = [];
-    $forefnKs = mysqli_query($conn, $foreignK_req);
-    if (!$forefnKs) {
-        echo 'Impossible d\'exécuter la requête : ' . $req;
-        echo 'error '.mysqli_error();
-        exit;
-    }
-    if (mysqli_num_rows($forefnKs) > 0) {
-      while ($forefnK = mysqli_fetch_row($forefnKs)) {
-	array_push($forefnK_fields_array, $forefnK[1]);
-	$reference_table_name = $forefnK[3];
-	require("requests.php"); //update requests with required reference_table_name
-	$primaryk_and_secondaryK = mysqli_query($conn, $secondaryk_fields_req);
-	$primaryk_and_secondaryK =  implode(", ",mysqli_fetch_row($primaryk_and_secondaryK));
-	require("requests.php"); //update requests with required primaryk_and_secondaryK
-	$primaryk_and_secondaryK_values = mysqli_query($conn, $secondaryk_values_req);
-	$psK_values_dic = [];
-	while ($psK_value = mysqli_fetch_row($primaryk_and_secondaryK_values)) {
-	  $psK_values_dic += [$psK_value[0] => implode(" ", array_slice($psK_value, 1))];
-	}
-	$forefnK_fields_values_dic += [$forefnK[1] => $psK_values_dic];
-      }
-    }
+ * Get all foreign keys with their secondary keys values
+ */
+$forefnK_fields_values_dic = [];
+$foreignKs = getForeignKeys($conn,  "INFO_parameters_of_views");
+foreach($foreignKs as $foreignK => $foreignTable){
+  $psK_values_dic = getPrimarySecondaryKeyValues($conn, $foreignTable);
+  $forefnK_fields_values_dic += [$foreignK => $psK_values_dic];
+}
 
 
 /*
  * Diplay form
  */
- print("
+print("
         <div class=\"paramview\">
             <form action=\"setViewParameters.php\" method=\"post\">
     ");

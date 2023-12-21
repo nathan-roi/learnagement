@@ -53,7 +53,7 @@ $_SESSION['timeout'] = $session_timeout;
       <?php include("view.php"); ?> 
     </main>
     <footer>
-    footer
+    <a href='https://github.com/FlavienVernier/learnagement'>Lernagement GitHub</a>
     </footer>
 
     <script type="text/javascript">

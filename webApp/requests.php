@@ -1,6 +1,6 @@
 <?php
   // get login informations
-  $login_req = "SELECT id_enseignant, prenom, nom, password FROM INFO_enseignant WHERE mail = \"$userlogin\"";
+
 
 
 
