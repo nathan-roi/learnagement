@@ -10,3 +10,4 @@
 - test default password check in launch.sh
 - refactor using Object PHP
 - extract the DAG of table dependecies and check if it's a DAG
+- update getTableData to apply filters recursively 
