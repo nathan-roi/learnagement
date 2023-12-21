@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : mysql
--- Généré le : mer. 20 déc. 2023 à 09:52
+-- Généré le : jeu. 21 déc. 2023 à 22:18
 -- Version du serveur : 8.0.33
 -- Version de PHP : 8.2.8
 
@@ -207,9 +207,9 @@ CREATE TABLE `INFO_parameters_of_views` (
   `userId` int DEFAULT NULL,
   `sessionId` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `id_semestre` tinyint DEFAULT NULL,
-  `code_module` int DEFAULT NULL,
+  `id_module` int DEFAULT NULL,
   `id_discipline` int DEFAULT NULL,
-  `fullname` int DEFAULT NULL,
+  `id_enseignant` int DEFAULT NULL,
   `nom_filiere` varchar(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -304,6 +304,7 @@ CREATE TABLE `INFO_view` (
   `id_view` int NOT NULL,
   `sortIndex` int NOT NULL,
   `name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `group_of_views` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `request` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -369,8 +370,8 @@ ALTER TABLE `INFO_discipline`
 --
 ALTER TABLE `INFO_enseignant`
   ADD PRIMARY KEY (`id_enseignant`),
+  ADD UNIQUE KEY `SECONDARY` (`prenom`,`nom`) USING BTREE,
   ADD UNIQUE KEY `mail` (`mail`),
-  ADD UNIQUE KEY `SECONDARY` (`fullName`) USING BTREE,
   ADD KEY `FK_enseignant_as_discipline` (`id_discipline`);
 
 --
@@ -439,8 +440,8 @@ ALTER TABLE `INFO_parameters_of_views`
   ADD PRIMARY KEY (`id_parameters_of_views`),
   ADD UNIQUE KEY `sessionId` (`sessionId`),
   ADD KEY `FK_parameters_of_views_as_semestre` (`id_semestre`),
-  ADD KEY `FK_parameters_of_views_as_module` (`code_module`),
-  ADD KEY `FK_parameters_of_views_as_enseignant` (`fullname`),
+  ADD KEY `FK_parameters_of_views_as_module` (`id_module`),
+  ADD KEY `FK_parameters_of_views_as_enseignant` (`id_enseignant`),
   ADD KEY `FK_parameters_of_views_as_filiere` (`nom_filiere`),
   ADD KEY `FK_parameters_of_views_as_discipline` (`id_discipline`);
 
@@ -632,9 +633,9 @@ ALTER TABLE `INFO_module_sequencage`
 --
 ALTER TABLE `INFO_parameters_of_views`
   ADD CONSTRAINT `FK_parameters_of_views_as_discipline` FOREIGN KEY (`id_discipline`) REFERENCES `INFO_discipline` (`id_discipline`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `FK_parameters_of_views_as_enseignant` FOREIGN KEY (`fullname`) REFERENCES `INFO_enseignant` (`id_enseignant`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `FK_parameters_of_views_as_enseignant` FOREIGN KEY (`id_enseignant`) REFERENCES `INFO_enseignant` (`id_enseignant`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `FK_parameters_of_views_as_filiere` FOREIGN KEY (`nom_filiere`) REFERENCES `INFO_filiere` (`nom_filiere`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `FK_parameters_of_views_as_module` FOREIGN KEY (`code_module`) REFERENCES `INFO_module` (`id_module`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `FK_parameters_of_views_as_module` FOREIGN KEY (`id_module`) REFERENCES `INFO_module` (`id_module`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `FK_parameters_of_views_as_semestre` FOREIGN KEY (`id_semestre`) REFERENCES `INFO_semestre` (`id_semestre`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
