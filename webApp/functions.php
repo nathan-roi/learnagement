@@ -254,7 +254,9 @@ function getParameters($conn){
 
   return $parameters[0];
 }
-
+/**
+ *
+ */
 function getTableData($conn, $table_name, $fields, $id_responsable){
 
   $table_fields = getFields($conn, $table_name);
@@ -453,7 +455,7 @@ function dispDict($dicName, $d){
   }print("</br>");
 }
 
-
+  
 /**
  *
  */

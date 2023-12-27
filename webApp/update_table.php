@@ -5,7 +5,7 @@ require_once("config.php");
 include("connectDB.php");
 include("functions.php");
 
-dispDict($_POST);
+dispDict("_POST", $_POST);
 
 if (isset($_POST['table'])) {
 
