@@ -10,3 +10,15 @@
 * View: GUI is automaticaly generated, according to the naming
 	* user view for user GUI: VUE_ explicit vue name
 	* learnings manager view for manager GUI: CHECK_  explicit vue name
+
+
+## Contraintes BD
+
+Toutes les tables de données (hors table de liaisons) doivent avoir une clé primaire numérique composée d'un seul attribut et une clé secondaire composé d'un ensemble d'attributs humainement compréhensible.
+Cet ensemble doit être déclaré comme unique avec pour nom d'indexe "SECONDARY".
+Si la clé secondaire contient une clé étrangaire, la table concernée sera califiée d'intermédiaire.
+La clé primaire est toujours constitué des premiers attributs, le premier dans le cas d'une table de base ou intermédiaire, les 2 premiers dans le cas d'une table de liaison.
+Nous avons donc 3 types de table:
+* les tables de base avec un seul attribut numérique clé primaire et une clé secondaire composée d'un ensemble d'attributs ne contemnant pas de clé étrangère 
+* les tables de intermédiaire avec un seul attribut numérique clé primaire et une clé secondaire composée d'un ensemble d'attributs contemnant au moins une clé étrangère  
+* les table de liaison avec 2 attributs formant la clé primaire et ne contenant pas de clé secondaire

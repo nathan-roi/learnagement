@@ -38,7 +38,7 @@ function __addFiltersInRequest($conn, $request){
   foreach($tablesOfRequest as $table){
     $fk = array_search($table, $foreignParam);
     //print("table: " . $table . " fk: " . $fk . "</br>\n");
-    if($parameters[$fk] != ""){
+    if($fk && $parameters[$fk] != ""){
       $filter = $filter . $table . "." . $fk . " = " . $parameters[$fk] . " AND ";
     }
   }
