@@ -39,7 +39,7 @@ function __addFiltersInRequest($conn, $request){
     $fk = array_search($table, $foreignParam);
     //print("table: " . $table . " fk: " . $fk . "</br>\n");
     if($fk && $parameters[$fk] != ""){
-      $filter = $filter . $table . "." . $fk . " = " . $parameters[$fk] . " AND ";
+      $filter = $filter . $table . "." . $fk . " = \"" . $parameters[$fk] . "\" AND ";
     }
   }
   //print("filter: " . $filter .  "</br>\n");

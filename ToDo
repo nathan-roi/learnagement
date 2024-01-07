@@ -1,3 +1,4 @@
+- change the relation 1-n from leaning_unit to maotule, to n-n relation
 - remove docker-compose.yml and config.php from git to secure system
 - remove src after re-integration into webApp
 - remove prefix of db table

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : mysql
--- Généré le : jeu. 21 déc. 2023 à 22:18
+-- Généré le : dim. 07 jan. 2024 à 18:48
 -- Version du serveur : 8.0.33
 -- Version de PHP : 8.2.8
 
@@ -20,33 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `learnagement`
 --
-
--- --------------------------------------------------------
-
---
--- Structure de la table `INFO_dependances`
---
-
-CREATE TABLE `INFO_dependances` (
-  `id_dependances` int NOT NULL,
-  `id_module precedant` int NOT NULL,
-  `type precedant` varchar(10) NOT NULL,
-  `numero seance precedant` int NOT NULL,
-  `id_module suivant` int NOT NULL,
-  `type suivant` varchar(10) NOT NULL,
-  `numero seance suivant` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `INFO_dependances_seance_to_be_planned`
---
-
-CREATE TABLE `INFO_dependances_seance_to_be_planned` (
-  `precedent` int NOT NULL,
-  `successeur` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -139,7 +112,8 @@ CREATE TABLE `INFO_groupe_type` (
 CREATE TABLE `INFO_learning_unit` (
   `id_learning_unit` int NOT NULL,
   `learning_unit_code` varchar(10) NOT NULL,
-  `learning_unit_name` varchar(50) NOT NULL
+  `learning_unit_name` varchar(50) NOT NULL,
+  `id_promo` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -151,7 +125,7 @@ CREATE TABLE `INFO_learning_unit` (
 CREATE TABLE `INFO_module` (
   `id_module` int NOT NULL,
   `code_module` varchar(10) NOT NULL,
-  `nom` varchar(50) NOT NULL,
+  `nom` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `id_discipline` int DEFAULT NULL,
   `id_semestre` tinyint NOT NULL,
   `id_learning_unit` int DEFAULT NULL,
@@ -316,9 +290,9 @@ CREATE TABLE `INFO_view` (
 --
 CREATE TABLE `Seance_to_be_planned_generator` (
 `code_module` varchar(10)
-,`nom_groupe` varchar(20)
-,`numero_ordre` int
 ,`seanceType` varchar(10)
+,`numero_ordre` int
+,`nom_groupe` varchar(20)
 );
 
 -- --------------------------------------------------------
@@ -333,22 +307,6 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `Seance_
 --
 -- Index pour les tables déchargées
 --
-
---
--- Index pour la table `INFO_dependances`
---
-ALTER TABLE `INFO_dependances`
-  ADD PRIMARY KEY (`id_dependances`),
-  ADD KEY `FK_dependances_as_module_prev` (`id_module precedant`),
-  ADD KEY `FK_dependances_as_module_next` (`id_module suivant`),
-  ADD KEY `FK_dependances_as_seanceType_prev` (`type precedant`),
-  ADD KEY `FK_dependances_as_seanceType_next` (`type suivant`);
-
---
--- Index pour la table `INFO_dependances_seance_to_be_planned`
---
-ALTER TABLE `INFO_dependances_seance_to_be_planned`
-  ADD PRIMARY KEY (`precedent`,`successeur`);
 
 --
 -- Index pour la table `INFO_dependance_sequence`
@@ -402,7 +360,8 @@ ALTER TABLE `INFO_groupe_type`
 --
 ALTER TABLE `INFO_learning_unit`
   ADD PRIMARY KEY (`id_learning_unit`),
-  ADD UNIQUE KEY `SECONDARY` (`learning_unit_code`);
+  ADD UNIQUE KEY `SECONDARY` (`learning_unit_code`,`id_promo`) USING BTREE,
+  ADD KEY `FK_learning_unit_as_promo` (`id_promo`);
 
 --
 -- Index pour la table `INFO_module`
@@ -574,15 +533,6 @@ ALTER TABLE `INFO_view`
 --
 
 --
--- Contraintes pour la table `INFO_dependances`
---
-ALTER TABLE `INFO_dependances`
-  ADD CONSTRAINT `FK_dependances_as_module_next` FOREIGN KEY (`id_module suivant`) REFERENCES `INFO_module` (`id_module`),
-  ADD CONSTRAINT `FK_dependances_as_module_prev` FOREIGN KEY (`id_module precedant`) REFERENCES `INFO_module` (`id_module`),
-  ADD CONSTRAINT `FK_dependances_as_seanceType_next` FOREIGN KEY (`type suivant`) REFERENCES `INFO_seanceType` (`type`),
-  ADD CONSTRAINT `FK_dependances_as_seanceType_prev` FOREIGN KEY (`type precedant`) REFERENCES `INFO_seanceType` (`type`);
-
---
 -- Contraintes pour la table `INFO_dependance_sequence`
 --
 ALTER TABLE `INFO_dependance_sequence`
@@ -602,6 +552,12 @@ ALTER TABLE `INFO_enseignant`
 ALTER TABLE `INFO_groupe`
   ADD CONSTRAINT `FK_groupe_as_groupe_type` FOREIGN KEY (`groupe_type`) REFERENCES `INFO_groupe_type` (`groupe_type`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `FK_groupe_as_promo` FOREIGN KEY (`id_promo`) REFERENCES `INFO_promo` (`id_promo`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
+-- Contraintes pour la table `INFO_learning_unit`
+--
+ALTER TABLE `INFO_learning_unit`
+  ADD CONSTRAINT `FK_learning_unit_as_promo` FOREIGN KEY (`id_promo`) REFERENCES `INFO_promo` (`id_promo`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
 -- Contraintes pour la table `INFO_module`
