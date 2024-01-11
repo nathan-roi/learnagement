@@ -3,4 +3,7 @@
 **/logs
 **/data
 __pycache__
-config.py
+.*
+#*
+webApp/config.php
+docker/docker-compose.yml

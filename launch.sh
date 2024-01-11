@@ -5,6 +5,24 @@ GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
 ##########
+# init web app config
+cd webApp
+if [ ! -f config.php ]
+then
+    cp config.php.example config.php
+    printf "${GREEN}Update docker/docker-compose.yml and webApp/config.php files with new password.${NC}"
+    echo
+    read -p "Then press any key to continue... " -n1 -s
+    echo    
+fi
+if cmp --silent -- config.php.example config.php
+then
+    printf "${RED}WARNING default password seems to be used !!!${NC}"
+    echo
+fi
+cd..
+
+##########
 # create links to populate with private data
 
 # create private data directory if not exist
@@ -12,6 +30,7 @@ mkdir -p db/data
 cd db
 sh insertPrivateData.sh
 cd ..
+
 
 ##########
 # launch docker
