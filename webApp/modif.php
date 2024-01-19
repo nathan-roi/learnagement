@@ -28,34 +28,31 @@ if(isset($_SESSION['loggedin'])){
     /*
      * db connection and load requests
      */
+    require_once("functions_db.php");
+    require_once("get_data.php");
     require("connectDB.php");
+
+    
     $sessionId = session_id();
     //print("-".$sessionId.".");
 
-    require("requests.php");
+    //require("requests.php");
 
+    print("<section>");
 
-print("<section>"); 
+    $updatables = get_updatables($conn);
 
-    /*
-     * get all modifiable tables
-     */
-    $tables = mysqli_query($conn, $modifiable_tables_req);
-    if (!$tables) {
-       echo 'Impossible d\'exécuter la requête : ' . $req;
-       echo 'error '.mysqli_error();
-       exit;
-     }
-
-
-     /*
-      * get each table
-      */
-     while ($table = mysqli_fetch_row($tables)) {
-       //print($table[0]);
-     	   $table_name = $table[0];
-    	   include("get_table.php");
-     }
+    while ($table = mysqli_fetch_row($updatables)) {
+      $table_name = $table[0];
+      $request = $table[1];
+      $request = sprintf($request, $sessionId);
+      print($request);
+      get_updatable($conn,  $table_name, $request);
+    }
+    
+    mysqli_close($conn);
+    print("</section>");
+    
  }else{
   header('location: login.php');
  }

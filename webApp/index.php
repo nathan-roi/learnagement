@@ -2,6 +2,7 @@
 session_start();
 require_once("config.php");
 require_once("functions.php");
+require_once("functions_filter.php");
 if(!isset($_SESSION["loggedin"])){
   $_SESSION['loggedin'] = false;
   $_SESSION['start'] = time();
@@ -41,6 +42,7 @@ $_SESSION['timeout'] = $session_timeout;
 	    </script>");
       print("<a href=\"login.php\"><i class=\"fas fa-sign-in-alt\"></i>Login</a>\n");
     }
+    
    ?>
     <a href="activateAccount.php">Activate Account</a>
 

@@ -2,6 +2,7 @@
   session_start();
   require_once("config.php");
   require_once("functions.php");
+  require_once("functions_filter.php");
   include("connectDB.php");
 
   // Now we check if the data from the login form was submitted, isset() will check if the data exists.

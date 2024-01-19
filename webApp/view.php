@@ -2,8 +2,9 @@
 session_start();
 require_once("config.php");
 require_once("functions_db.php");
-require_once("get_view.php");
-include("connectDB.php");
+require_once("get_data.php"); 
+require_once("db.php");
+include("connectDB.php"); 
 
 
 
@@ -15,7 +16,7 @@ if (isset($_SESSION['start']) && (time() - $_SESSION['start'] > $_SESSION['timeo
 
 $sessionId = session_id();
   
-
+initViewOfExplicitFKOfUpdatable($conn);
 
 print("<section>");
 

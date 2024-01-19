@@ -17,6 +17,10 @@ function get_views_old($conn, $vue_name){
   return $result;
 }
 
+
+/*
+ * TODO merge with get_updatables
+ */
 function get_views($conn){
   $views_req = "SELECT `name`, `request` FROM `INFO_view` WHERE 1 ORDER BY `sortIndex`";
 
@@ -29,5 +33,22 @@ if (!$views) {
  }
 
  return $views;
+}
+
+/*
+ * TODO merge with get_views
+ */
+function get_updatables($conn){
+  $updatables_req = "SELECT `name`, `request` FROM `INFO_updatable` WHERE 1 ORDER BY `sortIndex`";
+
+  $updatables = mysqli_query($conn, $updatables_req);
+
+if (!$updatables) {
+  echo 'Impossible d\'exécuter la requête : ' . $req;
+  echo 'error '.mysqli_error($conn);
+  exit;
+ }
+
+ return $updatables;
 }
 ?>

@@ -83,46 +83,24 @@ function getPrimaryKeyValues($conn, $table_name){
 
 
 /**
- * NOT USE YET
+ * return a array of row, each row is a dictionnary:
+ * row["id"] => primariKeyValue
+ * row["ExplicitSecondaryK"]=> explitSecondaryKeyValue
+ * only for foreign tables of updatable tables
  */
-function getSecondaryKs($table){
-  require_once("config.php");
-  $table_name = $table;
-  require("requests.php");
-
-  /*
-   * get the table foreign Ks 
-   */
-  $forefnK_fields_array = [];
-  $forefnK_fields_values_dic = [];
-  $forefnKs = mysqli_query($conn, $foreignK_req);
-  if (!$forefnKs) {
-    echo 'Impossible d\'exécuter la requête : ' . $req;
-    echo 'error '.mysqli_error();
-    exit;
-  }
-  if (mysqli_num_rows($forefnKs) > 0) {
-    while ($forefnK = mysqli_fetch_row($forefnKs)) {
-      array_push($forefnK_fields_array, $forefnK[1]);
-      $reference_table_name = $forefnK[3];
-      require("requests.php"); //update requests with required reference_table_name
-
-      $primaryk_and_secondaryK = mysqli_query($conn, $secondaryk_fields_req);
-      $primaryk_and_secondaryK =  implode(", ",mysqli_fetch_row($primaryk_and_secondaryK));
+function getSecondaryKeys($conn, $table){
   
-      require("requests.php"); //update requests with required primaryk_and_secondaryK
-      $primaryk_and_secondaryK_values = mysqli_query($conn, $secondaryk_values_req);
-      $psK_values_dic = [];
-      while ($psK_value = mysqli_fetch_row($primaryk_and_secondaryK_values)) {
-	$psK_values_dic += [$psK_value[0] => implode(" ", array_slice($psK_value, 1))]; // add dictionary entry: primaryK => secondaryK
-      }
-      $forefnK_fields_values_dic += [$forefnK[1] => $psK_values_dic];
-    }
-  }
-  return $forefnK_fields_values_dic;
+  $table_name = "ExplicitSecondaryKs_" . $table;
+
+  $result = query($conn, "SELECT * FROM $table_name");
+
+  $secondaryKeys = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+  return $secondaryKeys;
 }
 
 /**
+ * DEPRECATED
  * return explicit secondary K values as a string for a given primary K.
  */
 function getSecondaryKeyValue($conn, $reference_table_name, $primary_value){
@@ -133,7 +111,7 @@ function getSecondaryKeyValue($conn, $reference_table_name, $primary_value){
   $primaryKFields = getPrimaryKeyFields($conn, $reference_table_name);
   // Theoriticaly there is only one field
   
-  //get foreign Ks fields
+  //get foreign Ksfields
   $foreignKsFields = getForeignKeys($conn, $reference_table_name);
    
   // get secondary K fields
@@ -209,6 +187,8 @@ function getForeignKeys($conn, $table_name){
   return $foreignKeys;
 }
 
+
+
 /**
  * @return array of field names ordered according db server order
  */
@@ -254,8 +234,43 @@ function getParameters($conn){
 
   return $parameters[0];
 }
-/**
+
+/*
+ * WORK IN PROGRESS
+ */
+function getFilteredDependencies($conn, $table_name){
+
+  $table_fields = getFields($conn, $table_name);
+  $parameters = getParameters($conn);
+  $filterFields =  array_intersect($table_fields, array_keys($parameters));
+
+  $depedencies = [];
+  foreach($filterFields as $field){
+    $depedencies[$field] = $table_name;
+  }
+
+  $foreignKs = getForeignKeys($conn, $table_name);
+
+  foreach($foreignKs as $foreignK => $foreignTable){
+    $depedencies[$foreignK] = getFilteredDependencies($conn, $foreignTable);
+  }
+
+  return $dependencies;
+}
+
+/*
+ * WORK IN PROGRESS
  *
+ * return formated request
+ */
+function __dependencies2request($select, $dependencies, $parameters){
+  $request = $select;
+  $request = $request . " FROM ";
+}
+
+
+/**
+ * DEPRECATED ?
  */
 function getTableData($conn, $table_name, $fields, $id_responsable){
 
@@ -265,7 +280,7 @@ function getTableData($conn, $table_name, $fields, $id_responsable){
   $parameters = getParameters($conn);
   dispDict("parameters", $parameters);
   dispDict("parametersK", array_keys($parameters));
-  
+
   $filterFields =  array_intersect($table_fields, array_keys($parameters));
   dispDict("filterFields", $filterFields);
 
@@ -274,9 +289,10 @@ function getTableData($conn, $table_name, $fields, $id_responsable){
   $table_req = " SELECT $fields FROM  $table_name WHERE id_responsable='$id_responsable'";
   foreach($filterFields as $filterField){
     if($parameters[$filterField] != ""){
-      $table_req = $table_req . " AND $filterField = \"$parameters[$filterField]\"";
+      $table_req = $table_req . " AND $table_name.$filterField = \"$parameters[$filterField]\"";
     }
   }
+  
   //print($table_req);
   
   $result  =   mysqli_query($conn, $table_req);  
@@ -455,26 +471,5 @@ function dispDict($dicName, $d){
   }print("</br>");
 }
 
-  
-/**
- *
- */
-function initFilter($conn, $userId, $sessionId){
 
-  // duote userId if not null
-  if($userId != "NULL"){
-    $userId = "\"" . $userId . "\"";
-  }
-  
-  $req = "INSERT INTO `INFO_parameters_of_views` (`id_parameters_of_views`, `userId`, `sessionId`) VALUES (NULL," . $userId . ",\"" . $sessionId . "\")";
-
-  //print($req);
-  $result = mysqli_query($conn, $req);
-
-  if (!$result) {
-    echo 'Impossible d\'exécuter la requête : ' . $req;
-    echo 'error ' . mysqli_error($conn);
-    exit;
-  }
-}
 ?>
