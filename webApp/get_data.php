@@ -200,7 +200,7 @@ function get_updatable($conn, $table_name, $table_name_displayed, $request){
 
   foreach($fields as $field){
      // do not display modifiable field
-     if($field == "modifiable"){
+     if($field->name == "modifiable"){
        $modifiable = 0;
      }else if($field->name == "id_responsable"){
        print("<input form='" . $table_name . "_insert' type='hidden' name='$field->name' value=\"$_SESSION[userId]\">");    
