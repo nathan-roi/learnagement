@@ -41,7 +41,7 @@ include("connectDB.php");
 
 
 $parameterFieldsAndValues = getParameters($conn);
-dispDict("parameterFieldsAndValues", $parameterFieldsAndValues);
+//dispDICT("parameterFieldsAndValues", $parameterFieldsAndValues);
 
 /*
  * Get all foreign keys with their secondary keys values
@@ -52,7 +52,7 @@ foreach($foreignKs as $foreignK => $foreignTable){
   $psK_values_dic = getPrimarySecondaryKeyValues($conn, $foreignTable);
   $forefnK_fields_values_dic += [$foreignK => $psK_values_dic];
 }
-dispDict("forefnK_fields_values_dic", $forefnK_fields_values_dic);
+//dispDICT("forefnK_fields_values_dic", $forefnK_fields_values_dic);
 
 /*
  * Diplay form

@@ -25,9 +25,9 @@ function __addFiltersInRequest($conn, $request){
   $foreignParam = getForeignKeys($conn, "INFO_parameters_of_views"); // FK => Table
   $tablesOfRequest = __getTableFromRequest($conn, $request);
 
-  dispDict("parameters", $parameters);
-  dispDict("foreignParam", $foreignParam);
-  dispDict("tablesOfRequest", $tablesOfRequest);
+  //dispDICT("parameters", $parameters);
+  //dispDICT("foreignParam", $foreignParam);
+  //dispDICT("tablesOfRequest", $tablesOfRequest);
   
   $filter = "";
   foreach($tablesOfRequest as $table){

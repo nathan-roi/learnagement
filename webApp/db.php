@@ -64,15 +64,15 @@ function __buidSecondaryKeyRequest($conn, $table){
       $subRequestAsDict = __buidSecondaryKeyRequest($conn, $foreignKsFields[$secondaryKField]);
       
       $requestAsDict["SELECT"] = array_merge($requestAsDict["SELECT"], $subRequestAsDict["SELECT"]);
-      dispDict("requestAsDict after SELECT", $requestAsDict);  
+      //dispDICT("requestAsDict after SELECT", $requestAsDict);  
       $requestAsDict["FROM"] = $requestAsDict["FROM"] . " JOIN " . $subRequestAsDict["MAINTABLE"] . " ON " . $subRequestAsDict["MAINTABLE"] . "." . getPrimaryKeyFields($conn, $foreignKsFields[$secondaryKField])[0] . " = " . $table . "." . $secondaryKField . $subRequestAsDict["FROM"];
-      dispDict("requestAsDict AFTER FROM", $requestAsDict);  
+      //dispDICT("requestAsDict AFTER FROM", $requestAsDict);  
     }else{  
       array_push($requestAsDict["SELECT"], $table . "." . $secondaryKField);
     }
   }
   
-  dispDict("requestAsDict", $requestAsDict);  
+  //dispDICT("requestAsDict", $requestAsDict);  
   return $requestAsDict;
 }
 

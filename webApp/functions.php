@@ -275,14 +275,14 @@ function __dependencies2request($select, $dependencies, $parameters){
 function getTableData($conn, $table_name, $fields, $id_responsable){
 
   $table_fields = getFields($conn, $table_name);
-  dispDict("table_fields", $table_fields);
+  //dispDICT("table_fields", $table_fields);
   
   $parameters = getParameters($conn);
-  dispDict("parameters", $parameters);
-  dispDict("parametersK", array_keys($parameters));
+  //dispDICT("parameters", $parameters);
+  //dispDICT("parametersK", array_keys($parameters));
 
   $filterFields =  array_intersect($table_fields, array_keys($parameters));
-  dispDict("filterFields", $filterFields);
+  //dispDICT("filterFields", $filterFields);
 
   
   // get table content
@@ -375,7 +375,7 @@ function getResponsibleIdsToInsert($conn, $table_name){
  */
 function __getReponsibles($conn, $table_name, $primaryK_value){
   $fields = getFields($conn, $table_name);
-  dispDict("fields", $fields);
+  //dispDICT("fields", $fields);
   $responsibles = [];
 
   $primaryKField = getPrimaryKeyFields($conn, $table_name)[0]; //$table_name is logicaly a base table, so there is only one primary K 
@@ -420,7 +420,7 @@ function getForeignResponsibleIds($conn, $table_name, $dict_fields_values){
   //dispDict("dict_fields_values", $dict_fields_values);
   
   $foreignKeys = getForeignKeys($conn, $table_name);
-  dispDict("foreignKeys", $foreignKeys);
+  //dispDICT("foreignKeys", $foreignKeys);
   
   $reponsibleIds = [];
   foreach($foreignKeys as $foreignKey => $foreignTable){
@@ -461,7 +461,7 @@ function __quoteValue($value){
 }
 
 function dispDict($dicName, $d){
-  return(0); //comment to debug, uncomment for prod
+  //return(0); //comment to debug, uncomment for prod
   print("</br>$dicName:</br>");
   foreach($d as $k => $v){
     if(gettype($v) == "string")

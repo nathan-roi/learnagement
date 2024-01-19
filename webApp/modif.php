@@ -42,12 +42,13 @@ if(isset($_SESSION['loggedin'])){
 
     $updatables = get_updatables($conn);
 
-    while ($table = mysqli_fetch_row($updatables)) {
-      $table_name = $table[0];
-      $request = $table[1];
+    while ($table = mysqli_fetch_assoc($updatables)) {
+      $table_name = $table["table_name"];
+      $table_name_displayed = $table["table_name_displayed"];
+      $request = $table["request"];
       $request = sprintf($request, $sessionId);
       print($request);
-      get_updatable($conn,  $table_name, $request);
+      get_updatable($conn,  $table_name, $table_name_displayed, $request);
     }
     
     mysqli_close($conn);

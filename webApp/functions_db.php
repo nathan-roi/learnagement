@@ -39,7 +39,7 @@ if (!$views) {
  * TODO merge with get_views
  */
 function get_updatables($conn){
-  $updatables_req = "SELECT `name`, `request` FROM `INFO_updatable` WHERE 1 ORDER BY `sortIndex`";
+  $updatables_req = "SELECT `table_name`, `table_name_displayed`, `request` FROM `INFO_updatable` WHERE 1 ORDER BY `sortIndex`";
 
   $updatables = mysqli_query($conn, $updatables_req);
 

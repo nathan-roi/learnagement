@@ -54,19 +54,18 @@ function get_view($conn, $view_name, $request){
 /**
  *
  */
-function get_updatable($conn, $table_name_displayed, $request){
+  function get_updatable($conn, $table_name, $table_name_displayed, $request){
   
   $request = __addFiltersInRequest($conn, $request);
-  $table_name = __getTableFromRequest($conn, $request)[0];
 
-  //print($request . "\n");
-  //print("Table name: $table_name \n");
+  print($request . "\n");
+  print("Table name: $table_name \n");
   
   /*
    * get the table primary K field 
    */
   $primaryKeys = getPrimaryKeyFields($conn, $table_name);
-  //dispDict("pk", $primaryKeys);
+  dispDict("pk", $primaryKeys);
   
   print("<button type=\"button\" class=\"collapsible\">$table_name_displayed</button>");
   
@@ -142,7 +141,9 @@ function get_updatable($conn, $table_name_displayed, $request){
 
 	print(""); // do nothing, already manage previously
 
-      }else if($k == "modifiable"){ // do not display modifiable field
+      }
+
+      if($k == "modifiable"){ // do not display modifiable field
 	$modifiable = $v;
 	
       }else if($k ==  "id_responsable"){ // do not display responsible
@@ -163,7 +164,7 @@ function get_updatable($conn, $table_name_displayed, $request){
 	print("</select></td>");
 	//print("<script>selectElement('$pk$k', '$v');<\script>");
 	  
-      }else if (isLinkingTable($conn, $table_name) || ($k != 0)){ // display other fields except primary key of base table (not linking table)
+      }else if (isLinkingTable($conn, $table_name) || ($k != $primaryKeys[0])){ // display other fields except primary key of base table (not linking table)
 	
 	print("<td><input form='$table_name$pk' type='text' name='$k' value=\"$v\"></td>");
 
