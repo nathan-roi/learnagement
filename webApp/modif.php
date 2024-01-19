@@ -47,7 +47,7 @@ if(isset($_SESSION['loggedin'])){
       $table_name_displayed = $table["table_name_displayed"];
       $request = $table["request"];
       $request = sprintf($request, $sessionId);
-      print($request);
+      //print($request);
       get_updatable($conn,  $table_name, $table_name_displayed, $request);
     }
     

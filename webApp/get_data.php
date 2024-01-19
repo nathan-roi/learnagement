@@ -54,18 +54,18 @@ function get_view($conn, $view_name, $request){
 /**
  *
  */
-  function get_updatable($conn, $table_name, $table_name_displayed, $request){
+function get_updatable($conn, $table_name, $table_name_displayed, $request){
   
   $request = __addFiltersInRequest($conn, $request);
 
-  print($request . "\n");
-  print("Table name: $table_name \n");
+  //print($request . "\n");
+  //print("Table name: $table_name \n");
   
   /*
    * get the table primary K field 
    */
   $primaryKeys = getPrimaryKeyFields($conn, $table_name);
-  dispDict("pk", $primaryKeys);
+  //dispDict("pk", $primaryKeys);
   
   print("<button type=\"button\" class=\"collapsible\">$table_name_displayed</button>");
   
@@ -75,6 +75,7 @@ function get_view($conn, $view_name, $request){
 
   $result = query($conn, $request);
   $fields_type = [];
+  $fields = [];
 	
   if (mysqli_num_rows($result) > 0) {
     
@@ -185,6 +186,47 @@ function get_view($conn, $view_name, $request){
     }
     print("</tr>\n");
   }
+
+
+
+
+  /*
+   * add line to insert new data
+   */
+
+  print("<tr><form id='" . $table_name . "_insert' action='insert_into_table.php' method='post' class='form-row'></form>");
+	
+  print("<input form='" . $table_name . "_insert' type='hidden' name='table' value=\"$table_name\">");
+
+  foreach($fields as $field){
+     // do not display modifiable field
+     if($field == "modifiable"){
+       $modifiable = 0;
+     }else if($field->name == "id_responsable"){
+       print("<input form='" . $table_name . "_insert' type='hidden' name='$field->name' value=\"$_SESSION[userId]\">");    
+       // big text fields
+     }else if($field->type == "text"){
+       print("<td><textarea form='" . $table_name . "_insert' name='$field->name' placeholder=\"$v\"></textarea></td>");
+
+       // foreignK
+     }else if(in_array($field->name, array_keys($foreinKeyFields))){
+       print("<td><select form='" . $table_name . "_insert' name='" . $field->name . "'>");
+       print("<option value=\"" . $field->name ."\">" . $field->name . "</option>");
+       print($options[$field->name]);
+       print("</select></td>");
+	      
+       // primaryK
+     }else if($field->name == $primaryKeys[0]){
+       print(""); // primary K is autoincremented
+       // others
+     }else{
+       print("<td><input form='" . $table_name . "_insert' type='text' name='$field->name' placeholder=\"$field->name\"></td>");
+     }
+   }
+   print("<td><input form='" . $table_name . "_insert' type='submit' value='insert'></td>");
+   print("</tr>\n");
+
+	
   print("</tbody>");
   
   print("

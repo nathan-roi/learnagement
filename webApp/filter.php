@@ -7,38 +7,6 @@ $sessionId = session_id();
 
 include("connectDB.php");
 
-// get parameters according to the session
-//$param_req = "SELECT * FROM `INFO_parameters_of_views` WHERE `sessionId` =  \"$sessionId\"";
-
-/*
- * get parameters fields
- */
-/*$result = mysqli_query($conn, $param_req);
-
-  if (!$result) {
-  echo 'Impossible d\'exécuter la requête : ' . $req;
-  echo 'error ' . mysqli_error($conn);
-  exit;
-  }
-  $parameter_fields = [];
-  $fields = mysqli_fetch_fields($result); 
-
-  foreach($fields as $field){
-  if($field->name != "id_parameters_of_views" && $field->name != "sessionId" && $field->name != "userId"){
-  array_push($parameter_fields, $field->name);
-  }
-  }*/
-
-/*
- * get parameters: filters values
- */
-
-
-/*$parameter_values=[];
-  if (mysqli_num_rows($result) > 0) {
-  $parameter_values = mysqli_fetch_assoc($result);
-  }*/
-
 
 $parameterFieldsAndValues = getParameters($conn);
 //dispDICT("parameterFieldsAndValues", $parameterFieldsAndValues);
