@@ -77,7 +77,7 @@ function __buidSecondaryKeyRequest($conn, $table){
 }
 
 function buidSecondaryKeyRequest($conn, $table){
-    print("</br>TABLE: " . $table . "</br>");
+  //print("</br>TABLE: " . $table . "</br>");
 
     $primaryKeyField = getPrimaryKeyFields($conn, $table)[0];
 
@@ -89,7 +89,7 @@ function buidSecondaryKeyRequest($conn, $table){
  
     $secondaryKeyRequest = "CREATE OR REPLACE VIEW ExplicitSecondaryKs_" . $table . " AS SELECT $primaryKeyField AS id, CONCAT_WS(\" \", " . $secondaryKeyRequestAsDict["SELECT"] . ") AS ExplicitSecondaryK FROM " . $secondaryKeyRequestAsDict["FROM"];
 
-    print($secondaryKeyRequest);
+    //print($secondaryKeyRequest);
     query($conn, $secondaryKeyRequest);
 }
 /*
