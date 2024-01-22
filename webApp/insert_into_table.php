@@ -42,7 +42,7 @@ if (isset($_POST['table'])) {
   
   if($insertAllowed){
     $query = "INSERT INTO " . $_POST['table'] . "(" . implode(", ", array_keys($fieldsAndValues)) . ") VALUES ( " . implode(", ", $fieldsAndValues) . ")";
-
+    $query = str_replace("\"\"", "Null", $query);
     //print($query);
     
     mysqli_query($conn, $query);

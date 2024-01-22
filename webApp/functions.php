@@ -461,7 +461,7 @@ function __quoteValue($value){
 }
 
 function dispDict($dicName, $d){
-  //return(0); //comment to debug, uncomment for prod
+  return(0); //comment to debug, uncomment for prod
   print("</br>$dicName:</br>");
   foreach($d as $k => $v){
     if(gettype($v) == "string")

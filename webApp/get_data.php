@@ -211,7 +211,7 @@ function get_updatable($conn, $table_name, $table_name_displayed, $request){
        // foreignK
      }else if(in_array($field->name, array_keys($foreinKeyFields))){
        print("<td><select form='" . $table_name . "_insert' name='" . $field->name . "'>");
-       print("<option value=\"" . $field->name ."\">" . $field->name . "</option>");
+       print("<option value=\"\">" . $field->name ."</option>");
        print($options[$field->name]);
        print("</select></td>");
 	      
