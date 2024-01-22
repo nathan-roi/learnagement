@@ -77,7 +77,7 @@ function get_updatable($conn, $table_name, $table_name_displayed, $request){
   $fields_type = [];
   $fields = [];
 	
-  if (mysqli_num_rows($result) > 0) {
+	//if (mysqli_num_rows($result) > 0) {
     
     print("<thead><tr>");
     
@@ -99,7 +99,7 @@ function get_updatable($conn, $table_name, $table_name_displayed, $request){
     }
      
     print("</tr></thead>\n");
-  }
+	//}
 
   $options = [];
   $foreinKeyFields = getForeignKeys($conn, $table_name); // FK => FTable

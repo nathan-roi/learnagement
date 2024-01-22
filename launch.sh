@@ -20,7 +20,7 @@ then
     printf "${RED}WARNING default password seems to be used !!!${NC}"
     echo
 fi
-cd..
+cd ..
 
 ##########
 # create links to populate with private data

@@ -104,14 +104,15 @@ function initViewOfExplicitFKOfUpdatable($conn){
 
   // for each foreign table of updatable table, generate the explicit (human readable) secondary keys views
   
-  $request = "SELECT request FROM INFO_updatable";
+  $request = "SELECT table_name, request FROM INFO_updatable";
 
   $result = query($conn, $request);
 
   $tables = [];
   while ($row = mysqli_fetch_assoc($result)) {
     $request =  $row["request"];
-    $table = __getTableFromRequest($conn, $request)[0];
+    //$table = __getTableFromRequest($conn, $request)[0];
+    $table = $row["table_name"];
 
     //get foreign Ks fields
     $foreignKeysFields = getForeignKeys($conn, $table);
