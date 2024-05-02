@@ -1,5 +1,5 @@
 # learnagement
-Learning management
+Learnagement (Learning management) est un outil d'intégration de données de l'enseignement, il a pour but de faire le pont entre étudiants, enseignants et administratifs. Il est principalement développé par les étudiants de la filière IDU de Polytech Annecy dans le cadre d'un apprentissage par projet. 
 
 L'App Web s'organise autour de 3 objectifs: la gestion du planing prévisionel des enseignants, la cohérence entre le MCCC le prévisionel et la planification réelle, et la gestion des abscences des étudiants.
 
