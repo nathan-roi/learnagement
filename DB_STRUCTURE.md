@@ -24,5 +24,4 @@ table de liaison
 
 INFO_dependance_sequence : definit quelle séquence (CM, TD, TP ou autre) se place avant quelle autre séquence
 INFO_module_as_learning_unit : définit quelle module appartient à quelle unité d'enseignement, un module peut appartenir à plusieurs UE, mais pas 2 fois à la même UE
-INFO_module_as_promo : BUG !!! affectation des modules à leur promo (A REFACTORISER, CE SONT LES UE QUI DOIVENT ETRE ATTACHEES AU PROMO)
 INFO_seance_to_be_affected_as_enseignant : affectation d'une séance à un enseignant (Note : association 1-1 affin de séparer les droits de modification entre "seance_to_be_affected" et leur affectation)
