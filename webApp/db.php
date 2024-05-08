@@ -36,11 +36,15 @@ function __getTableFromRequest($conn, $request){
   return $tables;
 }
 
+// return request splitted in a dictionnary
 function __buidSecondaryKeyRequest($conn, $table){
 
   global $mysql_db;
-  
-  //get foreign Ks fields
+
+  //get primary K fields  
+  $primaryKsFields = getPrimaryKeyFields($conn, $table);
+
+  //get foreign K fields
   $foreignKsFields = getForeignKeys($conn, $table);
 
   // get secondary K fields
@@ -56,9 +60,13 @@ function __buidSecondaryKeyRequest($conn, $table){
   }
 
   $requestAsDict["SELECT"] = [];
+  foreach($primaryKsFields as $primaryKField){
+    array_push($requestAsDict["SELECT"], $table . "." . $primaryKField);
+  }
   $requestAsDict["FROM"] = "";
   $requestAsDict["MAINTABLE"] = "$table";
   foreach($secondaryKFields as $secondaryKField){
+    // if the secondary K field is a foreignK
     if(in_array($secondaryKField, array_keys($foreignKsFields))){
       
       $subRequestAsDict = __buidSecondaryKeyRequest($conn, $foreignKsFields[$secondaryKField]);
@@ -68,7 +76,7 @@ function __buidSecondaryKeyRequest($conn, $table){
       $requestAsDict["FROM"] = $requestAsDict["FROM"] . " JOIN " . $subRequestAsDict["MAINTABLE"] . " ON " . $subRequestAsDict["MAINTABLE"] . "." . getPrimaryKeyFields($conn, $foreignKsFields[$secondaryKField])[0] . " = " . $table . "." . $secondaryKField . $subRequestAsDict["FROM"];
       //dispDICT("requestAsDict AFTER FROM", $requestAsDict);  
     }else{  
-      array_push($requestAsDict["SELECT"], $table . "." . $secondaryKField);
+      $requestAsDict["SELECT"] = array_merge($requestAsDict["SELECT"], [$table . "." . $secondaryKField]);
     }
   }
   
@@ -87,9 +95,9 @@ function buidSecondaryKeyRequest($conn, $table){
   $secondaryKeyRequestAsDict["FROM"] = $table . " " . $secondaryKeyRequestAsDict["FROM"];
 
  
-    $secondaryKeyRequest = "CREATE OR REPLACE VIEW ExplicitSecondaryKs_" . $table . " AS SELECT $primaryKeyField AS id, CONCAT_WS(\" \", " . $secondaryKeyRequestAsDict["SELECT"] . ") AS ExplicitSecondaryK FROM " . $secondaryKeyRequestAsDict["FROM"];
+    $secondaryKeyRequest = "CREATE OR REPLACE VIEW ExplicitSecondaryKs_" . $table . " AS SELECT $primaryKeyField AS id, CONCAT_WS(\" \", " . $secondaryKeyRequestAsDict["SELECT"] . ") AS ExplicitSecondaryK, " . $secondaryKeyRequestAsDict["SELECT"] . " FROM " . $secondaryKeyRequestAsDict["FROM"];
 
-    //print($secondaryKeyRequest);
+    //print($secondaryKeyRequest . "</br>");
     query($conn, $secondaryKeyRequest);
 }
 /*
