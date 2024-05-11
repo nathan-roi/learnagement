@@ -92,7 +92,20 @@ function getSecondaryKeys($conn, $table){
   
   $table_name = "ExplicitSecondaryKs_" . $table;
 
-  $result = query($conn, "SELECT * FROM $table_name");
+  $table_fields = getFields($conn, $table_name);
+  $parameters = getParameters($conn);
+  $filterFields =  array_intersect($table_fields, array_keys($parameters));
+
+  $table_req = "SELECT * FROM $table_name WHERE 1 ";
+  foreach($filterFields as $filterField){
+    if($parameters[$filterField] != ""){
+      $table_req = $table_req . " AND $table_name.$filterField = \"$parameters[$filterField]\" ";
+    }
+  }
+
+  //print("</br>" . $table_req . "</br>");
+    
+  $result = query($conn, $table_req);
 
   $secondaryKeys = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -286,10 +299,10 @@ function getTableData($conn, $table_name, $fields, $id_responsable){
 
   
   // get table content
-  $table_req = " SELECT $fields FROM  $table_name WHERE id_responsable='$id_responsable'";
+  $table_req = " SELECT $fields FROM  $table_name WHERE id_responsable='$id_responsable' ";
   foreach($filterFields as $filterField){
     if($parameters[$filterField] != ""){
-      $table_req = $table_req . " AND $table_name.$filterField = \"$parameters[$filterField]\"";
+      $table_req = $table_req . " AND $table_name.$filterField = \"$parameters[$filterField]\" ";
     }
   }
   

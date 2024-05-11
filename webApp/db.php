@@ -60,8 +60,9 @@ function __buidSecondaryKeyRequest($conn, $table){
   }
 
   $requestAsDict["SELECT"] = [];
+  $requestAsDict["SELECT_PRIM"] = [];
   foreach($primaryKsFields as $primaryKField){
-    array_push($requestAsDict["SELECT"], $table . "." . $primaryKField);
+    array_push($requestAsDict["SELECT_PRIM"], $table . "." . $primaryKField);
   }
   $requestAsDict["FROM"] = "";
   $requestAsDict["MAINTABLE"] = "$table";
@@ -72,6 +73,7 @@ function __buidSecondaryKeyRequest($conn, $table){
       $subRequestAsDict = __buidSecondaryKeyRequest($conn, $foreignKsFields[$secondaryKField]);
       
       $requestAsDict["SELECT"] = array_merge($requestAsDict["SELECT"], $subRequestAsDict["SELECT"]);
+      $requestAsDict["SELECT_PRIM"] = array_merge($requestAsDict["SELECT_PRIM"], $subRequestAsDict["SELECT_PRIM"]);
       //dispDICT("requestAsDict after SELECT", $requestAsDict);  
       $requestAsDict["FROM"] = $requestAsDict["FROM"] . " JOIN " . $subRequestAsDict["MAINTABLE"] . " ON " . $subRequestAsDict["MAINTABLE"] . "." . getPrimaryKeyFields($conn, $foreignKsFields[$secondaryKField])[0] . " = " . $table . "." . $secondaryKField . $subRequestAsDict["FROM"];
       //dispDICT("requestAsDict AFTER FROM", $requestAsDict);  
@@ -92,10 +94,11 @@ function buidSecondaryKeyRequest($conn, $table){
     $secondaryKeyRequestAsDict = __buidSecondaryKeyRequest($conn, $table);
     
   $secondaryKeyRequestAsDict["SELECT"] = implode(", ", $secondaryKeyRequestAsDict["SELECT"]);
+  $secondaryKeyRequestAsDict["SELECT_PRIM"] = implode(", ", $secondaryKeyRequestAsDict["SELECT_PRIM"]);
   $secondaryKeyRequestAsDict["FROM"] = $table . " " . $secondaryKeyRequestAsDict["FROM"];
 
  
-    $secondaryKeyRequest = "CREATE OR REPLACE VIEW ExplicitSecondaryKs_" . $table . " AS SELECT $primaryKeyField AS id, CONCAT_WS(\" \", " . $secondaryKeyRequestAsDict["SELECT"] . ") AS ExplicitSecondaryK, " . $secondaryKeyRequestAsDict["SELECT"] . " FROM " . $secondaryKeyRequestAsDict["FROM"];
+    $secondaryKeyRequest = "CREATE OR REPLACE VIEW ExplicitSecondaryKs_" . $table . " AS SELECT $primaryKeyField AS id, CONCAT_WS(\" \", " . $secondaryKeyRequestAsDict["SELECT"] . ") AS ExplicitSecondaryK, " . $secondaryKeyRequestAsDict["SELECT_PRIM"] . " FROM " . $secondaryKeyRequestAsDict["FROM"];
 
     //print($secondaryKeyRequest . "</br>");
     query($conn, $secondaryKeyRequest);
