@@ -16,6 +16,8 @@ if (isset($_POST['table'])) {
     if($field != "table" && !str_starts_with($field, '__old_') && $field != "action"){
       if(empty($value)){
 	array_push($updates, $field . " = NULL");
+      }else if($value == "NULL"){
+	array_push($updates, $field . " = NULL");	
       }else{
 	array_push($updates, $field . " = \"$value\"");
       }
