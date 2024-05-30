@@ -3,10 +3,11 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : mysql
--- Généré le : mer. 08 mai 2024 à 21:34
+-- Généré le : mar. 14 mai 2024 à 14:20
 -- Version du serveur : 8.0.33
 -- Version de PHP : 8.2.8
 
+SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -287,7 +288,7 @@ CREATE TABLE `INFO_seance_planned` (
 CREATE TABLE `INFO_seance_to_be_affected` (
   `id_seance_to_be_affected` int NOT NULL,
   `id_module` int NOT NULL,
-  `seance_type` varchar(10) NOT NULL,
+  `id_seance_type` int DEFAULT NULL,
   `numero_ordre` int NOT NULL,
   `id_groupe` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -313,7 +314,7 @@ CREATE TABLE `INFO_seance_to_be_affected_as_enseignant` (
 
 CREATE TABLE `INFO_semestre` (
   `id_semestre` tinyint NOT NULL,
-  `semestre` int NOT NULL
+  `semestre` varchar(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -454,7 +455,7 @@ ALTER TABLE `INFO_module_as_learning_unit`
 --
 ALTER TABLE `INFO_module_sequencage`
   ADD PRIMARY KEY (`id_module_sequencage`),
-  ADD UNIQUE KEY `SECONDARY` (`id_module`,`nombre`,`id_seance_type`,`id_groupe_type`,`duree_h`) USING BTREE,
+  ADD UNIQUE KEY `SECONDARY` (`id_module`,`id_seance_type`,`id_groupe_type`,`duree_h`) USING BTREE,
   ADD KEY `FK_module_sequencage_as_enseignant` (`id_responsable`),
   ADD KEY `FK_module_sequencage_as_intervenant_principal` (`intervenant_principal`),
   ADD KEY `FK_module_sequencage_as_groupe_type` (`id_groupe_type`),
@@ -511,9 +512,9 @@ ALTER TABLE `INFO_seance_planned`
 --
 ALTER TABLE `INFO_seance_to_be_affected`
   ADD PRIMARY KEY (`id_seance_to_be_affected`),
-  ADD UNIQUE KEY `SECONDARY` (`id_module`,`seance_type`,`numero_ordre`,`id_groupe`) USING BTREE,
+  ADD UNIQUE KEY `SECONDARY` (`id_module`,`id_seance_type`,`numero_ordre`,`id_groupe`) USING BTREE,
   ADD KEY `FK_seance_to_be_affected_as_groupe` (`id_groupe`),
-  ADD KEY `FK_seance_to_be_affected_as_seance_type` (`seance_type`);
+  ADD KEY `FK_seance_to_be_affected_as_seance_type` (`id_seance_type`);
 
 --
 -- Index pour la table `INFO_seance_to_be_affected_as_enseignant`
@@ -762,7 +763,7 @@ ALTER TABLE `INFO_seance_planned`
 ALTER TABLE `INFO_seance_to_be_affected`
   ADD CONSTRAINT `FK_seance_to_be_affected_as_groupe` FOREIGN KEY (`id_groupe`) REFERENCES `INFO_groupe` (`id_groupe`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `FK_seance_to_be_affected_as_module` FOREIGN KEY (`id_module`) REFERENCES `INFO_module` (`id_module`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `FK_seance_to_be_affected_as_seance_type` FOREIGN KEY (`seance_type`) REFERENCES `INFO_seanceType` (`type`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `FK_seance_to_be_affected_as_seance_type` FOREIGN KEY (`id_seance_type`) REFERENCES `INFO_seanceType` (`id_seance_type`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
 -- Contraintes pour la table `INFO_seance_to_be_affected_as_enseignant`
@@ -771,6 +772,7 @@ ALTER TABLE `INFO_seance_to_be_affected_as_enseignant`
   ADD CONSTRAINT `FK_seance_to_be_affected_as_enseignant_as_enseignant` FOREIGN KEY (`id_enseignant`) REFERENCES `INFO_enseignant` (`id_enseignant`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `FK_seance_to_be_affected_as_enseignant_as_responsable` FOREIGN KEY (`id_responsable`) REFERENCES `INFO_enseignant` (`id_enseignant`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `FK_seance_to_be_affected_as_enseignant_as_seance_to_be_affected` FOREIGN KEY (`id_seance_to_be_affected`) REFERENCES `INFO_seance_to_be_affected` (`id_seance_to_be_affected`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+SET FOREIGN_KEY_CHECKS=1;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
