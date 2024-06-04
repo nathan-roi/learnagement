@@ -3,11 +3,10 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : mysql
--- Généré le : mar. 14 mai 2024 à 14:20
+-- Généré le : mar. 04 juin 2024 à 14:56
 -- Version du serveur : 8.0.33
 -- Version de PHP : 8.2.8
 
-SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -227,7 +226,7 @@ CREATE TABLE `INFO_parameters_of_views` (
   `id_module` int DEFAULT NULL,
   `id_discipline` int DEFAULT NULL,
   `id_enseignant` int DEFAULT NULL,
-  `nom_filiere` varchar(11) DEFAULT NULL,
+  `id_filiere` int DEFAULT NULL,
   `id_statut` int DEFAULT NULL,
   `id_display_limit` int NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -301,7 +300,7 @@ CREATE TABLE `INFO_seance_to_be_affected` (
 
 CREATE TABLE `INFO_seance_to_be_affected_as_enseignant` (
   `id_seance_to_be_affected` int NOT NULL,
-  `id_enseignant` int NOT NULL,
+  `id_enseignant` int DEFAULT NULL,
   `id_responsable` int NOT NULL,
   `modifiable` int NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -478,10 +477,10 @@ ALTER TABLE `INFO_parameters_of_views`
   ADD KEY `FK_parameters_of_views_as_semestre` (`id_semestre`),
   ADD KEY `FK_parameters_of_views_as_module` (`id_module`),
   ADD KEY `FK_parameters_of_views_as_enseignant` (`id_enseignant`),
-  ADD KEY `FK_parameters_of_views_as_filiere` (`nom_filiere`),
   ADD KEY `FK_parameters_of_views_as_discipline` (`id_discipline`),
   ADD KEY `FK_parameters_of_views_as_status` (`id_statut`),
-  ADD KEY `FK_parameters_of_views_as_display_limit` (`id_display_limit`);
+  ADD KEY `FK_parameters_of_views_as_display_limit` (`id_display_limit`),
+  ADD KEY `FK_parameters_of_views_as_filiere` (`id_filiere`);
 
 --
 -- Index pour la table `INFO_promo`
@@ -520,7 +519,7 @@ ALTER TABLE `INFO_seance_to_be_affected`
 -- Index pour la table `INFO_seance_to_be_affected_as_enseignant`
 --
 ALTER TABLE `INFO_seance_to_be_affected_as_enseignant`
-  ADD PRIMARY KEY (`id_seance_to_be_affected`,`id_enseignant`),
+  ADD PRIMARY KEY (`id_seance_to_be_affected`) USING BTREE,
   ADD UNIQUE KEY `SECONDARY` (`id_seance_to_be_affected`) USING BTREE,
   ADD KEY `FK_seance_to_be_affected_as_enseignant_as_enseignant` (`id_enseignant`),
   ADD KEY `FK_seance_to_be_affected_as_enseignant_as_responsable` (`id_responsable`);
@@ -738,7 +737,7 @@ ALTER TABLE `INFO_parameters_of_views`
   ADD CONSTRAINT `FK_parameters_of_views_as_discipline` FOREIGN KEY (`id_discipline`) REFERENCES `INFO_discipline` (`id_discipline`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `FK_parameters_of_views_as_display_limit` FOREIGN KEY (`id_display_limit`) REFERENCES `INFO_display_limit` (`id_display_limit`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `FK_parameters_of_views_as_enseignant` FOREIGN KEY (`id_enseignant`) REFERENCES `INFO_enseignant` (`id_enseignant`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `FK_parameters_of_views_as_filiere` FOREIGN KEY (`nom_filiere`) REFERENCES `INFO_filiere` (`nom_filiere`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `FK_parameters_of_views_as_filiere` FOREIGN KEY (`id_filiere`) REFERENCES `INFO_filiere` (`id_filiere`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `FK_parameters_of_views_as_module` FOREIGN KEY (`id_module`) REFERENCES `INFO_module` (`id_module`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `FK_parameters_of_views_as_semestre` FOREIGN KEY (`id_semestre`) REFERENCES `INFO_semestre` (`id_semestre`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `FK_parameters_of_views_as_status` FOREIGN KEY (`id_statut`) REFERENCES `INFO_statut` (`id_statut`) ON DELETE RESTRICT ON UPDATE RESTRICT;
@@ -772,7 +771,6 @@ ALTER TABLE `INFO_seance_to_be_affected_as_enseignant`
   ADD CONSTRAINT `FK_seance_to_be_affected_as_enseignant_as_enseignant` FOREIGN KEY (`id_enseignant`) REFERENCES `INFO_enseignant` (`id_enseignant`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `FK_seance_to_be_affected_as_enseignant_as_responsable` FOREIGN KEY (`id_responsable`) REFERENCES `INFO_enseignant` (`id_enseignant`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `FK_seance_to_be_affected_as_enseignant_as_seance_to_be_affected` FOREIGN KEY (`id_seance_to_be_affected`) REFERENCES `INFO_seance_to_be_affected` (`id_seance_to_be_affected`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-SET FOREIGN_KEY_CHECKS=1;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
