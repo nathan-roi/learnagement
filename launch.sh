@@ -52,7 +52,7 @@ then
     echo
 fi
 
-sudo docker-compose up
+sudo docker-compose up -d
 
 sleep 5
 
