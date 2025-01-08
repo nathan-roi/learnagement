@@ -14,17 +14,20 @@ export default function Home(setIsConnect:any) {
   function sendConnection(event:any){
     event.preventDefault()
     let form = event.currentTarget
+  // axios.post('http://localhost:8080/authenticate.php')
+  //         .then(response => console.log(response.data))
+  //         .catch(error => console.error(error));
 
     let form_data = new FormData()
-    form_data.append("login", login)
-    form_data.append("mdp", mdp)
+    form_data.append("username", login)
+    form_data.append("password", mdp)
 
-    axios.post("./php/connection/connection.php", form_data)
+    axios.post("http://localhost:8080/authenticate.php", form_data)
         .then(response => {
           let data = response.data
-          setIsConnect(data.connecte)
-          setWrongLogin(!(data.login))
-          setWrongMdp(!(data.mdp))
+          // setIsConnect(data.connecte)
+          // setWrongLogin(!(data.login))
+          // setWrongMdp(!(data.mdp))
           console.log(data)
         })
     form.reset()

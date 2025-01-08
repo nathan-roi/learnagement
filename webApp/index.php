@@ -3,6 +3,9 @@ session_start();
 require_once("config.php");
 require_once("functions.php");
 require_once("functions_filter.php");
+
+header("Access-Control-Allow-Origin: *");
+
 if(!isset($_SESSION["loggedin"])){
   $_SESSION['loggedin'] = false;
   $_SESSION['start'] = time();

@@ -52,7 +52,7 @@ then
     echo
 fi
 
-sudo docker-compose up -d #-d : lance docker en arrière plan
+sudo docker-compose up #-d : lance docker en arrière plan
 
 sleep 5
 
