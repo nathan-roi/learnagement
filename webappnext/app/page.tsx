@@ -1,17 +1,29 @@
 "use client";
-import React, {useState} from "react";
+
+import React, {useState, useEffect} from "react";
 import axios from "axios";
 
 import Connection from "./connection/connection";
 import Disconnection from "./connection/disconnection"
 
 export default function Home() {
-  const [isConnect, setIsConnect] = useState(false);
+    axios.defaults.withCredentials = true; // Autorise le partage de cookies (fonctionne pour les composants enfants)
+    const [isConnect, setIsConnect] = useState(false);
 
-  return (
+    useEffect(() => {
+
+        axios.get("http://localhost:8080/isConnect.php")
+            .then(response => {
+                let data = response.data
+                setIsConnect(data.loggedin)
+                console.log(data)
+            })
+
+    },[])
+    return (
       <>
           {!isConnect ?
-              <Connection setConnect={setIsConnect}/>
+              <Connection setIsConnect={setIsConnect}/>
               :
               <>
                   <p>successfully connected</p>

@@ -5,8 +5,10 @@
   require_once("functions_filter.php");
   include("connectDB.php");
 
-  // Activer CORS
-  header("Access-Control-Allow-Origin: *");
+  header("Access-Control-Allow-Origin: http://localhost:40080"); // Activer CORS
+  header("Access-Control-Allow-Credentials: true"); // Autoriser le partage de cookies
+
+  header("Content-Type: application/json");
 
   // Now we check if the data from the login form was submitted, isset() will check if the data exists.
   if ( !isset($_POST['username'], $_POST['password']) ) {
@@ -63,4 +65,4 @@
     echo 'Incorrect username!';
     print('Incorrect username and/or password!');
   }
-?>
+

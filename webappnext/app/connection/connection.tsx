@@ -4,7 +4,7 @@ import axios from "axios";
 import React, {useEffect, useState} from "react";
 
 
-export default function Connection({setConnect}:any) {
+export default function Connection({setIsConnect}:any) {
     const [login, setLogin] = useState('')
     const [mdp, setMdp] = useState('')
 
@@ -22,7 +22,7 @@ export default function Connection({setConnect}:any) {
         axios.post("http://localhost:8080/authenticate.php", form_data)
             .then(response => {
                 let data = response.data
-                setConnect(data.loggedin)
+                setIsConnect(data.loggedin)
                 // setWrongLogin(!(data.login))
                 // setWrongMdp(!(data.mdp))
                 console.log(data)
