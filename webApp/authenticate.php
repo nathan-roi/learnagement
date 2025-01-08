@@ -50,8 +50,8 @@
       $_SESSION['start'] = time();
     
       initFilter($conn, $id, $sessionId);
-      
-      header("Location: index.php");
+      echo json_encode($_SESSION);
+//      header("Location: index.php");
       exit();
     }else {
       // Incorrect password
