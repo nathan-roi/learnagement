@@ -4,7 +4,7 @@ import axios from "axios";
 import React, {useEffect, useState} from "react";
 
 
-export default function connection({setConnect}:any) {
+export default function Connection({setConnect}:any) {
     const [login, setLogin] = useState('')
     const [mdp, setMdp] = useState('')
 

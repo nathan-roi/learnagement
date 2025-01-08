@@ -1,17 +1,21 @@
 <?php
-// On démarre la session
+// Activer CORS
+header("Access-Control-Allow-Origin: *");
+
+// On dï¿½marre la session
 session_start ();
 
 session_regenerate_id(true);
 
-// On détruit les variables de notre session
+// On dï¿½truit les variables de notre session
 session_unset ();
 
 unset($_SESSION["loggedin"]);
 
-// On détruit notre session
+// On dï¿½truit notre session
 session_destroy ();
 
 // On redirige le visiteur vers la page d'accueil
-header ('location: index.php');
+//header ('location: index.php');
+echo json_encode(false);
 ?>
