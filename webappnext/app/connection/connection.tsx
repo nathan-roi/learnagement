@@ -47,7 +47,7 @@ export default function Connection({setIsConnect}:any) {
                 </div>
                 {wrongLogin && <p className={"formError"}>Login inexistant</p>}
                 {wrongMdp && <p className={"formError"}>Mauvais mot de passe</p>}
-                <button type="submit" className={"self-center"}>Se connecter</button>
+                <button type="submit" className={"self-center bg-usmb-cyan"}>Se connecter</button>
             </form>
         </div>
     );

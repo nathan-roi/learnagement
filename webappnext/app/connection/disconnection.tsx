@@ -8,6 +8,6 @@ export default function Disconnection({setIsConnect}:any){
     }
 
     return(
-        <p onClick={sendDeconnection} className={"underline text-blue-700 cursor-pointer"}>Déconnexion</p>
+        <p onClick={sendDeconnection} className={"underline text-usmb-red cursor-pointer"}>Déconnexion</p>
     )
 }

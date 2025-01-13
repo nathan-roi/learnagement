@@ -36,13 +36,13 @@ print("<div id=\"defaulttab\class =\"tabcontent\" <!-- by default, show no secti
 while ($view = mysqli_fetch_row($views)) {
   $view_name = $view[0];
   $request = $view[2];
+
   if($group_of_views != $view[1]){
     $group_of_views = $view[1];
     print("</div>");
     print("<div id=\"" .  $group_of_views . "\" class=\"tabcontent\">");
   }
   $request = sprintf($request, $sessionId);
-  //print($request);
   get_view($conn,  $view_name, $request);
 }
 

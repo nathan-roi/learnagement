@@ -11,6 +11,12 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        'usmb-blue': '#10069f',
+        'usmb-dark-blue': '#002542',
+        'usmb-cyan' : '#009cdd',
+        'usmb-red' : '#ef3340',
+        'usmb-green' : '#009956',
+        'usmb-grey' : '#939598'
       },
     },
   },

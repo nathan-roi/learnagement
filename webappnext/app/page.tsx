@@ -4,7 +4,8 @@ import React, {useState, useEffect} from "react";
 import axios from "axios";
 
 import Connection from "./connection/connection";
-import Disconnection from "./connection/disconnection"
+import Disconnection from "./connection/disconnection";
+import ListModules from "./listModules";
 
 export default function Home() {
     axios.defaults.withCredentials = true; // Autorise le partage de cookies (fonctionne pour les composants enfants)
@@ -20,17 +21,20 @@ export default function Home() {
             })
 
     },[])
+
     return (
       <>
           {!isConnect ?
               <Connection setIsConnect={setIsConnect}/>
               :
-              <>
-                  <p>successfully connected</p>
-                  <Disconnection setIsConnect={setIsConnect}/>
-              </>
+              <main>
+                  <aside className={"h-screen w-1/4 p-2.5 overflow-y-scroll bg-usmb-dark-blue text-white"}>
+                      <ListModules/>
+                      <Disconnection setIsConnect={setIsConnect}/>
+                  </aside>
+              </main>
           }
 
-      </>
-  );
-}
+              </>
+              );
+          }
