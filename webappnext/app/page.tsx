@@ -12,7 +12,7 @@ export default function Home() {
 
     useEffect(() => {
 
-        axios.get("http://localhost:8080/isConnect.php")
+        axios.get("http://localhost:8080/connection/isConnect.php")
             .then(response => {
                 let data = response.data
                 setIsConnect(data.loggedin)

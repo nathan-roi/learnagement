@@ -1,9 +1,9 @@
 <?php
   session_start();
-  require_once("config.php");
-  require_once("functions.php");
-  require_once("functions_filter.php");
-  include("connectDB.php");
+  require_once("../config.php");
+  require_once("../functions.php");
+  require_once("../functions_filter.php");
+  include("../connectDB.php");
 
   header("Access-Control-Allow-Origin: http://localhost:40080"); // Activer CORS
   header("Access-Control-Allow-Credentials: true"); // Autoriser le partage de cookies

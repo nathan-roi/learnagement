@@ -19,7 +19,7 @@ export default function Connection({setIsConnect}:any) {
         form_data.append("username", login)
         form_data.append("password", mdp)
 
-        axios.post("http://localhost:8080/authenticate.php", form_data)
+        axios.post("http://localhost:8080/connection/authenticate.php", form_data)
             .then(response => {
                 let data = response.data
                 setIsConnect(data.loggedin)
