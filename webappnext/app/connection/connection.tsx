@@ -1,7 +1,8 @@
 "use client";
 
 import axios from "axios";
-import React, {useEffect, useState} from "react";
+import Link from "next/link";
+import React, {useState} from "react";
 
 
 export default function Connection({setIsConnect}:any) {
@@ -32,23 +33,25 @@ export default function Connection({setIsConnect}:any) {
     }
 
     return (
-        <div className={"h-screen flex items-center justify-center"}>
-            <form className={"flex flex-col p-10 shadow-lg"} method="post" onSubmit={sendConnection}>
-                <div className="mb-2">
+        <form className={"flex flex-col items-center justify-center pb-3 shadow-lg"} method="post" onSubmit={sendConnection}>
+            <div className={"flex flex-col px-9 pb-9 pt-5"}>
+                <div className={"mb-2"}>
                     <label htmlFor="login">Login :</label>
                     <input type="text" id="login" name="user_login" required={true} value={login}
                            onChange={e => setLogin(e.target.value)}/>
                 </div>
 
-                <div className="mb-7">
+                <div className={"mb-7"}>
                     <label htmlFor="mdp">Mot de passe :</label>
                     <input type="password" id="mdp" name="user_mdp" required={true} value={mdp}
                            onChange={e => setMdp(e.target.value)}/>
                 </div>
-                {wrongLogin && <p className={"formError"}>Login inexistant</p>}
-                {wrongMdp && <p className={"formError"}>Mauvais mot de passe</p>}
+                {/*{wrongLogin && <p className={"formError"}>Login inexistant</p>}*/}
+                {/*{wrongMdp && <p className={"formError"}>Mauvais mot de passe</p>}*/}
                 <button type="submit" className={"self-center bg-usmb-cyan"}>Se connecter</button>
-            </form>
-        </div>
+            </div>
+            <Link href={"/activateAccount"} className={"text-xs underline text-usmb-cyan cursor-pointer"}>Activer mon compte</Link>
+        </form>
+
     );
 }

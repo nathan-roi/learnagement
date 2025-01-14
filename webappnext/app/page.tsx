@@ -1,6 +1,7 @@
 "use client";
 
 import React, {useState, useEffect} from "react";
+import dynamic from "next/dynamic";
 import axios from "axios";
 
 import Connection from "./connection/connection";
@@ -25,7 +26,9 @@ export default function Home() {
     return (
       <>
           {!isConnect ?
-              <Connection setIsConnect={setIsConnect}/>
+              <main className={"h-screen flex items-center justify-center"}>
+                <Connection setIsConnect={setIsConnect}/>
+              </main>
               :
               <main>
                   <aside className={"h-screen w-1/4 p-2.5 overflow-y-scroll bg-usmb-dark-blue text-white"}>
