@@ -6,11 +6,11 @@ NC='\033[0m' # No Color
 
 ##########
 # init web app config
-cd webApp
+cd webApp/db_connection
 if [ ! -f config.php ]
 then
     cp config.php.example config.php
-    printf "${GREEN}Update docker/docker-compose.yml and webApp/config.php files with new password.${NC}"
+    printf "${GREEN}Update docker/docker-compose.yml and webApp/db_connection/config.php files with new password.${NC}"
     echo
     read -p "Then press any key to continue... " -n1 -s
     echo    
@@ -20,7 +20,7 @@ then
     printf "${RED}WARNING default password seems to be used !!!${NC}"
     echo
 fi
-cd ..
+cd ../..
 
 ##########
 # create links to populate with private data
@@ -41,7 +41,7 @@ cd docker
 if [ ! -f docker-compose.yml ]
 then
     cp docker-compose.yml.example docker-compose.yml
-    printf "${GREEN}Update docker/docker-compose.yml and webApp/config.php files with new password.${NC}"
+    printf "${GREEN}Update docker/docker-compose.yml and webApp/db_connection/config.php files with new password.${NC}"
     echo
     read -p "Then press any key to continue... " -n1 -s
     echo

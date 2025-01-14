@@ -6,6 +6,6 @@ __pycache__
 .*
 #*
 *#
-webApp/config.php
+webApp/db_connection/config.php
 docker/docker-compose.yml
 ./launch.sh

@@ -1,6 +1,6 @@
 <?php
 
-include("connectDB.php");
+include("db_connection/connectDB.php");
 
 $vue = "VUE_".$_GET["vue_name"];
 

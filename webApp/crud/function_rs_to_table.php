@@ -1,5 +1,4 @@
 <?php
-
 function rs_to_table($rs)
 {
     $tab = [];

@@ -3,7 +3,7 @@
      * Session initialisation
      */
     session_start();
-    require_once("config.php");
+    require_once("db_connection/config.php");
 
 if(isset($_SESSION['loggedin'])){
     if (isset($_SESSION['start']) && (time() - $_SESSION['start'] > $session_timeout)) {

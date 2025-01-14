@@ -1,8 +1,8 @@
 <?php
 
 session_start();
-require_once("config.php");
-include("connectDB.php");
+require_once("db_connection/config.php");
+include("db_connection/connectDB.php");
 include("functions.php");
 
 dispDict("_POST", $_POST);

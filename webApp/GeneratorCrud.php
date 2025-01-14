@@ -1,5 +1,5 @@
 <?php
-include("connectDB.php");
+include("db_connection/connectDB.php");
 function ShowCreateCrud($name, $table, $columns)
 {
     echo "function create$name(\$conn";

@@ -3,7 +3,7 @@ session_start();
 
 if(isset($_POST['submit']))
 {    
-  require("connectDB.php");
+  require("db_connection/connectDB.php");
   $sessionId = session_id();
   if(isset($_SESSION['userId'])){
     $userId = "\"".$_SESSION['userId']."\"";
@@ -27,7 +27,7 @@ if(isset($_POST['submit']))
     header('location: index.php');
   } else {
     echo "Error: " . $req . ":-" . mysqli_error($conn);   
-    require("disconnectDB.php");
+    require("db_connection/disconnectDB.php");
   }
 }
 ?>

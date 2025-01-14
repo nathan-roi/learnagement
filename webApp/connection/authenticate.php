@@ -1,44 +1,46 @@
 <?php
-  session_start();
-  require_once("../config.php");
-  require_once("../functions.php");
-  require_once("../functions_filter.php");
-  include("../connectDB.php");
+header("Access-Control-Allow-Origin: http://localhost:40080"); // Activer CORS
+header("Access-Control-Allow-Credentials: true"); // Autoriser le partage de cookies
 
-  header("Access-Control-Allow-Origin: http://localhost:40080"); // Activer CORS
-  header("Access-Control-Allow-Credentials: true"); // Autoriser le partage de cookies
+header("Content-Type: application/json");
 
-  header("Content-Type: application/json");
+require_once("../db_connection/config.php");
+require_once("../functions.php");
+require_once("../functions_filter.php");
+include("../db_connection/connectDB.php");
 
-  // Now we check if the data from the login form was submitted, isset() will check if the data exists.
-  if ( !isset($_POST['username'], $_POST['password']) ) {
+session_start();
+
+
+// Now we check if the data from the login form was submitted, isset() will check if the data exists.
+if ( !isset($_POST['username'], $_POST['password']) ) {
     // Could not get the data that should have been sent.
     exit('Please fill both the username and password fields!');
-  }
+}
 
-  $userlogin = $_POST['username'];
+$userlogin = $_POST['username'];
 
-  /*
-   * get user id and hashed password
-   */
-  $login_req = "SELECT id_enseignant, prenom, nom, password FROM LNM_enseignant WHERE mail = \"$userlogin\"";
-  $result = mysqli_query($conn, $login_req);
+/*
+* get user id and hashed password
+*/
+$login_req = "SELECT id_enseignant, prenom, nom, password FROM LNM_enseignant WHERE mail = \"$userlogin\"";
+$result = mysqli_query($conn, $login_req);
 
-  if (!$result) {
+if (!$result) {
     echo 'Impossible d\'exécuter la requête : ' . $req;
     echo 'error ' . mysqli_error($conn);
     exit;
-  }
+}
 
 
-  if (mysqli_num_rows($result) > 0) {
-    $row = mysqli_fetch_assoc($result);
-    $id = $row["id_enseignant"];
-    $firstname = $row["prenom"];
-    $lastname = $row["nom"];
-    $hashedPassword = $row["password"];
-    // Account exists, now we verify the password.
-    // Note: remember to use password_hash in your registration file to store the hashed passwords.
+if (mysqli_num_rows($result) > 0) {
+$row = mysqli_fetch_assoc($result);
+$id = $row["id_enseignant"];
+$firstname = $row["prenom"];
+$lastname = $row["nom"];
+$hashedPassword = $row["password"];
+// Account exists, now we verify the password.
+// Note: remember to use password_hash in your registration file to store the hashed passwords.
     if (password_verify($_POST['password'], $hashedPassword)) {
       // Verification success! User has logged-in!
       // Create sessions, so we know the user is logged in, they basically act like cookies but remember the data on the server.
@@ -50,19 +52,19 @@
       $_SESSION['userFirstname'] = $firstname;
       $_SESSION['userLastname'] = $lastname;
       $_SESSION['start'] = time();
-    
+
       initFilter($conn, $id, $sessionId);
       echo json_encode($_SESSION);
-//      header("Location: index.php");
-      exit();
+    //      header("Location: index.php");
+    exit();
     }else {
-      // Incorrect password
-      echo 'Incorrect  password!';
-      print('Incorrect username and/or password!');
+          // Incorrect password
+          echo 'Incorrect  password!';
+          print('Incorrect username and/or password!');
     }
-  }else{
+}else{
     // Incorrect username
     echo 'Incorrect username!';
     print('Incorrect username and/or password!');
-  }
+}
 

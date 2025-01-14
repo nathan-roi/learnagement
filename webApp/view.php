@@ -1,15 +1,15 @@
 <?php
 session_start();
-require_once("config.php");
+require_once("db_connection/config.php");
 require_once("functions_db.php");
 require_once("get_data.php"); 
-require_once("db.php");
-include("connectDB.php"); 
+require_once("db_connection/db.php");
+include("db_connection/connectDB.php");
 
 
 
 if (isset($_SESSION['start']) && (time() - $_SESSION['start'] > $_SESSION['timeout'])) {
-  include("logout.php"); 
+  include("connection/logout.php");
  }else if(isset($_SESSION['start'])){
   $_SESSION['start'] = time();
  }
