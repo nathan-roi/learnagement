@@ -24,20 +24,19 @@ export default function Home() {
     },[])
 
     return (
-      <>
-          {!isConnect ?
-              <main className={"h-screen flex items-center justify-center"}>
-                <Connection setIsConnect={setIsConnect}/>
-              </main>
+        <>
+            {!isConnect ?
+                <main className={"h-screen flex items-center justify-center"}>
+                    <Connection setIsConnect={setIsConnect}/>
+                </main>
               :
-              <main>
-                  <aside className={"h-screen w-1/4 p-2.5 overflow-y-scroll bg-usmb-dark-blue text-white"}>
+                <main>
+                    <aside className={"h-screen w-1/4 p-2.5 overflow-y-scroll bg-usmb-dark-blue text-white"}>
                       <ListModules/>
                       <Disconnection setIsConnect={setIsConnect}/>
-                  </aside>
+                    </aside>
               </main>
           }
-
-              </>
-              );
-          }
+      </>
+    );
+}
