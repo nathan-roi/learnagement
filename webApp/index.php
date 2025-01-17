@@ -4,14 +4,14 @@ require_once("db_connection/config.php");
 require_once("functions.php");
 require_once("functions_filter.php");
 
-header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Origin: http://localhost:40080/");
 
 if(!isset($_SESSION["loggedin"])){
   $_SESSION['loggedin'] = false;
   $_SESSION['start'] = time();
   
   $sessionId = session_id();
-  include("connectDB.php");
+  include("db_connection/connectDB.php");
   
   initFilter($conn, "NULL", $sessionId);
  

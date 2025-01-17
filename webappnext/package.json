@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tailwindcss/typography": "^0.5.16",
     "@types/webpack-dev-middleware": "^5.0.2",
     "axios": "^1.7.9",
     "bcrypt": "^5.1.1",

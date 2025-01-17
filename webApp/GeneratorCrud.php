@@ -44,20 +44,26 @@ function ShowCreateCrud($name, $table, $columns)
 //ShowCreateCrud("Object", "Objet", ["code_barre", "nom", "categorie", "couleur", "taille"]);
 //ShowCreateCrud("Modele", "Modele", ["id", "nom", "prenom", "genre", "tarif_horaire"]);
 //ShowCreateCrud("Atelier", "Atelier", ["id", "nom", "type"]);
-ShowCreateCrud("MAQUETTE_module", "MAQUETTE_module", ["id_module",
-    "code_module",
-    "nom",
-    "ECTS",
-    "id_discipline",
-    "id_semestre",
-    "hCM",
-    "hTD",
-    "hTP",
-    "hTPTD",
-    "hPROJ",
-    "hPersonnelle",
+//ShowCreateCrud("MAQUETTE_module", "MAQUETTE_module", ["id_module",
+//    "code_module",
+//    "nom",
+//    "ECTS",
+//    "id_discipline",
+//    "id_semestre",
+//    "hCM",
+//    "hTD",
+//    "hTP",
+//    "hTPTD",
+//    "hPROJ",
+//    "hPersonnelle",
+//    "id_responsable",
+//    "id_etat_module",
+//    "commentaire",
+//    "modifiable"]);
+ShowCreateCrud("MAQUETTE_dependance_sequence", "MAQUETTE_dependance_sequence", [
+    "id_sequence_prev",
+    "id_sequence_next",
     "id_responsable",
-    "id_etat_module",
-    "commentaire",
-    "modifiable"]);
+    "modifiable"
+]);
 

@@ -5,7 +5,7 @@ require_once("functions.php");
 $sessionId = session_id();
 
 
-include("connectDB.php");
+include("db_connection/connectDB.php");
 
 
 $parameterFieldsAndValues = getParameters($conn);
