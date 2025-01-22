@@ -1,5 +1,5 @@
 import axios from "axios";
-import {useEffect, useState} from "react";
+import {use, useEffect, useState} from "react";
 
 import InfosModule from './modules/infosModule'
 
@@ -11,6 +11,7 @@ interface Module {
 
 export default function ListModule({setInfosModule}:{setInfosModule:any}){
     const [listeModules, setListeModules] = useState<Module[]>([]);
+    const [moduleClicked, setModuleClicked] = useState('')
 
     useEffect(() => {
 
@@ -22,7 +23,7 @@ export default function ListModule({setInfosModule}:{setInfosModule:any}){
     }, []);
 
     const listeModulesHTML = listeModules.map(module =>
-        <div key={module.id_module} id={module.id_module} className={"w-full h-16 mb-2.5 pl-2.5 rounded-lg bg-usmb-cyan hover:bg-usmb-blue cursor-pointer"} onClick={getModuleInfos}>
+        <div key={module.id_module} id={module.id_module} className={`w-full h-20 mb-2.5 pl-2.5 rounded-lg bg-usmb-cyan hover:bg-usmb-blue cursor-pointer ${moduleClicked === module.id_module ? 'bg-usmb-blue' : 'bg-usmb-cyan'}`} onClick={getModuleInfos}>
             <p className={"font-medium"}>{module.nom}</p>
             <p>{module.code_module}</p>
         </div>
@@ -42,6 +43,7 @@ export default function ListModule({setInfosModule}:{setInfosModule:any}){
         axios.post("http://localhost:8080/select/selectModuleById.php",form_data)
             .then(response => {
                 setInfosModule(response.data[0])
+                setModuleClicked(response.data[0].id_module)
             })
     }
 

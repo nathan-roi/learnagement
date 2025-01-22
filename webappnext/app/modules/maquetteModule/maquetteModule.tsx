@@ -15,6 +15,7 @@ export default function maquetteModule({code_module}:{code_module:string}){
 
     useEffect(() => {
         setIsLoading(true)
+        
         let form_data = new FormData()
         let id_view = '9'
 
