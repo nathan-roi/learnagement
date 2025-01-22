@@ -11,7 +11,6 @@ interface Module {
 
 export default function ListModule({setInfosModule}:{setInfosModule:any}){
     const [listeModules, setListeModules] = useState<Module[]>([]);
-    // const [infosModule, setInfosModule] = useState({});
 
     useEffect(() => {
 
@@ -23,15 +22,15 @@ export default function ListModule({setInfosModule}:{setInfosModule:any}){
     }, []);
 
     const listeModulesHTML = listeModules.map(module =>
-        <div key={module.id_module} id={module.id_module} className={"w-full mb-2.5 p-1 rounded-lg bg-usmb-cyan cursor-pointer"} onClick={getModuleInfos}>
-            <p>{module.nom}</p>
+        <div key={module.id_module} id={module.id_module} className={"w-full h-16 mb-2.5 pl-2.5 rounded-lg bg-usmb-cyan hover:bg-usmb-blue cursor-pointer"} onClick={getModuleInfos}>
+            <p className={"font-medium"}>{module.nom}</p>
             <p>{module.code_module}</p>
         </div>
     )
 
     async function getModuleInfos(event:any){
         let id_module
-        console.log(event)
+
         if (event.target.localName == "div"){
             id_module = event.target.id //div cliqué
         }else{

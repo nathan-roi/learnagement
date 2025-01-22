@@ -10,6 +10,9 @@ COPY package.json package-lock.json ./
 # Supprimer les dépendances existantes et les réinstaller
 RUN npm install
 
+# Copier tout le code de l'application dans l'image
+COPY . .
+
 # Exposer le port 3000 pour le serveur Next.js
 EXPOSE 3000
 

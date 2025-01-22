@@ -60,10 +60,11 @@ function ShowCreateCrud($name, $table, $columns)
 //    "id_etat_module",
 //    "commentaire",
 //    "modifiable"]);
-ShowCreateCrud("MAQUETTE_dependance_sequence", "MAQUETTE_dependance_sequence", [
-    "id_sequence_prev",
-    "id_sequence_next",
-    "id_responsable",
-    "modifiable"
+ShowCreateCrud("VIEW_display", "VIEW_display", [
+    "id_view",
+    "sortIndex",
+    "name",
+    "group_of_views",
+    "request"
 ]);
 

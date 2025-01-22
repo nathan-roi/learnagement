@@ -16,8 +16,8 @@
 
 Toutes les tables de données (hors table de liaisons) doivent avoir une clé primaire numérique composée d'un seul attribut et une clé secondaire composé d'un ensemble d'attributs humainement compréhensible.
 Cet ensemble doit être déclaré comme unique avec pour nom d'indexe "SECONDARY".
-Si la clé secondaire contient une clé étrangaire, la table concernée sera califiée d'intermédiaire.
-La clé primaire est toujours constitué des premiers attributs, le premier dans le cas d'une table de base ou intermédiaire, les 2 premiers dans le cas d'une table de liaison.
+Si la clé secondaire contient une clé étrangère, la table concernée sera qualifiée d'intermédiaire.
+La clé primaire est toujours constituée des premiers attributs, le premier dans le cas d'une table de base ou intermédiaire, les 2 premiers dans le cas d'une table de liaison.
 Nous avons donc 3 types de table:
 * les tables de base avec un seul attribut numérique clé primaire et une clé secondaire composée d'un ensemble d'attributs ne contemnant pas de clé étrangère 
 * les tables de intermédiaire avec un seul attribut numérique clé primaire et une clé secondaire composée d'un ensemble d'attributs contemnant au moins une clé étrangère  

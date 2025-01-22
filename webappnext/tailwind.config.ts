@@ -16,7 +16,12 @@ export default {
         'usmb-cyan' : '#009cdd',
         'usmb-red' : '#ef3340',
         'usmb-green' : '#009956',
-        'usmb-grey' : '#939598'
+        'usmb-grey' : '#939598',
+        'cm-red' : '#ff6666',
+        'td-green' : '#80ff00',
+        'tp-yellow' : '#ffff00',
+        'exam-blue' : '#00ffff',
+        'other-pink': '#ff6fcf'
       },
     },
   },
