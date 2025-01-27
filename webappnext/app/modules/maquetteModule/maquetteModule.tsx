@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import React, {useEffect, useState} from "react";
-import {Position, ReactFlowProvider} from "@xyflow/react";
+import {MarkerType, Position, ReactFlowProvider} from "@xyflow/react";
 
 import MaquetteFlow from "@/app/modules/maquetteModule/maquetteFlow";
 import Loader from "@/app/loader"
@@ -130,7 +130,11 @@ export default function maquetteModule({code_module}:{code_module:string}){
             let link = {
                 id: pred + '-' + suiv,
                 source: pred,
-                target: suiv
+                target: suiv,
+                animated: true,
+                markerEnd: {
+                    type: MarkerType.Arrow,
+                }
             }
             edges.push(link)
         }
