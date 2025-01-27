@@ -23,10 +23,11 @@ export default function ListModule({setInfosModule}:{setInfosModule:any}){
     }, []);
 
     const listeModulesHTML = listeModules.map(module =>
-        <div key={module.id_module} id={module.id_module} className={`w-full h-20 mb-2.5 pl-2.5 rounded-lg bg-usmb-cyan hover:bg-usmb-blue cursor-pointer ${moduleClicked === module.id_module ? 'bg-usmb-blue' : 'bg-usmb-cyan'}`} onClick={getModuleInfos}>
-            <p className={"font-medium"}>{module.nom}</p>
-            <p>{module.code_module}</p>
-        </div>
+            <div key={module.id_module} id={module.id_module} className={`w-full h-20 mb-2.5 pl-2.5 rounded-lg hover:bg-usmb-blue cursor-pointer 
+            ${moduleClicked === module.id_module ? 'bg-usmb-blue' : 'bg-usmb-cyan'}`} onClick={getModuleInfos}>
+                <p className={"font-medium"}>{module.nom}</p>
+                <p>{module.code_module}</p>
+            </div>
     )
 
     async function getModuleInfos(event:any){
