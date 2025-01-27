@@ -12,12 +12,13 @@ function CustomNode({data}:{data:any}){
             <Handle
                 type="target"
                 position={Position.Left}
-                className="w-16 !bg-usmb-cyan"
+                className={"opacity-0"}
             />
             <Handle
                 type="source"
                 position={Position.Right}
-                className="w-16 !bg-usmb-cyan"
+                className={"opacity-0"} // les petits ronds qui permettent l'existence des liens ne se voient pas
+
             />
         </div>
     )

@@ -3,20 +3,25 @@ import {
     ReactFlow,
     Background,
     Controls,
-    applyEdgeChanges,
-    applyNodeChanges,
-    useReactFlow,
-} from "@xyflow/react";
+    useReactFlow, useNodesState, useEdgesState, addEdge, MarkerType,
+}
+from "@xyflow/react";
 import '@xyflow/react/dist/style.css';
-
+import FloatingEdge from './floatingEdge';
+import FloatingConnectionLine from "@/app/modules/maquetteModule/floatingConnectionLine";
 import CustomNode from "@/app/modules/maquetteModule/customNode";
+import floatingConnectionLine from "@/app/modules/maquetteModule/floatingConnectionLine";
 
 export default function MaquetteFlow({initialNodes, initialEdges, setWidth}:{initialNodes:any, initialEdges:any, setWidth:any}){
     const componentRef = useRef<HTMLDivElement>(null)
     const { fitView } = useReactFlow();
     const [majWidth, setMajWidth] = useState(0)
-    const [nodes, setNodes] = useState(initialNodes);
-    const [edges, setEdges] = useState(initialEdges);
+    // const [nodes, setNodes] = useState(initialNodes);
+    // const [edges, setEdges] = useState(initialEdges);
+    // const { nodes: initNodes, edges: initEdges } = initialElements();
+    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+    const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
 
     useEffect(() => {
         setNodes(initialNodes)
@@ -52,17 +57,37 @@ export default function MaquetteFlow({initialNodes, initialEdges, setWidth}:{ini
 
     }, []);
 
-    const onNodesChange = useCallback(
-        (changes:any) => setNodes((nds:any) => applyNodeChanges(changes, nds)),
-        [],
+    // const onNodesChange = useCallback(
+    //     (changes:any) => setNodes((nds:any) => applyNodeChanges(changes, nds)),
+    //     [],
+    // );
+    // const onEdgesChange = useCallback(
+    //     (changes:any) => setEdges((eds:any) => applyEdgeChanges(changes, eds)),
+    //     [],
+    // );
+
+    const onConnect = useCallback(
+        (params:any) =>
+            setEdges((eds) =>
+                addEdge(
+                    {
+                        ...params,
+                        type: 'floating',
+                        markerEnd: { type: MarkerType.ArrowClosed },
+                    },
+                    eds,
+                ),
+            ),
+        [setEdges],
     );
-    const onEdgesChange = useCallback(
-        (changes:any) => setEdges((eds:any) => applyEdgeChanges(changes, eds)),
-        [],
-    );
+
 
     const nodeTypes = {
         customNode: CustomNode
+    }
+
+    const edgeTypes = {
+        floating: FloatingEdge
     }
 
     return (
@@ -75,16 +100,19 @@ export default function MaquetteFlow({initialNodes, initialEdges, setWidth}:{ini
                 :
                 <ReactFlow
                     nodes={nodes}
-                    onNodesChange={onNodesChange}
                     edges={edges}
+                    onNodesChange={onNodesChange}
                     onEdgesChange={onEdgesChange}
                     nodeTypes={nodeTypes}
+                    // @ts-ignore j'ai suivis la doc de react flow
+                    edgeTypes={edgeTypes}
+                    onConnect={onConnect}
+                    connectionLineComponent={floatingConnectionLine}
                 >
                     <Background/>
                     <Controls/>
                 </ReactFlow>
             }
-
         </div>
     )
 }

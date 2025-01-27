@@ -6,6 +6,8 @@ import {MarkerType, Position, ReactFlowProvider} from "@xyflow/react";
 
 import MaquetteFlow from "@/app/modules/maquetteModule/maquetteFlow";
 import Loader from "@/app/loader"
+
+
 export default function maquetteModule({code_module}:{code_module:string}){
     const [maquette, setMaquette] = useState([])
     const [nodes, setNodes] = useState<any[]>([])
@@ -133,8 +135,11 @@ export default function maquetteModule({code_module}:{code_module:string}){
                 target: suiv,
                 animated: true,
                 markerEnd: {
-                    type: MarkerType.Arrow,
-                }
+                    type: MarkerType.ArrowClosed,
+                    width: 30,
+                    height: 30,
+                },
+                type:'floating'
             }
             edges.push(link)
         }
