@@ -10,9 +10,9 @@ import Loader from "@/app/loader"
 
 export default function maquetteModule({code_module}:{code_module:string}){
     const [maquette, setMaquette] = useState([])
-    const [nodes, setNodes] = useState<any[]>([])
-    const [edges, setEdges] = useState<any[]>([])
-    const [width, setWidth] = useState(0)
+    const [nodes, setNodes] = useState<object[]>([])
+    const [edges, setEdges] = useState<object[]>([])
+    const [width, setWidth] = useState(-1)
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
@@ -31,56 +31,52 @@ export default function maquetteModule({code_module}:{code_module:string}){
 
     }, [code_module]);
 
+    /* création des nodes des edges (besoins de la largeur d'écran pour placer les nodes */
     useEffect(() => {
         if (maquette.length > 0) {
-            // Appel de `createEdges` après la mise à jour de `maquette`
-            createEdges(maquette);
-        }else{
-            setEdges([])
-        }
-    }, [maquette]);
-
-    useEffect(() => {
-        if (edges.length > 0){
-            createNodes(edges)
+            createNodes(maquette)
+            createEdges(maquette)
         }else{
             setNodes([])
+            setEdges([])
         }
-    }, [edges,width]);
+    }, [maquette, width]);
 
-    function getSeances(edges:any){
+    function getSeances(maquette:any){
+        /* liste des séances de cours dans le bon ordre */
         let tmpSeances = []
 
         let index = 0
         let i = 0
-        let seancePred = edges[i].source
-        let seanceSuiv = edges[i].target
+        let seancePred = maquette[i]['séance précédente']
+        let seanceSuiv = maquette[i]['séance suivante']
 
         tmpSeances.push(seancePred)
         tmpSeances.push(seanceSuiv)
 
-        while(i < edges.length){
-            index = edges.findIndex((obj: { source: any; }) => obj.source === seanceSuiv)
+        while(i < maquette.length){
+            index = maquette.findIndex((obj:any) => obj['séance précédente'] === seanceSuiv)
 
             if (index != -1){
-
-                seanceSuiv = edges[index].target
+                seanceSuiv = maquette[index]['séance suivante']
                 tmpSeances.push(seanceSuiv)
             }else{
-                seancePred = edges[i].source
-                seanceSuiv = edges[i].target
+                /* Traitement du cas où il y a une rupture dans les liens de tous les cours */
+                seancePred = maquette[i]['séance précédente']
+                seanceSuiv = maquette[i]['séance suivante']
                 tmpSeances.push(seancePred, seanceSuiv)
             }
 
             i ++
         }
+
         return [...new Set(tmpSeances)]
     }
 
     function createNodes(edges: any){
-
-        let seances = getSeances(edges)
+        let seances = getSeances(edges) // Liste des séances dans le bon ordre (selon les liens
         let nodes = []
+
         let x = 0
         let y = 0
 
@@ -112,7 +108,7 @@ export default function maquetteModule({code_module}:{code_module:string}){
 
             nodes.push(node)
 
-            if(x >= width){
+            if(x >= width && width != -1){
                 y += 200
                 x = 0
             }else{
@@ -139,7 +135,7 @@ export default function maquetteModule({code_module}:{code_module:string}){
                     width: 30,
                     height: 30,
                 },
-                type:'floating'
+                type: 'floating'
             }
             edges.push(link)
         }

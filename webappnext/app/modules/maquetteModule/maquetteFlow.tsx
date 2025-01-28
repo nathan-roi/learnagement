@@ -8,7 +8,6 @@ import {
 from "@xyflow/react";
 import '@xyflow/react/dist/style.css';
 import FloatingEdge from './floatingEdge';
-import FloatingConnectionLine from "@/app/modules/maquetteModule/floatingConnectionLine";
 import CustomNode from "@/app/modules/maquetteModule/customNode";
 import floatingConnectionLine from "@/app/modules/maquetteModule/floatingConnectionLine";
 
@@ -16,9 +15,6 @@ export default function MaquetteFlow({initialNodes, initialEdges, setWidth}:{ini
     const componentRef = useRef<HTMLDivElement>(null)
     const { fitView } = useReactFlow();
     const [majWidth, setMajWidth] = useState(0)
-    // const [nodes, setNodes] = useState(initialNodes);
-    // const [edges, setEdges] = useState(initialEdges);
-    // const { nodes: initNodes, edges: initEdges } = initialElements();
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
@@ -37,8 +33,11 @@ export default function MaquetteFlow({initialNodes, initialEdges, setWidth}:{ini
 
     useEffect(() => {
         /*Permet de connaitre la largeur du flow pour afficher à la ligne les cours*/
+
         const element = componentRef.current; // Accéder à l'élément référencé
+
         if (!element) return;
+
         // Créer une instance de ResizeObserver
         const resizeObserver = new ResizeObserver((entries) => {
             if (entries.length > 0) {
@@ -56,15 +55,6 @@ export default function MaquetteFlow({initialNodes, initialEdges, setWidth}:{ini
 
 
     }, []);
-
-    // const onNodesChange = useCallback(
-    //     (changes:any) => setNodes((nds:any) => applyNodeChanges(changes, nds)),
-    //     [],
-    // );
-    // const onEdgesChange = useCallback(
-    //     (changes:any) => setEdges((eds:any) => applyEdgeChanges(changes, eds)),
-    //     [],
-    // );
 
     const onConnect = useCallback(
         (params:any) =>
