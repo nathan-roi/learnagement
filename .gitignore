@@ -7,5 +7,4 @@ __pycache__
 #*
 *#
 webApp/db_connection/config.php
-docker/docker-compose.yml
 launch.sh

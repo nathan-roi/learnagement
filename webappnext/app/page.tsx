@@ -8,6 +8,7 @@ import Disconnection from "./connection/disconnection";
 import ListModules from "./listModules";
 import InfosModule from "./modules/infosModule"
 import Loader from "@/app/loader";
+import Homepage from "@/app/homepage/homepage";
 
 export default function Home() {
     axios.defaults.withCredentials = true // Autorise le partage de cookies (fonctionne pour les composants enfants)
@@ -58,6 +59,9 @@ export default function Home() {
                         <ListModules setInfosModule={setInfosModule}/>
                         <Disconnection setIsConnect={setIsConnect}/>
                     </aside>
+                    <div className={"col-span-3"}>
+                        <Homepage/>
+                    </div>
                     <div className={"col-span-3"}>
                         {Object.keys(infosModule).length > 0 && <InfosModule infos={infosModule}/>}
                     </div>

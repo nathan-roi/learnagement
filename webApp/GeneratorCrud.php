@@ -41,9 +41,6 @@ function ShowCreateCrud($name, $table, $columns)
 }
 
 
-//ShowCreateCrud("Object", "Objet", ["code_barre", "nom", "categorie", "couleur", "taille"]);
-//ShowCreateCrud("Modele", "Modele", ["id", "nom", "prenom", "genre", "tarif_horaire"]);
-//ShowCreateCrud("Atelier", "Atelier", ["id", "nom", "type"]);
 //ShowCreateCrud("MAQUETTE_module", "MAQUETTE_module", ["id_module",
 //    "code_module",
 //    "nom",
@@ -60,11 +57,15 @@ function ShowCreateCrud($name, $table, $columns)
 //    "id_etat_module",
 //    "commentaire",
 //    "modifiable"]);
-ShowCreateCrud("VIEW_display", "VIEW_display", [
-    "id_view",
-    "sortIndex",
-    "name",
-    "group_of_views",
-    "request"
+ShowCreateCrud("MAQUETTE_module_sequencage", "MAQUETTE_module_sequencage", [
+    "id_module_sequencage",
+    "id_module",
+    "nombre",
+    "id_seance_type",
+    "id_groupe_type",
+    "duree_h",
+    "intervenant_principal",
+    "id_responsable",
+    "modifiable"
 ]);
 
