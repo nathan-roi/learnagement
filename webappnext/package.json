@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@svgr/webpack": "^8.1.0",
     "@tailwindcss/typography": "^0.5.16",
     "@types/webpack-dev-middleware": "^5.0.2",
     "@xyflow/react": "^12.4.1",

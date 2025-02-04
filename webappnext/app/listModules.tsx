@@ -9,7 +9,7 @@ interface Module {
     code_module: string;
 }
 
-export default function ListModule({setInfosModule}:{setInfosModule:any}){
+export default function ListModule({setInfosModule, homepageShown}:{setInfosModule:any, homepageShown:boolean}){
     const [listeModules, setListeModules] = useState<Module[]>([]);
     const [moduleClicked, setModuleClicked] = useState('')
 
@@ -21,7 +21,11 @@ export default function ListModule({setInfosModule}:{setInfosModule:any}){
             })
 
     }, []);
-
+    useEffect(() => {
+        if (homepageShown){
+            setModuleClicked('')
+        }
+    }, [homepageShown]);
     const listeModulesHTML = listeModules.map(module =>
             <div key={module.id_module} id={module.id_module} className={`w-full h-20 mb-2.5 pl-2.5 rounded-lg hover:bg-usmb-blue cursor-pointer 
             ${moduleClicked === module.id_module ? 'bg-usmb-blue' : 'bg-usmb-cyan'}`} onClick={getModuleInfos}>
@@ -49,9 +53,9 @@ export default function ListModule({setInfosModule}:{setInfosModule:any}){
     }
 
     return (
-        <>
+        <div className={"h-3/4 overflow-y-auto"}>
             {listeModulesHTML}
-        </>
+        </div>
 
 
     )

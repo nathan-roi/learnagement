@@ -5,7 +5,7 @@ import Link from "next/link";
 import React, {useState} from "react";
 
 
-export default function Connection({setIsConnect}:any) {
+export default function Connection({setIsConnect, setUserInfos}:any) {
     const [login, setLogin] = useState('')
     const [mdp, setMdp] = useState('')
 
@@ -24,9 +24,9 @@ export default function Connection({setIsConnect}:any) {
             .then(response => {
                 let data = response.data
                 setIsConnect(data.loggedin)
+                setUserInfos(data)
                 // setWrongLogin(!(data.login))
-                // setWrongMdp(!(data.mdp))
-                console.log(data)
+                // setWrongMdp(!(data.mdp)
             })
         form.reset()
 
