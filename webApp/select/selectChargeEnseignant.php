@@ -39,7 +39,7 @@ if (isset($_POST["user_id"])){
 
     echo $strCours;
 }else{
-    echo "Error user_id undefined";
+    echo json_encode([False, "Error user_id undefined"]);
 }
 
 
