@@ -5,7 +5,7 @@
     header("Content-Type: application/json");
 
     session_start();
-
+    var_dump($_SESSION);
     // Vérifier ou initialiser la session
     if (isset($_SESSION['loggedin'])) {
         echo json_encode($_SESSION);

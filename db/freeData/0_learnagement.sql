@@ -7,7 +7,7 @@
 -- Version du serveur : 8.0.33
 -- Version de PHP : 8.2.8
 
-SET FOREIGN_KEY_CHECKS=0;
+SET FOREIGN_KEY_CHECKS = 0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";

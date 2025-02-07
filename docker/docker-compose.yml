@@ -9,8 +9,8 @@ services:
              - ../webApp:/var/www/html
              - ./log:/var/log/apache2
              
-    appnext:
-        image: webappnext:latest
+    nextjs:
+        image: nextjs:latest
         restart: always
         ports:
             - "40080:3000"
