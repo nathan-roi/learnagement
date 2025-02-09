@@ -56,7 +56,7 @@ sudo docker compose up #-d : lance docker en arrière plan
 
 sleep 5
 
-sudo docker-compose ps
+sudo docker compose ps
 
 cd ..
 
