@@ -27,6 +27,6 @@ function listVIEW_display($conn) {
 function selectVIEW_display($conn, $id_view) {
     $sql = "SELECT * FROM `VIEW_display` WHERE `id_view`=$id_view";
     $res = mysqli_query($conn, $sql);
-    $rs = rs_to_table($res);
+    $rs = rs_to_table($res)[0];
     return $rs;
 }

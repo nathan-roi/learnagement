@@ -14,7 +14,7 @@ import LinkHomepage from "@/app/homepage/linkHomepage";
 export default function Home() {
     axios.defaults.withCredentials = true // Autorise le partage de cookies (fonctionne pour les composants enfants)
     const [isConnect, setIsConnect] = useState(false)
-    const [userInfos, setUserInfos] = useState({userId: ''})
+    const [userInfos, setUserInfos] = useState({userFirstname:'', userLastname: ''})
     const [infosModule, setInfosModule] = useState({code_module:"null"})
     const [isLoading, setIsLoading] = useState(true)
 
@@ -55,7 +55,7 @@ export default function Home() {
                             {/*Si aucun module affiché alors homepage s'affiche sinon le module*/}
                             {infosModule.code_module == "null" ?
                                 <div className={"col-span-3"}>
-                                    <Homepage userId={userInfos.userId}/>
+                                    <Homepage userInfos={userInfos}/>
                                 </div>
                                 :
                                 <div className={"col-span-3"}>

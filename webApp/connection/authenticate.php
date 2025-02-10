@@ -55,16 +55,14 @@ $hashedPassword = $row["password"];
 
       initFilter($conn, $id, $sessionId);
       echo json_encode($_SESSION);
-    //      header("Location: index.php");
+
     exit();
     }else {
           // Incorrect password
           echo 'Incorrect  password!';
-          print('Incorrect username and/or password!');
     }
 }else{
     // Incorrect username
     echo 'Incorrect username!';
-    print('Incorrect username and/or password!');
 }
 

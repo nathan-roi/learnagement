@@ -1,30 +1,41 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
 
-export default function Homepage({userId} : {userId : string}){
-    const [err, setErr] = useState('')
-    const [charge, setCharge] = useState(-1)
+import CardCharge from "@/app/homepage/cardCharge";
+
+interface User{
+    userFirstname: string,
+    userLastname: string
+}
+
+export default function Homepage({userInfos} : {userInfos : User}){
+    const [detailsCharge, setDetailsCharge] = useState({
+        Charge: -1,
+        CM: -1,
+        TD: -1,
+        TP: -1
+    })
 
     useEffect(() => {
 
         let form_data = new FormData()
-        form_data.append("user_id", userId)
+        form_data.append("userFirstname", userInfos.userFirstname)
+        form_data.append("userLastname", userInfos.userLastname)
         axios.post("http://localhost:8080/select/selectChargeEnseignant.php", form_data)
             .then(response => {
-                let data = response.data
-                if (!data[0]){
-                    setErr(data[1])
-                }else{
-                    setCharge(data[0].Charge)
-                }
+                setDetailsCharge(response.data)
             })
-    }, [userId]);
-    console.log(userId)
+    }, [userInfos]);
+
+
     return(
-        <div className={"h-screen flex justify-center items-center"}>
-            <h1>HOMEPAGE</h1>
-            <p>{charge >= 0 && charge}</p>
-            <p>{err != '' && err}</p>
+        <div>
+            <h1 className={"text-center text-4xl font-bold mt-5"}>Bonjour, {userInfos.userFirstname} ! 👋</h1>
+            <div>
+                <h3 className={"text-2xl font-bold ml-5 mb-16"}>Ma charge de cours</h3>
+                <CardCharge detailsCharge={detailsCharge}/>
+            </div>
+
         </div>
     )
 }

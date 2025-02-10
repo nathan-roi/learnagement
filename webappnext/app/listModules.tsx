@@ -1,5 +1,5 @@
 import axios from "axios";
-import {use, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 
 import InfosModule from './modules/infosModule'
 
@@ -21,11 +21,13 @@ export default function ListModule({setInfosModule, homepageShown}:{setInfosModu
             })
 
     }, []);
+
     useEffect(() => {
         if (homepageShown){
             setModuleClicked('')
         }
     }, [homepageShown]);
+
     const listeModulesHTML = listeModules.map(module =>
             <div key={module.id_module} id={module.id_module} className={`w-full h-20 mb-2.5 pl-2.5 rounded-lg hover:bg-usmb-blue cursor-pointer 
             ${moduleClicked === module.id_module ? 'bg-usmb-blue' : 'bg-usmb-cyan'}`} onClick={getModuleInfos}>
