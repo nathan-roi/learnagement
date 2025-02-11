@@ -1,8 +1,8 @@
 export interface ChargeState {
-    total: number;
+    Charge: number;
     CM: number;
     TD: number;
     TP: number;
 }
 
-export type ChargeType = keyof Omit<ChargeState, 'total'>;
+export type ChargeType = keyof ChargeState

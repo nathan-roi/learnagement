@@ -47,10 +47,12 @@ if (isset($_POST["userFirstname"]) && isset($_POST["userLastname"])) {
         $chargeTotaleOneEnseignant[array_keys($chargeTotaleOneEnseignant)[0]],
         $chargeRepartOneEnseignant[array_keys($chargeRepartOneEnseignant)[0]]
     );
+
+    // SUppression des données inutile du tableau
     unset($charge["prenom"]);
     unset($charge["nom"]);
 
-    echo json_encode($charge);
+    echo json_encode($charge, JSON_NUMERIC_CHECK);
 }else{
 
     echo json_encode([False, "Error userFirstname or userLastname undefined"]);
