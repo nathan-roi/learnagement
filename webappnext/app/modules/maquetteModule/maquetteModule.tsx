@@ -14,7 +14,7 @@ export default function maquetteModule({code_module}:{code_module:string}){
     const [edges, setEdges] = useState<object[]>([])
     const [width, setWidth] = useState(-1)
     const [isLoading, setIsLoading] = useState(true)
-
+    console.log(maquette)
     useEffect(() => {
         setIsLoading(true)
         

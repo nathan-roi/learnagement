@@ -30,7 +30,7 @@ $code_module = $_POST['code_module'];
 
 $req = selectVIEW_display($conn, $id_view); // on récupère la ligne qui permet d'avoir les dépendances de tout les modules
 
-$sql = $req[0]['request']; // on garde uniquement la requête sql
+$sql = $req['request']; // on garde uniquement la requête sql
 $sqlFormat = substr($sql, 0, -8) . "WHERE previousModule.`code_module`='" . $code_module . "';"; // WHERE 1; remplacer par le nom du module dont on veut la maquette
 $res = mysqli_query($conn, $sqlFormat); // on exécute la nouvelle requête
 $rs = rs_to_table($res);

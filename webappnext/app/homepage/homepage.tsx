@@ -1,7 +1,8 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
 
-import CardCharge from "@/app/homepage/cardCharge";
+import listCardsCharge from "@/app/homepage/listCardsCharge";
+import ListCardsCharge from "@/app/homepage/listCardsCharge";
 
 interface User{
     userFirstname: string,
@@ -33,7 +34,7 @@ export default function Homepage({userInfos} : {userInfos : User}){
             <h1 className={"text-center text-4xl font-bold mt-5"}>Bonjour, {userInfos.userFirstname} ! 👋</h1>
             <div>
                 <h3 className={"text-2xl font-bold ml-5 mb-16"}>Ma charge de cours</h3>
-                <CardCharge detailsCharge={detailsCharge}/>
+                <ListCardsCharge detailsCharge={detailsCharge}/>
             </div>
 
         </div>

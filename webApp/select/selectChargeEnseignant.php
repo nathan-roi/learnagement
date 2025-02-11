@@ -47,7 +47,8 @@ if (isset($_POST["userFirstname"]) && isset($_POST["userLastname"])) {
         $chargeTotaleOneEnseignant[array_keys($chargeTotaleOneEnseignant)[0]],
         $chargeRepartOneEnseignant[array_keys($chargeRepartOneEnseignant)[0]]
     );
-
+    unset($charge["prenom"]);
+    unset($charge["nom"]);
 
     echo json_encode($charge);
 }else{
