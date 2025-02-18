@@ -5,7 +5,7 @@ import CardCharge from "@/app/homepage/charge/cardCharge";
 import { ChargeState, ChargeType } from "@/app/types/charges";
 
 
-export default function ListCardsCharge({userFirstname, userLastname}:{userFirstname: string, userLastname: string}){
+export default function ListCardsCharge({userId} : {userId:string}){
     const [charges, setCharges] = useState<ChargeState>({
         Charge: -1,
         CM: -1,
@@ -13,28 +13,38 @@ export default function ListCardsCharge({userFirstname, userLastname}:{userFirst
         TP: -1
     })
 
+    const chargeTotCmTdTp = charges.CM + charges.TD + charges.TP
+
     useEffect(() => {
 
         let form_data = new FormData()
-        form_data.append("userFirstname", userFirstname)
-        form_data.append("userLastname", userLastname)
+        form_data.append("user_id", userId)
         axios.post("http://localhost:8080/select/selectChargeEnseignant.php", form_data)
             .then(response => {
-                setCharges(response.data)
+                if (response.data[0] != false){
+                    setCharges(response.data)
+                }else{
+                    console.log('erreur')
+                }
+
             })
 
-    }, [userFirstname, userLastname]);
+    }, [userId]);
 
     const chargeTypes: ChargeType[] = ['CM', 'TD', 'TP'];
 
     return(
         <div className={"w-full flex flex-grow justify-evenly"}>
-            <CardCharge label={'TOTAL'} dataDonut={[charges['CM'], charges['TD'], charges['TP']]}/>
+            {charges.Charge == chargeTotCmTdTp ?
+                <CardCharge label={'TOTAL'} dataDonut={[charges.CM, charges.TD, charges.TP]}/>
+                :
+                <CardCharge label={'TOTAL'} dataDonut={[charges.CM, charges.TD, charges.TP, charges.Charge - chargeTotCmTdTp]}/>
+            }
             {chargeTypes.map((type) => (
                 <CardCharge
                     key={type}
                     label={type}
-                    dataDonut={[charges[type], charges['Charge'] - charges[type]]}
+                    dataDonut={[charges[type], charges.Charge - charges[type]]}
                 />
             ))}
         </div>

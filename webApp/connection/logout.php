@@ -3,7 +3,7 @@ header("Access-Control-Allow-Origin: http://localhost:40080"); // Activer CORS
 header("Access-Control-Allow-Credentials: true"); // Autoriser le partage de cookies
 
 
-// On d�marre la session
+// On demarre la session
 session_start ();
 
 session_regenerate_id(true);

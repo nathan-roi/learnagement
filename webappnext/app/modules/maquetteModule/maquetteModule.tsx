@@ -14,19 +14,24 @@ export default function maquetteModule({code_module}:{code_module:string}){
     const [edges, setEdges] = useState<object[]>([])
     const [width, setWidth] = useState(-1)
     const [isLoading, setIsLoading] = useState(true)
-    console.log(maquette)
+
     useEffect(() => {
         setIsLoading(true)
         
         let form_data = new FormData()
-        let id_view = '9'
 
-        form_data.append("id_view", id_view)
         form_data.append("code_module", code_module)
         axios.post("http://localhost:8080/select/selectMaquette.php", form_data)
             .then(response => {
-                setMaquette(response.data)
-                setIsLoading(false)
+                if (response.data[0] != false){
+                    setMaquette(response.data)
+                    setIsLoading(false)
+                }else{
+                    console.log(response.data[1])
+                    setTimeout(() => {
+                        setIsLoading(false)
+                    }, 2000)
+                }
             })
 
     }, [code_module]);

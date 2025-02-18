@@ -47,7 +47,7 @@ export default function ListModule({setInfosModule, homepageShown}:{setInfosModu
 
         let form_data = new FormData()
         form_data.append("id_module", id_module)
-        axios.post("http://localhost:8080/select/selectModuleById.php",form_data)
+        axios.post("http://localhost:8080/select/selectInfosModule.php",form_data)
             .then(response => {
                 setInfosModule(response.data[0])
                 setModuleClicked(response.data[0].id_module)

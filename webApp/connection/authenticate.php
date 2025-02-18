@@ -56,7 +56,7 @@ $hashedPassword = $row["password"];
       initFilter($conn, $id, $sessionId);
       echo json_encode($_SESSION);
 
-    exit();
+      exit();
     }else {
           // Incorrect password
           echo 'Incorrect  password!';

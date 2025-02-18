@@ -1,8 +1,8 @@
 import ListCardsCharge from "@/app/homepage/charge/listCardsCharge";
 
 interface User{
-    userFirstname: string,
-    userLastname: string
+    userId: string,
+    userFirstname: string
 }
 
 export default function Homepage({userInfos} : {userInfos : User}){
@@ -13,7 +13,7 @@ export default function Homepage({userInfos} : {userInfos : User}){
             <h1 className={"absolute top-0 text-4xl font-bold mt-5"}>Bonjour, {userInfos.userFirstname} ! 👋</h1>
             <div className={"w-full self-start"}>
                 <h3 className={"text-2xl font-bold ml-5 mb-16"}>Ma charge de cours</h3>
-                <ListCardsCharge userFirstname={userInfos.userFirstname} userLastname={userInfos.userLastname} />
+                <ListCardsCharge userId={userInfos.userId} />
             </div>
 
         </div>

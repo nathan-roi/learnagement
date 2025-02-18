@@ -4,16 +4,14 @@
 
     header("Content-Type: application/json");
 
+    session_start();
 
     include("../db_connection/connectDB.php");
     include("../crud/MAQUETTE_module.crud.php");
     include("../crud/function_rs_to_table.php");
 
-    session_start();
+    $id_module = $_POST['id_module'];
+    $infosModule = select_infos_module($conn, $id_module);
+    $strInfosModule = json_encode($infosModule);
 
-
-    $id = $_SESSION['userId'];
-    $listeModules = listMAQUETTE_moduleByIdResp($conn, $id);
-    $strlisteModules = json_encode($listeModules);
-
-    echo $strlisteModules;
+    echo $strInfosModule;
