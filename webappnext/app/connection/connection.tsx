@@ -3,9 +3,11 @@
 import axios from "axios";
 import Link from "next/link";
 import React, {useState} from "react";
+import { useUserInfosStore } from "@/app/store/useUserInfosStore";
 
 
-export default function Connection({setIsConnect, setUserInfos}:any) {
+export default function Connection() {
+    const {setUser} = useUserInfosStore()
     const [login, setLogin] = useState('')
     const [mdp, setMdp] = useState('')
 
@@ -23,8 +25,7 @@ export default function Connection({setIsConnect, setUserInfos}:any) {
         axios.post("http://localhost:8080/connection/authenticate.php", form_data)
             .then(response => {
                 let data = response.data
-                setIsConnect(data.loggedin)
-                setUserInfos(data)
+                setUser(data)
                 // setWrongLogin(!(data.login))
                 // setWrongMdp(!(data.mdp)
             })

@@ -1,7 +1,7 @@
 import axios from "axios";
 import {useEffect, useState} from "react";
 
-import InfosModule from './modules/infosModule'
+import InfosModule from './infosModule'
 
 interface Module {
     id_module: string;

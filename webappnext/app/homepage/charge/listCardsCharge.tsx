@@ -1,11 +1,12 @@
 import axios from "axios";
 import {useEffect, useState} from "react";
+import { useUserInfosStore } from "@/app/store/useUserInfosStore";
 
 import CardCharge from "@/app/homepage/charge/cardCharge";
 import { ChargeState, ChargeType } from "@/app/types/charges";
 
 
-export default function ListCardsCharge({userId} : {userId:string}){
+export default function ListCardsCharge(){
     const [charges, setCharges] = useState<ChargeState>({
         Charge: -1,
         CM: -1,
@@ -13,12 +14,14 @@ export default function ListCardsCharge({userId} : {userId:string}){
         TP: -1
     })
 
+    const {user} = useUserInfosStore()
+
     const chargeTotCmTdTp = charges.CM + charges.TD + charges.TP
 
     useEffect(() => {
 
         let form_data = new FormData()
-        form_data.append("user_id", userId)
+        form_data.append("user_id", user.userId)
         axios.post("http://localhost:8080/select/selectChargeEnseignant.php", form_data)
             .then(response => {
                 if (response.data[0] != false){
@@ -29,7 +32,7 @@ export default function ListCardsCharge({userId} : {userId:string}){
 
             })
 
-    }, [userId]);
+    }, [user.userId]);
 
     const chargeTypes: ChargeType[] = ['CM', 'TD', 'TP'];
 

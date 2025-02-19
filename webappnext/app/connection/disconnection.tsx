@@ -1,11 +1,13 @@
 "use client";
 
 import axios from "axios";
+import {useUserInfosStore} from "@/app/store/useUserInfosStore";
 
-export default function Disconnection({setIsConnect}:any){
+export default function Disconnection(){
+    const {setLoggedin} = useUserInfosStore()
     function sendDeconnection(){
         axios.get("http://localhost:8080/connection/logout.php")
-            .then(r => setIsConnect(r.data))
+            .then(r => setLoggedin(r.data))
     }
 
     return(

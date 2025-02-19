@@ -2,10 +2,11 @@
 
 import React, {useState, useEffect} from "react";
 import axios from "axios";
+import { useUserInfosStore } from "./store/useUserInfosStore"
 
 import Connection from "./connection/connection";
 import Disconnection from "./connection/disconnection";
-import ListModules from "./listModules";
+import ListModules from "./modules/listModules";
 import InfosModule from "./modules/infosModule"
 import Loader from "@/app/loader";
 import Homepage from "@/app/homepage/homepage";
@@ -13,8 +14,7 @@ import LinkHomepage from "@/app/homepage/linkHomepage";
 
 export default function Home() {
     axios.defaults.withCredentials = true // Autorise le partage de cookies (fonctionne pour les composants enfants)
-    const [isConnect, setIsConnect] = useState(false)
-    const [userInfos, setUserInfos] = useState({userId:'', userFirstname: ''})
+    const { user, setUser } = useUserInfosStore()
     const [infosModule, setInfosModule] = useState({code_module:"null"})
     const [isLoading, setIsLoading] = useState(true)
 
@@ -25,21 +25,19 @@ export default function Home() {
         axios.get("http://localhost:8080/connection/isConnect.php")
             .then(response => {
                 let data = response.data
-
-                setIsConnect(data.loggedin)
-                setUserInfos(data)
+                setUser(data)
                 setIsLoading(false)
             })
     },[])
     function shownHomepage(){
         return infosModule?.code_module === "null";
     }
-
+    
     return (
         <>
-            {!isConnect ?
+            {!user.loggedin ?
                 <main className={"h-screen flex items-center justify-center"}>
-                    {isLoading ? <Loader /> : <Connection setIsConnect={setIsConnect} setUserInfos={setUserInfos}/>}
+                    {isLoading ? <Loader /> : <Connection />}
 
                 </main>
                 :
@@ -50,12 +48,12 @@ export default function Home() {
                             <aside className={"h-screen col-span-1 p-2.5 bg-usmb-dark-blue text-white"}>
                                 <LinkHomepage setInfosModule={setInfosModule}/>
                                 <ListModules setInfosModule={setInfosModule} homepageShown= {shownHomepage()}/>
-                                <Disconnection setIsConnect={setIsConnect}/>
+                                <Disconnection />
                             </aside>
                             {/*Si aucun module affiché alors homepage s'affiche sinon le module*/}
                             {shownHomepage() ?
                                 <div className={"col-span-3"}>
-                                    <Homepage userInfos={userInfos}/>
+                                    <Homepage />
                                 </div>
                                 :
                                 <div className={"col-span-3"}>
