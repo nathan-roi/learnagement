@@ -29,10 +29,11 @@ export default function Home() {
                 setIsLoading(false)
             })
     },[])
+
     function shownHomepage(){
         return infosModule?.code_module === "null";
     }
-    
+    console.log(infosModule)
     return (
         <>
             {!user.loggedin ?
