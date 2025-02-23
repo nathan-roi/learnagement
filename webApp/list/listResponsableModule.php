@@ -11,9 +11,7 @@
 
     session_start();
 
-
     $id = $_SESSION['userId'];
     $listeModules = listMAQUETTE_moduleByIdResp($conn, $id);
-    $strlisteModules = json_encode($listeModules);
 
-    echo $strlisteModules;
+    echo json_encode($listeModules, JSON_NUMERIC_CHECK);

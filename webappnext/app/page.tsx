@@ -1,8 +1,9 @@
 "use client";
 
-import React, {useState, useEffect} from "react";
 import axios from "axios";
-import { useUserInfosStore } from "./store/useUserInfosStore"
+import React, {useState, useEffect} from "react";
+import { useUserInfosStore } from "./store/useUserInfosStore";
+import { useInfosModuleStore } from "@/app/store/useInfosModuleStore";
 
 import Connection from "./connection/connection";
 import Disconnection from "./connection/disconnection";
@@ -15,7 +16,7 @@ import LinkHomepage from "@/app/homepage/linkHomepage";
 export default function Home() {
     axios.defaults.withCredentials = true // Autorise le partage de cookies (fonctionne pour les composants enfants)
     const { user, setUser } = useUserInfosStore()
-    const [infosModule, setInfosModule] = useState({code_module:"null"})
+    const { module } = useInfosModuleStore()
     const [isLoading, setIsLoading] = useState(true)
 
 
@@ -31,9 +32,9 @@ export default function Home() {
     },[])
 
     function shownHomepage(){
-        return infosModule?.code_module === "null";
+        return module.code_module === "";
     }
-    console.log(infosModule)
+
     return (
         <>
             {!user.loggedin ?
@@ -47,8 +48,8 @@ export default function Home() {
                     {isLoading ? <Loader /> :
                         <>
                             <aside className={"h-screen col-span-1 p-2.5 bg-usmb-dark-blue text-white"}>
-                                <LinkHomepage setInfosModule={setInfosModule}/>
-                                <ListModules setInfosModule={setInfosModule} homepageShown= {shownHomepage()}/>
+                                <LinkHomepage />
+                                <ListModules homepageShown= {shownHomepage()} />
                                 <Disconnection />
                             </aside>
                             {/*Si aucun module affiché alors homepage s'affiche sinon le module*/}
@@ -58,7 +59,7 @@ export default function Home() {
                                 </div>
                                 :
                                 <div className={"col-span-3"}>
-                                    {Object.keys(infosModule).length > 0 && <InfosModule infos={infosModule}/>}
+                                    {Object.keys(module).length > 0 && <InfosModule />}
                                 </div>
                             }
                         </>

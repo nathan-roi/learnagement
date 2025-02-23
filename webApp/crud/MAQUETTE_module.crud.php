@@ -9,7 +9,8 @@ function select_infos_module($conn, $id) {
     $sql = "SELECT * FROM `MAQUETTE_module` WHERE `id_module`=$id";
     $res = mysqli_query($conn, $sql);
     $rs = rs_to_table($res);
-    return $rs;
+
+    return $rs[0];
 }
 
 function selectMAQUETTE_module($conn, $code_module) {

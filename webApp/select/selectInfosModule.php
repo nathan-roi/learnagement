@@ -12,6 +12,5 @@
 
     $id_module = $_POST['id_module'];
     $infosModule = select_infos_module($conn, $id_module);
-    $strInfosModule = json_encode($infosModule);
 
-    echo $strInfosModule;
+    echo json_encode($infosModule, JSON_NUMERIC_CHECK);
