@@ -5,11 +5,11 @@ import React, {useState, useEffect} from "react";
 import { useUserInfosStore } from "./store/useUserInfosStore";
 import { useInfosModuleStore } from "@/app/store/useInfosModuleStore";
 
-import Connection from "./connection/connection";
-import Disconnection from "./connection/disconnection";
-import ListModules from "./modules/listModules";
-import InfosModule from "./modules/infosModule"
-import Loader from "@/app/loader";
+import Connection from "@/app/connection/connection";
+import Disconnection from "@/app/connection/disconnection";
+import ListModules from "@/app/modules/listModules";
+import InfosModule from "@/app/modules/infosModule"
+import Loader from "@/app/indicators/loader";
 import Homepage from "@/app/homepage/homepage";
 import LinkHomepage from "@/app/homepage/linkHomepage";
 

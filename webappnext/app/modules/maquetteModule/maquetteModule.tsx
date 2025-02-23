@@ -5,7 +5,7 @@ import React, {useEffect, useState} from "react";
 import {MarkerType, Position, ReactFlowProvider} from "@xyflow/react";
 
 import MaquetteFlow from "@/app/modules/maquetteModule/maquetteFlow";
-import Loader from "@/app/loader"
+import Loader from "@/app/indicators/loader"
 
 
 export default function maquetteModule({code_module}:{code_module:string}){

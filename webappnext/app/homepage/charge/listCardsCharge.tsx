@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import { useUserInfosStore } from "@/app/store/useUserInfosStore";
 
 import CardCharge from "@/app/homepage/charge/cardCharge";
-import { ChargeState, ChargeType } from "@/app/types/charges";
+import { ChargeState, ChargeType } from "@/app/types/charge/charges";
 
 
 export default function ListCardsCharge(){

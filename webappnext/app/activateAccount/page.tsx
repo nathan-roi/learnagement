@@ -4,7 +4,7 @@ import React, {useEffect, useState} from "react";
 import Link from "next/link";
 import bcrypt from 'bcryptjs';
 
-import AlertBox from "../alertBox";
+import AlertBox from "../indicators/alertBox";
 
 export default function ActivateAccount() {
     const [pwd, setPwd] = useState('')
@@ -70,7 +70,7 @@ export default function ActivateAccount() {
                 {(hash != "Erreur hashage" && pwd != '' ) && hash}
                 <div className={"flex items-center gap-5"}>
                     <button value="copy" onClick={copyHash}>Copier</button>
-                    <button className={"bg-white border hover:bg-gray-50 border-usmb-grey"}><Link href={"/"} className={"text-usmb-cyan"}>Retour</Link></button>
+                    <Link href={"/"} className={"button-second"}>Retour</Link>
                 </div>
             </div>
         </main>
