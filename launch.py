@@ -3,6 +3,7 @@ import shutil
 import subprocess
 import time
 
+
 def main():
     # Couleurs pour les messages (non directement nécessaires dans Python mais émulation via ANSI codes)
     RED = "\033[0;31m"
@@ -13,24 +14,28 @@ def main():
     # Initialisation de la configuration de l'application web
     print("##########")
     print("Initialisation de la configuration de l'application web")
-    
+
     os.chdir("webApp")
-    if not os.path.exists("config.php"):
-        shutil.copy("config.php.example", "config.php")
-        print(f"{GREEN}Update docker/docker-compose.yml and webApp/config.php files with new password.{NC}")
+    if not os.path.exists("db_connection/config.php"):
+        shutil.copy("db_connection/config.php.example", "db_connection/config.php")
+        print(
+            f"{GREEN}Update docker/docker-compose.yml and webApp/db_connection/config.php files with new password.{NC}"
+        )
         input("Then press any key to continue... ")
-    
-    if os.path.exists("config.php.example") and os.path.exists("config.php"):
-        if filecmp("config.php.example", "config.php"):
+
+    if os.path.exists("db_connection/config.php.example") and os.path.exists(
+        "db_connection/config.php"
+    ):
+        if filecmp("db_connection/config.php.example", "db_connection/config.php"):
             print(f"{RED}WARNING default password seems to be used !!!{NC}")
-    
+
     os.chdir("..")
 
     ##########
     # Création du répertoire de données initiales
     print("##########")
     print("Création du répertoire de données initiales")
-    
+
     # Création du répertoire de données initiales s'il n'existe pas
     try:
         os.makedirs("db/data", exist_ok=False)
@@ -51,10 +56,10 @@ def main():
                 # Copie le fichier
                 shutil.copy(source_path, target_path)
                 print(f"Copied: {source_path} -> {target_path}")
-            
+
     except OSError as error:
         print(f"{GREEN}Data already exist!{NC}")
-        
+
     # Chemin vers le fichier db/data/README
     readme_path = "db/data/README"
     # Texte à ajouter
@@ -72,38 +77,41 @@ def main():
     # Lancement de Docker
     print("##########")
     print("Lancement de Docker")
-    
+
     os.chdir("docker")
     if not os.path.exists("docker-compose.yml"):
         shutil.copy("docker-compose.yml.example", "docker-compose.yml")
-        print(f"{GREEN}Update docker/docker-compose.yml and webApp/config.php files with new password.{NC}")
+        print(
+            f"{GREEN}Update docker/docker-compose.yml and webApp/config.php files with new password.{NC}"
+        )
         input("Then press any key to continue... ")
 
-    if os.path.exists("docker-compose.yml.example") and os.path.exists("docker-compose.yml"):
+    if os.path.exists("docker-compose.yml.example") and os.path.exists(
+        "docker-compose.yml"
+    ):
         if filecmp("docker-compose.yml.example", "docker-compose.yml"):
             print(f"{RED}WARNING default password seems to be used !!!{NC}")
 
-    
-    if os.name == 'nt':
-        #prog = subprocess.Popen(['runas', '/noprofile', '/user:Administrator', 'docker-compose up'],stdin=subprocess.PIPE)
-        #prog.stdin.write(b'password')
-        prog = subprocess.Popen(['docker-compose', 'up'])
+    if os.name == "nt":
+        # prog = subprocess.Popen(['runas', '/noprofile', '/user:Administrator', 'docker-compose up'],stdin=subprocess.PIPE)
+        # prog.stdin.write(b'password')
+        prog = subprocess.Popen(["docker-compose", "up"])
         prog.communicate()
-    else:    
+    else:
         subprocess.run(["sudo", "docker-compose", "up"], check=True)
 
     # Pause pour laisser Docker démarrer
     time.sleep(5)
 
-    if os.name == 'nt':
-        #prog = subprocess.Popen(['runas', '/noprofile', '/user:Administrator', 'docker-compose ps'],stdin=subprocess.PIPE)
-        #prog.stdin.write(b'password')
-        prog = subprocess.Popen(['docker-compose', 'ps'])
-        #prog.stdin.write(b'password')
+    if os.name == "nt":
+        # prog = subprocess.Popen(['runas', '/noprofile', '/user:Administrator', 'docker-compose ps'],stdin=subprocess.PIPE)
+        # prog.stdin.write(b'password')
+        prog = subprocess.Popen(["docker-compose", "ps"])
+        # prog.stdin.write(b'password')
         prog.communicate()
-    else:            
+    else:
         subprocess.run(["sudo", "docker-compose", "ps"], check=True)
-        
+
     os.chdir("..")
 
     # Population avec des données libres
@@ -112,10 +120,12 @@ def main():
     # Population via ADE
     # subprocess.run(["python3", "ade2sql.py"], check=True)
 
+
 def filecmp(file1, file2):
     """Compare deux fichiers pour vérifier s'ils sont identiques."""
     with open(file1, "r") as f1, open(file2, "r") as f2:
         return f1.read() == f2.read()
+
 
 if __name__ == "__main__":
     main()
