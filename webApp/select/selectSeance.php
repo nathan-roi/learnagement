@@ -14,13 +14,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-if (isset($_POST['input'])) {
+if (isset($_POST['input']) && isset($_POST['module'])) {
     $input = $_POST['input'];
+    $module = $_POST['module'];
 
-    $duree_h = viewSeance($conn, $input);
+    $duree_h = viewSeance($conn, $input, $module);
 
     echo json_encode($duree_h);
 } else {
-    echo json_encode([false, "Error: input undefined"]);
+    echo json_encode([false, "Error: input or module undefined"]);
 }
 ?>
