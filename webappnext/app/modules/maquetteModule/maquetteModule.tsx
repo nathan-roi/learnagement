@@ -1,163 +1,173 @@
 "use client";
 
 import axios from "axios";
-import React, {useEffect, useState} from "react";
-import {MarkerType, Position, ReactFlowProvider} from "@xyflow/react";
+import React, { useEffect, useState } from "react";
+import { MarkerType, Position, ReactFlowProvider } from "@xyflow/react";
 
 import MaquetteFlow from "@/app/modules/maquetteModule/maquetteFlow";
-import Loader from "@/app/indicators/loader"
+import Loader from "@/app/indicators/loader";
 
+export default function maquetteModule({
+  code_module,
+}: {
+  code_module: string;
+}) {
+  const [maquette, setMaquette] = useState([]);
+  const [nodes, setNodes] = useState<object[]>([]);
+  const [edges, setEdges] = useState<object[]>([]);
+  const [width, setWidth] = useState(-1);
+  const [isLoading, setIsLoading] = useState(true);
 
-export default function maquetteModule({code_module}:{code_module:string}){
-    const [maquette, setMaquette] = useState([])
-    const [nodes, setNodes] = useState<object[]>([])
-    const [edges, setEdges] = useState<object[]>([])
-    const [width, setWidth] = useState(-1)
-    const [isLoading, setIsLoading] = useState(true)
+  useEffect(() => {
+    setIsLoading(true);
 
-    useEffect(() => {
-        setIsLoading(true)
-        
-        let form_data = new FormData()
+    let form_data = new FormData();
 
-        form_data.append("code_module", code_module)
-        axios.post("http://localhost:8080/select/selectMaquette.php", form_data)
-            .then(response => {
-                if (response.data[0] != false){
-                    setMaquette(response.data)
-                    setIsLoading(false)
-                }else{
-                    console.log(response.data[1])
-                    setTimeout(() => {
-                        setIsLoading(false)
-                    }, 2000)
-                }
-            })
-
-    }, [code_module]);
-
-    /* création des nodes des edges (besoins de la largeur d'écran pour placer les nodes */
-    useEffect(() => {
-        if (maquette.length > 0) {
-            createNodes(maquette)
-            createEdges(maquette)
-        }else{
-            setNodes([])
-            setEdges([])
+    form_data.append("code_module", code_module);
+    axios
+      .post("http://localhost:8080/select/selectMaquette.php", form_data)
+      .then((response) => {
+        if (response.data[0] != false) {
+          console.log(response);
+          setMaquette(response.data);
+          setIsLoading(false);
+        } else {
+          console.error(response.data[1]);
+          setTimeout(() => {
+            setIsLoading(false);
+          }, 2000);
         }
-    }, [maquette, width]);
+      });
+  }, [code_module]);
 
-    function getSeances(maquette:any){
-        /* liste des séances de cours dans le bon ordre */
-        let tmpSeances = []
+  /* création des nodes des edges (besoins de la largeur d'écran pour placer les nodes */
+  useEffect(() => {
+    if (maquette.length > 0) {
+      createNodes(maquette);
+      createEdges(maquette);
+    } else {
+      setNodes([]);
+      setEdges([]);
+    }
+  }, [maquette, width]);
 
-        let index = 0
-        let i = 0
-        let seancePred = maquette[i]['séance précédente']
-        let seanceSuiv = maquette[i]['séance suivante']
+  function getSeances(maquette: any) {
+    /* liste des séances de cours dans le bon ordre */
+    let tmpSeances = [];
 
-        tmpSeances.push(seancePred)
-        tmpSeances.push(seanceSuiv)
+    let index = 0;
+    let i = 0;
+    let seancePred = maquette[i]["séance précédente"];
+    let seanceSuiv = maquette[i]["séance suivante"];
 
-        while(i < maquette.length){
-            index = maquette.findIndex((obj:any) => obj['séance précédente'] === seanceSuiv)
+    tmpSeances.push(seancePred);
+    tmpSeances.push(seanceSuiv);
 
-            if (index != -1){
-                seanceSuiv = maquette[index]['séance suivante']
-                tmpSeances.push(seanceSuiv)
-            }else{
-                /* Traitement du cas où il y a une rupture dans les liens de tous les cours */
-                seancePred = maquette[i]['séance précédente']
-                seanceSuiv = maquette[i]['séance suivante']
-                tmpSeances.push(seancePred, seanceSuiv)
-            }
+    while (i < maquette.length) {
+      index = maquette.findIndex(
+        (obj: any) => obj["séance précédente"] === seanceSuiv
+      );
 
-            i ++
-        }
+      if (index != -1) {
+        seanceSuiv = maquette[index]["séance suivante"];
+        tmpSeances.push(seanceSuiv);
+      } else {
+        /* Traitement du cas où il y a une rupture dans les liens de tous les cours */
+        seancePred = maquette[i]["séance précédente"];
+        seanceSuiv = maquette[i]["séance suivante"];
+        tmpSeances.push(seancePred, seanceSuiv);
+      }
 
-        return [...new Set(tmpSeances)]
+      i++;
     }
 
-    function createNodes(edges: any){
-        let seances = getSeances(edges) // Liste des séances dans le bon ordre (selon les liens
-        let nodes = []
+    return [...new Set(tmpSeances)];
+  }
 
-        let x = 0
-        let y = 0
+  function createNodes(edges: any) {
+    let seances = getSeances(edges); // Liste des séances dans le bon ordre (selon les liens)
+    let nodes = [];
 
-        for (let i = 0; i < seances.length; i++) {
-            let color
-            let seance = seances[i]
-            let type = seance.slice(0,2)
+    let x = 0;
+    let y = 0;
 
-            if (type === 'CM'){
-                color = 'bg-cm-red'
-            }else if(type === 'TD'){
-                color = 'bg-td-green'
-            }else if(type === 'TP'){
-                color = 'bg-tp-yellow'
-            }else if(type === 'Ex'){
-                color = 'bg-exam-blue'
-            }else{
-                color = 'bg-other-pink'
-            }
+    for (let i = 0; i < seances.length; i++) {
+      let color;
+      let seance = seances[i];
+      let type = seance.slice(0, 2);
 
-            let node = {
-                id: seance,
-                type: 'customNode',
-                position : {x: x, y: y},
-                data: {label: seance, color:color},
-                sourcePosition: Position.Right, // Les liens sortent par la droite
-                targetPosition: Position.Left,  // Les liens entrent par la gauche
-            }
+      if (type === "CM") {
+        color = "bg-cm-red";
+      } else if (type === "TD") {
+        color = "bg-td-green";
+      } else if (type === "TP") {
+        color = "bg-tp-yellow";
+      } else if (type === "Ex") {
+        color = "bg-exam-blue";
+      } else {
+        color = "bg-other-pink";
+      }
 
-            nodes.push(node)
+      let node = {
+        id: seance,
+        type: "customNode",
+        position: { x: x, y: y },
+        data: { label: seance, color: color },
+        sourcePosition: Position.Right, // Les liens sortent par la droite
+        targetPosition: Position.Left, // Les liens entrent par la gauche
+      };
 
-            if(x >= width && width != -1){
-                y += 200
-                x = 0
-            }else{
-                x += 200
-            }
-        }
-        setNodes(nodes)
+      nodes.push(node);
+
+      if (x >= width && width != -1) {
+        y += 200;
+        x = 0;
+      } else {
+        x += 200;
+      }
     }
-    
-    function createEdges(maquette:any){
-        let edges = []
+    setNodes(nodes);
+  }
 
-        for (let i = 0; i < maquette.length; i++) {
-            let pred = maquette[i]['séance précédente']
-            let suiv = maquette[i]['séance suivante']
+  function createEdges(maquette: any) {
+    let edges = [];
 
-            let link = {
-                id: pred + '-' + suiv,
-                source: pred,
-                target: suiv,
-                animated: true,
-                markerEnd: {
-                    type: MarkerType.ArrowClosed,
-                    width: 30,
-                    height: 30,
-                },
-                type: 'floating'
-            }
-            edges.push(link)
-        }
-        setEdges(edges)
+    for (let i = 0; i < maquette.length; i++) {
+      let pred = maquette[i]["séance précédente"];
+      let suiv = maquette[i]["séance suivante"];
+
+      let link = {
+        id: pred + "-" + suiv,
+        source: pred,
+        target: suiv,
+        animated: true,
+        markerEnd: {
+          type: MarkerType.ArrowClosed,
+          width: 30,
+          height: 30,
+        },
+        type: "floating",
+      };
+      edges.push(link);
     }
+    setEdges(edges);
+  }
 
-    return (
-        <div className={"h-screen w-full"}>
-            {!isLoading ? (
-                <ReactFlowProvider>
-                    <MaquetteFlow initialNodes={nodes} initialEdges={edges} setWidth={setWidth}/>
-                </ReactFlowProvider>
-            ) : (
-                <div className={"h-full w-full flex items-center justify-center"}>
-                    <Loader/>
-                </div>
-            )}
+  return (
+    <div className={"h-screen w-full"}>
+      {!isLoading ? (
+        <ReactFlowProvider>
+          <MaquetteFlow
+            initialNodes={nodes}
+            initialEdges={edges}
+            setWidth={setWidth}
+          />
+        </ReactFlowProvider>
+      ) : (
+        <div className={"h-full w-full flex items-center justify-center"}>
+          <Loader />
         </div>
-    )
+      )}
+    </div>
+  );
 }

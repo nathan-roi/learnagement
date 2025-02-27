@@ -1,108 +1,161 @@
-import React, {useState, useCallback, useEffect, useRef} from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import {
-    ReactFlow,
-    Background,
-    Controls,
-    useReactFlow, useNodesState, useEdgesState, addEdge, MarkerType,
-}
-from "@xyflow/react";
-import '@xyflow/react/dist/style.css';
-import FloatingEdge from './floatingEdge';
+  ReactFlow,
+  Background,
+  Controls,
+  useReactFlow,
+  useNodesState,
+  useEdgesState,
+  addEdge,
+  MarkerType,
+} from "@xyflow/react";
+import "@xyflow/react/dist/style.css";
+import FloatingEdge from "./floatingEdge";
 import CustomNode from "@/app/modules/maquetteModule/customNode";
 import floatingConnectionLine from "@/app/modules/maquetteModule/floatingConnectionLine";
+import CourseCard from "../maquetteSequence/courseCard";
 
-export default function MaquetteFlow({initialNodes, initialEdges, setWidth}:{initialNodes:any, initialEdges:any, setWidth:any}){
-    const componentRef = useRef<HTMLDivElement>(null)
-    const { fitView } = useReactFlow();
-    const [majWidth, setMajWidth] = useState(0)
-    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-    const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+export default function MaquetteFlow({
+  initialNodes,
+  initialEdges,
+  setWidth,
+}: {
+  initialNodes: any;
+  initialEdges: any;
+  setWidth: any;
+}) {
+  const componentRef = useRef<HTMLDivElement>(null);
+  const { fitView } = useReactFlow();
+  const [majWidth, setMajWidth] = useState(0);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
+  interface CourseData {
+    label?: string;
+    moduleCode?: string;
+    session?: string;
+    duration?: number;
+    color?: string;
+    typeCourse?: string;
+    currentNumber?: number;
+    totalNumber?: number;
+  }
 
-    useEffect(() => {
-        setNodes(initialNodes)
-        setEdges(initialEdges)
-    }, [initialNodes,initialEdges]);
+  const [displayCardCourse, setDisplayCardCourse] = useState<CourseData>({});
 
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-            fitView({padding:0.1, duration:800})
-        },300)
-        return() => clearTimeout(timeout)
-    }, [majWidth,initialEdges,initialNodes]);
+  useEffect(() => {
+    console.log("[DEBUG]Display Card Course : ", displayCardCourse);
+  }, [displayCardCourse]);
 
-    useEffect(() => {
-        /*Permet de connaitre la largeur du flow pour afficher à la ligne les cours*/
+  useEffect(() => {
+    setNodes(initialNodes);
+    setEdges(initialEdges);
+  }, [initialNodes, initialEdges]);
 
-        const element = componentRef.current; // Accéder à l'élément référencé
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      fitView({ padding: 0.1, duration: 800 });
+    }, 300);
+    return () => clearTimeout(timeout);
+  }, [majWidth, initialEdges, initialNodes]);
 
-        if (!element) return;
+  useEffect(() => {
+    const element = componentRef.current;
+    if (!element) return;
 
-        // Créer une instance de ResizeObserver
-        const resizeObserver = new ResizeObserver((entries) => {
-            if (entries.length > 0) {
-                const newWidth = entries[0].contentRect.width; // Largeur actuelle
-                setWidth(newWidth);
-                setMajWidth(newWidth);
-            }
-        });
+    const resizeObserver = new ResizeObserver((entries) => {
+      if (entries.length > 0) {
+        const newWidth = entries[0].contentRect.width;
+        setWidth(newWidth);
+        setMajWidth(newWidth);
+      }
+    });
 
-        // Observer l'élément
-        resizeObserver.observe(element);
+    resizeObserver.observe(element);
+    return () => resizeObserver.disconnect();
+  }, []);
 
-        // Nettoyer l'observation lorsque le composant est démonté
-        return () => resizeObserver.disconnect();
+  const onConnect = useCallback(
+    (params: any) =>
+      setEdges((eds) =>
+        addEdge(
+          {
+            ...params,
+            type: "floating",
+            markerEnd: { type: MarkerType.ArrowClosed },
+          },
+          eds
+        )
+      ),
+    [setEdges]
+  );
 
+  const nodeTypes = {
+    customNode: (nodeProps: any) => (
+      <CustomNode {...nodeProps} setDisplayCardCourse={setDisplayCardCourse} />
+    ),
+  };
 
-    }, []);
+  const edgeTypes: Record<string, any> = {
+    floating: FloatingEdge,
+  };
 
-    const onConnect = useCallback(
-        (params:any) =>
-            setEdges((eds) =>
-                addEdge(
-                    {
-                        ...params,
-                        type: 'floating',
-                        markerEnd: { type: MarkerType.ArrowClosed },
-                    },
-                    eds,
-                ),
-            ),
-        [setEdges],
-    );
+  const formatDuration = (duration: number | undefined) => {
+    if (duration === undefined) return "N/A";
+    const hours = Math.floor(duration);
+    const minutes = Math.round((duration - hours) * 60);
+    return `${hours}h ${minutes > 0 ? minutes + "min" : ""}`;
+  };
 
+  const colorSelector = (type: string | undefined) => {
+    if (type === "CM") {
+        return "bg-cm-red";
+      } else if (type === "TD") {
+        return "bg-td-green";
+      } else if (type === "TP") {
+        return "bg-tp-yellow";
+      } else if (type === "Exam") {
+        return "bg-exam-blue";
+      } else {
+        return "bg-other-pink";
+      }
+  }
 
-    const nodeTypes = {
-        customNode: CustomNode
-    }
-
-    const edgeTypes = {
-        floating: FloatingEdge
-    }
-
-    return (
-
-        <div ref={componentRef} style={{ height: '100%', width: '100%' }}>
-            {(initialNodes.length == 0 && initialEdges == 0) ?
-                <div className={"h-full w-full flex items-center justify-center"}>
-                    <p className={"font-bold text-2xl text-usmb-red"}>Pas de maquette à afficher</p>
-                </div>
-                :
-                <ReactFlow
-                    nodes={nodes}
-                    edges={edges}
-                    onNodesChange={onNodesChange}
-                    onEdgesChange={onEdgesChange}
-                    nodeTypes={nodeTypes}
-                    // @ts-ignore j'ai suivis la doc de react flow
-                    edgeTypes={edgeTypes}
-                    onConnect={onConnect}
-                    connectionLineComponent={floatingConnectionLine}
-                >
-                    <Background/>
-                    <Controls/>
-                </ReactFlow>
-            }
+  return (
+    <div ref={componentRef} style={{ height: "100%", width: "100%" }}>
+      {nodes.length === 0 && edges.length === 0 ? (
+        <div className={"h-full w-full flex items-center justify-center"}>
+          <p className={"font-bold text-2xl text-usmb-red"}>
+            Pas de maquette à afficher
+          </p>
         </div>
-    )
+      ) : (
+        <div style={{ height: "100%", width: "100%" }}>
+          {displayCardCourse && Object.keys(displayCardCourse).length > 0 && (
+            <CourseCard
+              label={displayCardCourse.label || "N/A"}
+              type={displayCardCourse.typeCourse || "N/A"}
+              moduleCode={displayCardCourse.moduleCode || "N/A"}
+              session={`${displayCardCourse.currentNumber || "N/A"}/${displayCardCourse.totalNumber || "N/A"}`}
+              duration={formatDuration(displayCardCourse.duration) || "N/A"}
+              bgColor={colorSelector(displayCardCourse.typeCourse)}
+            />
+          )}
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes}
+            onConnect={onConnect}
+            connectionLineComponent={floatingConnectionLine}
+          >
+            <Background />
+            <Controls />
+          </ReactFlow>
+        </div>
+      )}
+    </div>
+  );
 }
