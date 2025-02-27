@@ -10,9 +10,8 @@ export default function Connection() {
     const {setUser} = useUserInfosStore()
     const [login, setLogin] = useState('')
     const [mdp, setMdp] = useState('')
-
-    const [wrongLogin, setWrongLogin] = useState(false)
-    const [wrongMdp, setWrongMdp] = useState(false)
+    const [loggError, setLoggingError] = useState(false)
+    const [msgLoggErr, setMsgLoggErr] = useState('')
 
     function sendConnection(event:any){
         event.preventDefault()
@@ -25,9 +24,13 @@ export default function Connection() {
         axios.post("http://localhost:8080/connection/authenticate.php", form_data)
             .then(response => {
                 let data = response.data
-                setUser(data)
-                // setWrongLogin(!(data.login))
-                // setWrongMdp(!(data.mdp)
+                if (!data[0]){
+                    setLoggingError(true)
+                    setMsgLoggErr(data[1])
+                }else{
+                    setUser(data[1])
+                    setLoggingError(false)
+                }
             })
         form.reset()
 
@@ -49,6 +52,7 @@ export default function Connection() {
                 </div>
                 {/*{wrongLogin && <p className={"formError"}>Login inexistant</p>}*/}
                 {/*{wrongMdp && <p className={"formError"}>Mauvais mot de passe</p>}*/}
+                {loggError && <p className={"text-usmb-red self-center mb-7"}>{msgLoggErr}</p>}
                 <button type="submit" className={"self-center bg-usmb-cyan"}>Se connecter</button>
             </div>
             <Link href={"/activateAccount"} className={"text-xs underline text-usmb-cyan cursor-pointer"}>Activer mon compte</Link>

@@ -54,15 +54,15 @@ $hashedPassword = $row["password"];
       $_SESSION['start'] = time();
 
       initFilter($conn, $id, $sessionId);
-      echo json_encode($_SESSION);
+      echo json_encode([true, $_SESSION]);
 
       exit();
     }else {
           // Incorrect password
-          echo 'Incorrect  password!';
+          echo json_encode([false, 'Incorrect  password !']);
     }
 }else{
     // Incorrect username
-    echo 'Incorrect username!';
+    echo json_encode([false, 'Incorrect username !']);
 }
 
