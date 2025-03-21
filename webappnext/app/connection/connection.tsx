@@ -30,7 +30,6 @@ export default function Connection() {
                 }else{
                     setUser(data[1])
                     setLoggingError(false)
-                    console.log(data)
                 }
             })
         form.reset()

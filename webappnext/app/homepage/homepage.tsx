@@ -1,6 +1,7 @@
 import { useUserInfosStore } from "@/app/store/useUserInfosStore";
 
 import ListCardsCharge from "@/app/homepage/charge/listCardsCharge";
+import Filieres from "@/app/homepage/competences/filieres";
 
 
 export default function Homepage(){
@@ -13,7 +14,7 @@ export default function Homepage(){
                 <h3 className={"text-2xl font-bold ml-5 mb-16"}>Ma charge de cours</h3>
                 <ListCardsCharge />
             </div>
-
+            <Filieres />
         </div>
     )
 }
