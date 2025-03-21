@@ -7,7 +7,7 @@ require_once("functions_filter.php");
  *
  */
 function get_view($conn, $view_name, $request){
-
+//  var_dump($view_name, $request);
   $request = __addFiltersInRequest($conn, $request);
 
   //print($request . "\n");

@@ -12,7 +12,7 @@ function initFilter($conn, $userId, $sessionId){
     $userId = "\"" . $userId . "\"";
   }
   
-  $req = "INSERT INTO `VIEW_parameters_of_views` (`id_parameters_of_views`, `userId`, `sessionId`) VALUES (NULL," . $userId . ",\"" . $sessionId . "\")";
+  $req = "INSERT INTO `VIEW_parameters_of_views` (`id_parameters_of_views`, `userId`, `sessionId`, `id_enseignant`) VALUES (NULL," . $userId . ",\"" . $sessionId . "\", $userId)";
 
   $result = query($conn, $req);
 }

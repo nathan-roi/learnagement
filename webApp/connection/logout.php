@@ -13,7 +13,7 @@ session_unset ();
 
 unset($_SESSION["loggedin"]);
 
-// On d�truit notre session
+// On détruit notre session
 session_destroy ();
 
 // On redirige le visiteur vers la page d'accueil
