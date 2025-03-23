@@ -46,7 +46,10 @@ $filieres = array_values(array_unique($filieres)); //array_unique supprime tout 
 for ($i = 0; $i < sizeof($filieres); $i++) {
     $nom_filiere = $filieres[$i];
     $nom_long = selectLNM_filiereByName($conn, $nom_filiere)["nom_long"];
+
     $filieres[$i] = [$nom_filiere, $nom_long];
+
+
 }
 
 echo json_encode($filieres, JSON_NUMERIC_CHECK);
