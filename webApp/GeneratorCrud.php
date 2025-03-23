@@ -57,15 +57,10 @@ function ShowCreateCrud($name, $table, $columns)
 //    "id_etat_module",
 //    "commentaire",
 //    "modifiable"]);
-ShowCreateCrud("MAQUETTE_module_sequencage", "MAQUETTE_module_sequencage", [
-    "id_module_sequencage",
-    "id_module",
-    "nombre",
-    "id_seance_type",
-    "id_groupe_type",
-    "duree_h",
-    "intervenant_principal",
-    "id_responsable",
-    "modifiable"
+ShowCreateCrud("LNM_filiere", "LNM_filiere", [
+    "id_filiere",
+    "nom_filiere",
+    "nom_long",
+    "id_responsable"
 ]);
 
