@@ -54,11 +54,11 @@ export default function Home() {
                             </aside>
                             {/*Si aucun module affiché alors homepage s'affiche sinon le module*/}
                             {shownHomepage() ?
-                                <div className={"col-span-3"}>
+                                <div className={"col-span-3 overflow-y-auto"}>
                                     <Homepage />
                                 </div>
                                 :
-                                <div className={"col-span-3"}>
+                                <div className={"col-span-3 overflow-y-auto"}>
                                     {Object.keys(module).length > 0 && <InfosModule />}
                                 </div>
                             }

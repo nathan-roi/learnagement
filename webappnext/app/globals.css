@@ -13,3 +13,9 @@ button, .button {
 input {
     @apply w-full rounded-lg border border-gray-300 p-2 focus:border-blue-500 focus:ring focus:ring-blue-200;
 }
+
+.shadow-default {
+    -webkit-box-shadow: 0px 0px 9.3px 4px rgba(193,193,193,0.45);
+    -moz-box-shadow: 0px 0px 9.3px 4px rgba(193,193,193,0.45);
+    box-shadow: 0px 0px 9.3px 4px rgba(193,193,193,0.45);
+}

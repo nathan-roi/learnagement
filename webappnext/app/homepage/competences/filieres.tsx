@@ -17,12 +17,16 @@ export default function Filieres(){
     console.log(nomFilieres)
     return (
         <>
-            <p>Filières</p>
-            {nomFilieres.length > 0 ? (
-                nomFilieres.map((nom, index) => <p key={index}>{nom[1] != null ? <>{nom[0]} - {nom[1]}</>:<>{nom[0]}</>}</p>)
-            ) : (
-                <p>Aucune filière disponible.</p>
-            )}
+            <div id="cards-container" className={"w-full px-3 flex flex-wrap justify-center gap-10 gap-y-8"}>
+                {nomFilieres.length > 0 ? (
+                    nomFilieres.map((nom, index) =>
+                        <div key={index} className={"w-60 h-16 flex justify-center items-center rounded-lg shadow-default cursor-pointer"}>
+                            <p className={"font-semibold"}>{nom[0]}</p>
+                        </div>)
+                ) : (
+                    <p>Aucune filière disponible.</p>
+                )}
+            </div>
         </>
     )
 }
