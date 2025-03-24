@@ -51,6 +51,6 @@ for ($i = 0; $i < sizeof($filieres); $i++) {
 
 
 }
-
+sort($filieres); # ordre alphabétique
 echo json_encode($filieres, JSON_NUMERIC_CHECK);
 
