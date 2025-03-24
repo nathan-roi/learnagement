@@ -2,7 +2,8 @@ import axios from "axios";
 import {useEffect, useState} from "react";
 import { useUserInfosStore } from "@/app/store/useUserInfosStore";
 
-import Competences from "./competences";
+import ModaleFiliere from "@/app/homepage/competences/modaleFiliere";
+
 export default function Filieres(){
     const {user} = useUserInfosStore()
     const [nomFilieres, setNomFilieres] = useState([])
@@ -29,7 +30,7 @@ export default function Filieres(){
                     <p>Aucune filière disponible.</p>
                 )}
             </div>
-            {nomFiliereClicked != null && <Competences nomFiliere={nomFiliereClicked} setNomFiliere={setNomFiliereClicked}/>}
+            {nomFiliereClicked != null && <ModaleFiliere nomFiliere={nomFiliereClicked} setNomFiliere={setNomFiliereClicked}/>}
         </>
     )
 }
