@@ -1,9 +1,10 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
-import {bgWhite} from "next/dist/lib/picocolors";
+
+import ListCompetences from "./listCompetences"
 
 export default function modaleFiliere({nomFiliere, setNomFiliere}:{nomFiliere: string, setNomFiliere:any}){
-    const [infosCompetences, setInfosCompetences] = useState([])
+    const [infosCompetences, setInfosCompetences] = useState<infosCompetence[]>([])
 
     useEffect(() => {
         let form_data = new FormData()
@@ -18,6 +19,7 @@ export default function modaleFiliere({nomFiliere, setNomFiliere}:{nomFiliere: s
         <div className={"absolute top-0 w-3/4 h-3/4 bg-white"}>
             <p>Modale filière : {nomFiliere}</p>
             <button onClick={() => {setNomFiliere(null)}}>close</button>
+            <ListCompetences infosCompetences={infosCompetences} />
         </div>
     )
 }
