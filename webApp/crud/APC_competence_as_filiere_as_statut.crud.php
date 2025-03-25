@@ -1,6 +1,7 @@
 <?php
 function selectCompetenceByNomFiliere($conn, $nom_filiere){
-    $sql = "SELECT 
+    $sql = "SELECT
+            `APC_competence`.`id_competence` AS `id_competence`,
             `APC_competence`.`code_competence` AS `code_competence`,
             `APC_competence`.`libelle_competence` AS `libelle_competence`,
             `APC_competence`.`description` AS `description_competence`

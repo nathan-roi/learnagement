@@ -8,7 +8,7 @@ export default function Filieres(){
     const {user} = useUserInfosStore()
     const [nomFilieres, setNomFilieres] = useState([])
     const [nomFiliereClicked, setNomFiliereClicked] = useState(null)
-    console.log(nomFiliereClicked)
+
     useEffect(() => {
         let form_data = new FormData()
         form_data.append("userId", user.userId)
