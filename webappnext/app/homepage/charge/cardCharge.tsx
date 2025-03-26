@@ -8,7 +8,7 @@ export default function CardCharge({label, dataDonut}:{label:string, dataDonut: 
     return(
 
         <div className={"h-56 w-56 shadow-md rounded-lg flex flex-col items-center justify-between py-2"}>
-            <h3 className={"text-2xl font-bold"}>{label}</h3>
+            <h3 className={"text-2xl font-bold mb-0 ml-0"}>{label}</h3>
             <Donut label={label} dataDonut={dataDonut}/>
         </div>
 

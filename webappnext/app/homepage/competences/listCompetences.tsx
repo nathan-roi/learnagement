@@ -1,14 +1,35 @@
+import {useState} from "react";
 
 export default function listCompetences({infosCompetences, setIdCompetenceClicked}:{infosCompetences: infosCompetence[], setIdCompetenceClicked:any}){
     // console.log(infosCompetences)
+    const [competenceClicked, setCompetenceCLicked] = useState(-1)
     return(
-        <>
-            <p>Compétences</p>
+        <div className={"mb-8"}>
+            <h4>Compétences de la filière</h4>
+            <div className={"w-full flex justify-center mb-8"}>
+                <p className={"w-4/5 border-t border-gray-300"}></p>
+            </div>
+
             {infosCompetences.length > 0 ?
-                infosCompetences.map((competence:infosCompetence) => (
-                <p key={competence.id_competence} onClick={() => setIdCompetenceClicked(competence.id_competence)}>{competence.libelle_competence}</p>
-            )):
+                <div className={"flex justify-around"}>
+                    {infosCompetences.map((competence:infosCompetence) => (
+                        <div key={competence.id_competence} className={`w-60 h-20 px-2 flex items-center rounded-lg text-white cursor-pointer
+                            ${competenceClicked === competence.id_competence ? 'bg-usmb-blue' : 'bg-usmb-cyan'}`}
+
+                             onClick={() => {
+                                 setIdCompetenceClicked(competence.id_competence)
+                                 setCompetenceCLicked(competence.id_competence)
+                             }}
+                        >
+                            <p className={"font-semibold text-base/5"}>{competence.libelle_competence}</p>
+                        </div>
+                    ))}
+                </div>
+                :
                 <p>Pas d'informations sur les compétences pour cette filière</p>}
-        </>
+            <div className={"w-full flex justify-center mt-8"}>
+                <p className={"w-4/5 border-t border-gray-300"}></p>
+            </div>
+        </div>
     )
 }
