@@ -54,7 +54,7 @@ export default function modaleFiliere({nomFiliere, setNomFiliere}: { nomFiliere:
 
     return(
         <div className={"foreground-full flex justify-center items-center"} onClick={closeModale}>
-            <div className={"w-[90%] h-3/4 p-4 rounded-lg bg-white overflow-auto"} onClick={(e) => {
+            <div className={"w-[90%] h-4/5 p-4 rounded-lg bg-white overflow-auto"} onClick={(e) => {
                 e.stopPropagation()
             }}>
                 <div className={"relative"}>
