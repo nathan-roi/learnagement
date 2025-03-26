@@ -48,7 +48,7 @@ export default function modaleFiliere({nomFiliere, setNomFiliere}: { nomFiliere:
     }, []);
 
     function closeModale(){
-        setNomFiliere(null);
+        setNomFiliere([]);
         setIdCompetenceClicked(-1)
     }
 

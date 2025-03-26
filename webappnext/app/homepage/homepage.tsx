@@ -11,7 +11,6 @@ export default function Homepage(){
         <>
             <h1>Bonjour, {user.userFirstname} ! 👋</h1>
             <div className={"h-screen flex flex-col items-center justify-around"}>
-                {/*<h1 className={"absolute top-0 text-4xl font-bold mt-5"}>Bonjour, {user.userFirstname} ! 👋</h1>*/}
                 <div className={"w-full self-start"}>
                     <h3>Ma charge de cours</h3>
                     <ListCardsCharge />

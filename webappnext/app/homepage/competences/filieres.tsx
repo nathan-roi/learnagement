@@ -3,7 +3,6 @@ import {useEffect, useState} from "react";
 import { useUserInfosStore } from "@/app/store/useUserInfosStore";
 
 import ModaleFiliere from "@/app/homepage/competences/modaleFiliere";
-import {find} from "domutils";
 
 export default function Filieres(){
     const {user} = useUserInfosStore()
@@ -37,7 +36,7 @@ export default function Filieres(){
                     <p>Aucune filière disponible.</p>
                 )}
             </div>
-            {nomFiliereClicked != null && <ModaleFiliere nomFiliere={nomFiliereClicked} setNomFiliere={setNomFiliereClicked}/>}
+            {nomFiliereClicked.length > 0 && <ModaleFiliere nomFiliere={nomFiliereClicked} setNomFiliere={setNomFiliereClicked}/>}
         </>
     )
 }

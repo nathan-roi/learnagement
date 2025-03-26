@@ -1,5 +1,4 @@
 export default function composantesEssentielles({composanteEssentielle}:{composanteEssentielle: any[]}){
-    console.log(composanteEssentielle)
     return (
         <div className={"w-2/4 px-1"}>
             <h4>Composantes essentielles</h4>
