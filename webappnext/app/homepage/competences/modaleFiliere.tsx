@@ -64,7 +64,8 @@ export default function modaleFiliere({nomFiliere, setNomFiliere}: { nomFiliere:
                     <ListCompetences infosCompetences={infosCompetences} setIdCompetenceClicked={setIdCompetenceClicked} />
                     <div className={"w-full flex flex-row justify-between"}>
                         <ComposantesEssentielles composanteEssentielle={composanteEssentielle}/>
-                        <ListApprentissagesCritiques />
+                        {idCompetenceClicked >= 0 && <ListApprentissagesCritiques idCompetence={idCompetenceClicked}/>}
+
                     </div>
                 </div>
             </div>
