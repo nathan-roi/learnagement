@@ -3,6 +3,7 @@ import axios from "axios";
 
 import ListCompetences from "./listCompetences"
 import ComposantesEssentielles from "./composantesEssentielles"
+import ListApprentissagesCritiques from "@/app/homepage/competences/apprentissagesCritiques/listApprentissagesCritiques"
 
 export default function modaleFiliere({nomFiliere, setNomFiliere}: { nomFiliere: string[], setNomFiliere: any }) {
     const [infosCompetences, setInfosCompetences] = useState<infosCompetence[]>([])
@@ -61,7 +62,10 @@ export default function modaleFiliere({nomFiliere, setNomFiliere}: { nomFiliere:
                     <button onClick={closeModale} className={"absolute top-0 right-0 bg-usmb-red hover:bg-red-600"}>close</button>
                     <h1 className={"mt-0 mb-8"}>{nomFiliere[1] != null ? <>{nomFiliere[0]} - {nomFiliere[1]}</>  : nomFiliere[0]}</h1>
                     <ListCompetences infosCompetences={infosCompetences} setIdCompetenceClicked={setIdCompetenceClicked} />
-                    <ComposantesEssentielles composanteEssentielle={composanteEssentielle}/>
+                    <div className={"w-full flex flex-row justify-between"}>
+                        <ComposantesEssentielles composanteEssentielle={composanteEssentielle}/>
+                        <ListApprentissagesCritiques />
+                    </div>
                 </div>
             </div>
         </div>
