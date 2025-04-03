@@ -2,10 +2,23 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import {isEmpty} from "@jsonjoy.com/util/lib/isEmpty";
 
+interface ModuleOfAPC{
+    id_apprentissage_critique: number,
+    id_module: number,
+    code_module: string,
+    nom: string
+}
+
 export default function listApprentissagesCritiques({idCompetence}:{idCompetence: number}) {
     const [apprentissagesCritques, setApprentissagesCritques] = useState<apprentissagesCritiquesStruct>({})
+    const [apcAsModule, setApcAsModule] = useState<ModuleOfAPC[]>([])
+
     const [levels, setLevels] = useState<string[]>([])
     const [levelClicked, setLevelClicked] = useState<number>(-1)
+
+    const [showTooltip, setShowTooltip] = useState(false)
+    const [tooltipPostion, setTooltipPosition] = useState({x: 0, y:0})
+
 
     useEffect(() => {
         if (levels.length > 0 && apprentissagesCritques != undefined){
@@ -20,16 +33,39 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
         axios.post("http://localhost:8080/select/selectApprentissageCritique.php", form_data)
             .then(response => {
                 let data = response.data
-                console.log(data)
                 setApprentissagesCritques(data)
                 setLevels(Object.keys(data))
             })
     }, [idCompetence]);
 
+    useEffect(() => {
+        let form_data = new FormData
+        form_data.append("id_user", "18")
+        axios.post("http://localhost:8080/select/selectModulesOfAllAPC.php", form_data)
+            .then(response => {
+                let data = response.data
+                setApcAsModule(data)
+            })
+    }, []);
+
     function levelOfApcToShow(event: any) {
         let text_event: string = event.target.innerText
         let level: string[] = text_event.split(" ")
         setLevelClicked(parseInt(level[1]))
+    }
+
+
+    function tooltip(event: any){
+        let id = parseInt(event.target.id)
+
+        if (!apcAsModule.some(item => item.id_apprentissage_critique === id)){
+            setShowTooltip(true)
+        }
+    }
+
+    function moveTooltip(event: React.MouseEvent){
+        setTooltipPosition({x: event.clientX, y: event.clientY})
+        console.log(event)
     }
 
     return(
@@ -49,13 +85,32 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
 
             <div className={"flex flex-col gap-4"}>
                 {/* Affichage des APC*/}
-                {(!isEmpty(apprentissagesCritques) && levelClicked >= 0) && (
+                {(!isEmpty(apprentissagesCritques) && levelClicked >= 0 && apcAsModule.length > 0) && (
                     apprentissagesCritques[levelClicked].map((apc: apprentissageCritique) => (
-                        <div key={apc.id_apprentissage_critique} className={"p-2 font-semibold shadow-md rounded-lg"}>{apc.libelle_apprentissage}</div>
+                        <div id={apc.id_apprentissage_critique.toString()}
+                             key={apc.id_apprentissage_critique}
+                             className={`p-2 font-semibold shadow-md rounded-lg 
+                             ${apcAsModule.some(item => item.id_apprentissage_critique === apc.id_apprentissage_critique) ? 
+                                 'bg-white cursor-pointer' : 'bg-gray-100'}`}
+
+                             onMouseOver={tooltip}
+                             onMouseLeave={() => setShowTooltip(false)}
+                             onMouseMove={moveTooltip}
+                        >
+                            {apc.libelle_apprentissage}
+
+                        </div>
                     ))
                 )}
             </div>
-
+            {showTooltip && (
+                <div
+                    className="fixed bg-black text-white p-2 rounded-lg text-sm pointer-events-none"
+                    style={{ left: `${tooltipPostion.x}px`, top: `${tooltipPostion.y}px` }}
+                >
+                    Vous n'avez pas de module pour cet apprentissage critique
+                </div>
+            )}
         </div>
     )
 }
