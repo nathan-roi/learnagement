@@ -7,41 +7,22 @@ header("Content-Type: application/json");
 
 include("../db_connection/connectDB.php");
 include("../crud/function_rs_to_table.php");
-include("../crud/APC_apprentissage_critique_as_module.crud.php");
+include("../crud/APC_apprentissage_critique.crud.php");
 
 if (isset($_POST["idCompetence"])) {
     $idCompetence = $_POST["idCompetence"];
-    $apprentissage_critiques = selectAPCbyIdComp($conn, $idCompetence);
+    $apprentissagesCritiques = selectAPCbyIdComp($conn, $idCompetence);
 
-    $firstGroupedData = [];
+    $apprentissagesCritiquesByLevel = [];
 
     // Regrouper par niveau
-    foreach ($apprentissage_critiques as $item) {
-        $niveau = $item['niveau'];
-        if (!isset($firstGroupedData[$niveau])) {
-            $firstGroupedData[$niveau] = [];
+    foreach ($apprentissagesCritiques as $APC) {
+        $niveau = $APC['niveau'];
+        if (!isset($apprentissagesCritiquesByLevel[$niveau])) {
+            $apprentissagesCritiquesByLevel[$niveau] = [];
         }
-        $firstGroupedData[$niveau][] = $item;
+        $apprentissagesCritiquesByLevel[$niveau][] = $APC;
     }
 
-    $secondGroupedData = [];
-
-    foreach ($firstGroupedData as $niveau => $apprentissages) { // Parcours les niveaux
-        foreach ($apprentissages as $apprentissage) { // Parcours chaque apprentissage
-            $id_apprentissage = $apprentissage["id_apprentissage_critique"];
-
-            // Création des niveaux et id_apprentissage_critique s'ils n'existent pas
-            if (!isset($secondGroupedData[$niveau])) {
-                $secondGroupedData[$niveau] = [];
-            }
-            if (!isset($secondGroupedData[$niveau][$id_apprentissage])) {
-                $secondGroupedData[$niveau][$id_apprentissage] = [];
-            }
-
-            // Ajout de l'apprentissage dans son groupe
-            $secondGroupedData[$niveau][$id_apprentissage][] = $apprentissage;
-        }
-    }
-
-    echo json_encode($secondGroupedData, JSON_NUMERIC_CHECK);
+    echo json_encode($apprentissagesCritiquesByLevel, JSON_NUMERIC_CHECK);
 }

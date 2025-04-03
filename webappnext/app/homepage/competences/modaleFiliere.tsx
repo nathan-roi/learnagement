@@ -8,7 +8,7 @@ import ListApprentissagesCritiques from "@/app/homepage/competences/apprentissag
 export default function modaleFiliere({nomFiliere, setNomFiliere}: { nomFiliere: string[], setNomFiliere: any }) {
     const [infosCompetences, setInfosCompetences] = useState<infosCompetence[]>([])
     const [idCompetenceClicked, setIdCompetenceClicked] = useState<number>(-1)
-    const [composanteEssentielle, setComposanteEssentielle] = useState<any[]>([])
+    const [composanteEssentielle, setComposanteEssentielle] = useState<composanteEssentielle[]>([])
 
     useEffect(() => {
         let form_data = new FormData
@@ -43,7 +43,7 @@ export default function modaleFiliere({nomFiliere, setNomFiliere}: { nomFiliere:
 
         window.addEventListener("keydown", handleKeyDown);
 
-        return () => {
+        return (): void => {
             window.removeEventListener("keydown", handleKeyDown);
         };
     }, []);

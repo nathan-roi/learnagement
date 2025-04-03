@@ -18,7 +18,7 @@ export default function Filieres(){
             })
     }, []);
     function filiereClicked(str: string){
-        let res:any = nomFilieres.find((element) => str == element[0])
+        let res:any = nomFilieres.find((element: string): boolean => str == element[0])
         if(res != undefined){
             setNomFiliereClicked(res)
         }
@@ -28,8 +28,8 @@ export default function Filieres(){
         <>
             <div id="cards-container" className={"w-full px-3 flex flex-wrap justify-center gap-10 gap-y-8"}>
                 {nomFilieres.length > 0 ? (
-                    nomFilieres.map((nom, index) =>
-                        <div key={index} onClick={(event:any) => {filiereClicked(event.target.innerText)}} className={"w-60 h-16 flex justify-center items-center rounded-lg shadow-default cursor-pointer"}>
+                    nomFilieres.map((nom: string, index: number) =>
+                        <div key={index} onClick={(event:any): void => {filiereClicked(event.target.innerText)}} className={"w-60 h-16 flex justify-center items-center rounded-lg shadow-default cursor-pointer"}>
                             <p className={"font-semibold"}>{nom[0]}</p>
                         </div>)
                 ) : (

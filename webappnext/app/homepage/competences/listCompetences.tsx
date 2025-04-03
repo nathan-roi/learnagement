@@ -1,8 +1,16 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 export default function listCompetences({infosCompetences, setIdCompetenceClicked}:{infosCompetences: infosCompetence[], setIdCompetenceClicked:any}){
-    // console.log(infosCompetences)
+
     const [competenceClicked, setCompetenceCLicked] = useState(-1)
+
+    useEffect(() => {
+        if (infosCompetences.length > 0){
+            let default_competence = infosCompetences[0].id_competence
+            setCompetenceCLicked(default_competence)
+            setIdCompetenceClicked(default_competence)
+        }
+    }, [infosCompetences]);
     return(
         <div className={"mb-8"}>
             <h4>Compétences de la filière</h4>
