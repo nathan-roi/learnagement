@@ -1,6 +1,7 @@
 <?php
 
-function selectModulesOfAllAPC($conn, $id_user){
+function selectModulesOfAllAPC($conn, $id_user)
+{
     $sql = "SELECT 
                 `id_apprentissage_critique`,
                 `MAQUETTE_module`.`id_module`,

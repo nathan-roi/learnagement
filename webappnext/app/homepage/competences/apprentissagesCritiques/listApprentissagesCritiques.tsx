@@ -1,7 +1,8 @@
-import {useEffect, useState} from "react";
+import {ReactEventHandler, useEffect, useState} from "react";
 import axios from "axios";
 import {isEmpty} from "@jsonjoy.com/util/lib/isEmpty";
 
+import ModulesOfApprentissageCritique from "./modulesOfApprentissageCritique"
 interface ModuleOfAPC{
     id_apprentissage_critique: number,
     id_module: number,
@@ -9,23 +10,29 @@ interface ModuleOfAPC{
     nom: string
 }
 
+interface ModulesOfAPC{
+    [key: number]: ModuleOfAPC
+}
+
 export default function listApprentissagesCritiques({idCompetence}:{idCompetence: number}) {
-    const [apprentissagesCritques, setApprentissagesCritques] = useState<apprentissagesCritiquesStruct>({})
-    const [apcAsModule, setApcAsModule] = useState<ModuleOfAPC[]>([])
+    const [apprentissagesCritiques, setApprentissagesCritiques] = useState<apprentissagesCritiquesStruct>({})
+    const [apcAsModule, setApcAsModule] = useState<ModulesOfAPC>({})
 
     const [levels, setLevels] = useState<string[]>([])
     const [levelClicked, setLevelClicked] = useState<number>(-1)
+
+    const [idApcClicked, setApcClicked] = useState<number>(-1)
 
     const [showTooltip, setShowTooltip] = useState(false)
     const [tooltipPostion, setTooltipPosition] = useState({x: 0, y:0})
 
 
     useEffect(() => {
-        if (levels.length > 0 && apprentissagesCritques != undefined){
+        if (levels.length > 0 && apprentissagesCritiques != undefined){
             let default_level: string = levels[0]
             setLevelClicked(parseInt(default_level))
         }
-    }, [levels, apprentissagesCritques]);
+    }, [levels, apprentissagesCritiques]);
 
     useEffect(() => {
         let form_data = new FormData
@@ -33,7 +40,7 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
         axios.post("http://localhost:8080/select/selectApprentissageCritique.php", form_data)
             .then(response => {
                 let data = response.data
-                setApprentissagesCritques(data)
+                setApprentissagesCritiques(data)
                 setLevels(Object.keys(data))
             })
     }, [idCompetence]);
@@ -54,18 +61,24 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
         setLevelClicked(parseInt(level[1]))
     }
 
+    function showModules(event: any){
+        let idApc: number = parseInt(event.target.id)
+        if (idApcClicked == idApc){
+            setApcClicked(-1)
+        }else if(idApc in Object.keys(apcAsModule)){
+            setApcClicked(idApc)
+        }
+    }
 
     function tooltip(event: any){
-        let id = parseInt(event.target.id)
+        let id = event.target.id
 
-        if (!apcAsModule.some(item => item.id_apprentissage_critique === id)){
-            setShowTooltip(true)
-        }
+        let keys = Object.keys(apcAsModule)
+        if (!(id in keys)){setShowTooltip(true)}
     }
 
     function moveTooltip(event: React.MouseEvent){
         setTooltipPosition({x: event.clientX, y: event.clientY})
-        console.log(event)
     }
 
     return(
@@ -85,21 +98,28 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
 
             <div className={"flex flex-col gap-4"}>
                 {/* Affichage des APC*/}
-                {(!isEmpty(apprentissagesCritques) && levelClicked >= 0 && apcAsModule.length > 0) && (
-                    apprentissagesCritques[levelClicked].map((apc: apprentissageCritique) => (
-                        <div id={apc.id_apprentissage_critique.toString()}
-                             key={apc.id_apprentissage_critique}
-                             className={`p-2 font-semibold shadow-md rounded-lg 
-                             ${apcAsModule.some(item => item.id_apprentissage_critique === apc.id_apprentissage_critique) ? 
-                                 'bg-white cursor-pointer' : 'bg-gray-100'}`}
+                {(!isEmpty(apprentissagesCritiques) && levelClicked >= 0 && Object.keys(apcAsModule).length > 0) && (
+                    apprentissagesCritiques[levelClicked].map((apc: apprentissageCritique) => (
+                        <div>
+                            <div id={apc.id_apprentissage_critique.toString()}
+                                 key={apc.id_apprentissage_critique}
+                                 className={`p-2 font-semibold shadow-md rounded-lg 
+                             ${(apc.id_apprentissage_critique in Object.keys(apcAsModule)) ?
+                                     'bg-white cursor-pointer' : 'bg-gray-100'}
+                                 `}
 
-                             onMouseOver={tooltip}
-                             onMouseLeave={() => setShowTooltip(false)}
-                             onMouseMove={moveTooltip}
-                        >
-                            {apc.libelle_apprentissage}
+                                 onMouseOver={tooltip}
+                                 onMouseLeave={() => setShowTooltip(false)}
+                                 onMouseMove={moveTooltip}
 
+                                 onClick={showModules}
+                            >
+                                {apc.libelle_apprentissage}
+
+                            </div>
+                            {idApcClicked >= 0 && idApcClicked === apc.id_apprentissage_critique && <ModulesOfApprentissageCritique listModules={apcAsModule[idApcClicked]} />}
                         </div>
+
                     ))
                 )}
             </div>

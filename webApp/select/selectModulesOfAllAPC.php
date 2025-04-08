@@ -13,6 +13,11 @@ include("../crud/APC_apprentissage_critique_as_module.crud.php");
 if(isset($_POST["id_user"])){
     $id_user = $_POST["id_user"];
     $modulesOfAllAPC = selectModulesOfAllAPC($conn, $id_user);
+    $modulesOfAllAPCIndex = [];
 
-    echo json_encode($modulesOfAllAPC, JSON_NUMERIC_CHECK);
+    foreach ($modulesOfAllAPC as $item) {
+        $modulesOfAllAPCIndex[$item["id_apprentissage_critique"]] = $item;
+    }
+
+    echo json_encode($modulesOfAllAPCIndex, JSON_NUMERIC_CHECK);
 }
