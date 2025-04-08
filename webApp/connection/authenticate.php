@@ -15,7 +15,7 @@ session_start();
 // Now we check if the data from the login form was submitted, isset() will check if the data exists.
 if ( !isset($_POST['username'], $_POST['password']) ) {
     // Could not get the data that should have been sent.
-    exit('Please fill both the username and password fields!');
+    exit('Please fill both the username and password fields !');
 }
 
 $userlogin = $_POST['username'];
@@ -48,13 +48,22 @@ $hashedPassword = $row["password"];
       $sessionId = session_id();
       $_SESSION['loggedin'] = true;
       $_SESSION['userLogin'] = $_POST['username'];
-      $_SESSION['userId'] = $id;
+      $_SESSION['id'] = $id;
       $_SESSION['userFirstname'] = $firstname;
       $_SESSION['userLastname'] = $lastname;
       $_SESSION['start'] = time();
 
       initFilter($conn, $id, $sessionId);
-      echo json_encode([true, $_SESSION]);
+
+      $response = [
+          "user" => [
+              "id" => $id,
+              "email" => $_POST['username'],
+              "name" => $firstname . ' ' . $lastname,
+        ]
+    ];
+
+        echo json_encode($response);
 
       exit();
     }else {

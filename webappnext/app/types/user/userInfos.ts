@@ -2,7 +2,7 @@ type UserInfos = {
     loggedin: boolean,
     start: number,
     userLogin: string,
-    userId: string,
+    id: string,
     userFirstname: string,
     userLastname: string,
 }
