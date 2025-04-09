@@ -1,22 +1,27 @@
 import axios from "axios";
 import {useEffect, useState} from "react";
-import { useUserInfosStore } from "@/app/store/useUserInfosStore";
+import {useSession} from "next-auth/react";
 
 import ModaleFiliere from "@/app/homepage/competences/modaleFiliere";
 
 export default function Filieres(){
-    const {user} = useUserInfosStore()
+    const {data: session, status} = useSession()
     const [nomFilieres, setNomFilieres] = useState<string[]>([])
     const [nomFiliereClicked, setNomFiliereClicked] = useState([])
 
     useEffect(() => {
-        let form_data = new FormData()
-        form_data.append("userId", user.userId)
-        axios.post("http://localhost:8080/select/selectFilieres.php", form_data)
-            .then(response => {
-                setNomFilieres(response.data)
-            })
-    }, []);
+        if (status === "authenticated"){
+            let form_data = new FormData()
+            form_data.append("userId", session?.user.id)
+            console.log(form_data)
+            axios.post("http://localhost:8080/select/selectFilieres.php", form_data)
+                .then(response => {
+                    console.log(response.data)
+                    setNomFilieres(response.data)
+                })
+        }
+    }, [status]);
+
     function filiereClicked(str: string){
         let res:any = nomFilieres.find((element: string): boolean => str == element[0])
         if(res != undefined){

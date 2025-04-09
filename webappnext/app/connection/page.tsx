@@ -7,7 +7,7 @@ import React, {useState} from "react";
 import { useUserInfosStore } from "@/app/store/useUserInfosStore";
 
 
-export default function Connection() {
+export default function Page() {
     const {setUser} = useUserInfosStore()
     const [login, setLogin] = useState('')
     const [mdp, setMdp] = useState('')
@@ -16,32 +16,11 @@ export default function Connection() {
 
     const {data:session} = useSession()
     if (session){console.log(session)}
-    /*function sendConnection(event:any){
-        event.preventDefault()
-        let form = event.currentTarget
 
-        let form_data = new FormData()
-        form_data.append("username", login)
-        form_data.append("password", mdp)
-
-        axios.post("http://localhost:8080/connection/authenticate.php", form_data)
-            .then(response => {
-                let data = response.data
-                if (!data[0]){
-                    setLoggingError(true)
-                    setMsgLoggErr(data[1])
-                }else{
-                    setUser(data[1])
-                    setLoggingError(false)
-                }
-            })
-        form.reset()*/
-
-        const credentialsAction = (formData: FormData) => {
-            let credentials = Object.fromEntries(formData.entries())
-            signIn("credentials", credentials)
-        }
-
+    const credentialsAction = (formData: FormData) => {
+        let credentials = Object.fromEntries(formData.entries())
+        signIn("credentials", credentials)
+    }
 
     return (
         <form className={"flex flex-col items-center justify-center pb-3 shadow-lg"} action={credentialsAction}>

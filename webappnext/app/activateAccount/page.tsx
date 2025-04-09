@@ -5,6 +5,7 @@ import Link from "next/link";
 import bcrypt from 'bcryptjs';
 
 import AlertBox from "../indicators/alertBox";
+import {useSession} from "next-auth/react";
 
 export default function ActivateAccount() {
     const [pwd, setPwd] = useState('')
@@ -12,7 +13,8 @@ export default function ActivateAccount() {
     const [resCopy, setResCopy] = useState(false)
     const [isVisible, setIsVisible] = useState(false)
     const [wantCopy, setWantCopy] = useState(false) // Permet de savoir si le bouton est cliqué
-
+    const {data: session} = useSession()
+    console.log(session)
     useEffect(() => {
 
         setIsVisible(true)
@@ -70,7 +72,7 @@ export default function ActivateAccount() {
                 {(hash != "Erreur hashage" && pwd != '' ) && hash}
                 <div className={"flex items-center gap-5"}>
                     <button value="copy" onClick={copyHash}>Copier</button>
-                    <Link href={"/"} className={"button-second"}>Retour</Link>
+                    <Link href={"/connection"} className={"button-second"}>Retour</Link>
                 </div>
             </div>
         </main>

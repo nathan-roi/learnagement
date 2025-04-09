@@ -1,13 +1,11 @@
-"use client";
-
 import axios from "axios";
-import {useUserInfosStore} from "@/app/store/useUserInfosStore";
-
+import {signOut} from "next-auth/react";
 export default function Disconnection(){
-    const {setLoggedin} = useUserInfosStore()
+
     function sendDeconnection(){
         axios.get("http://localhost:8080/connection/logout.php")
-            .then(r => setLoggedin(r.data))
+        signOut()
+
     }
 
     return(
