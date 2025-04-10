@@ -10,8 +10,8 @@ include("../crud/VIEW_display.crud.php");
 include("../crud/function_rs_to_table.php");
 include("../functions_filter.php");
 
-
-
+session_id($_POST["sessionId"]);
+session_start();
 
 if (isset($_POST["userId"])) {
     $filieres = [];
@@ -19,6 +19,7 @@ if (isset($_POST["userId"])) {
     $filieresUserResponsable = selectLNM_filiereByUserId($conn, $_POST["userId"]);
     foreach ($filieresUserResponsable as $filiereUser) {
         $filieres[] = $filiereUser["nom_filiere"];
+    }
 
     // Execution de MCCC par module (id : 4) et filtrage par l'utilisateur connecté
     $request = selectVIEW_display($conn, 4)["request"];

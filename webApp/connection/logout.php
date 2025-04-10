@@ -4,6 +4,7 @@ header("Access-Control-Allow-Credentials: true"); // Autoriser le partage de coo
 
 
 // On demarre la session
+session_id($_POST["sessionId"]);
 session_start ();
 
 session_regenerate_id(true);
@@ -11,12 +12,6 @@ session_regenerate_id(true);
 // On d�truit les variables de notre session
 session_unset ();
 
-unset($_SESSION["loggedin"]);
-
 // On détruit notre session
 session_destroy ();
 
-// On redirige le visiteur vers la page d'accueil
-//header ('location: index.php');
-echo json_encode(false);
-?>

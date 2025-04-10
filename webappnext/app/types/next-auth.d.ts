@@ -7,8 +7,7 @@ declare module "next-auth" {
             id: string;
             email?: string | null;
             name?: string | null;
-            nom?: string; // Si tu as un champ nom dans ton back
-            // Ajoute d'autres propriétés ici si besoin
+            sessionId: string;
         }
     }
 
@@ -16,7 +15,7 @@ declare module "next-auth" {
         id: string;
         email?: string;
         name?: string;
-        nom?: string;
+        sessionId: string;
     }
 }
 

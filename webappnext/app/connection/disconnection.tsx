@@ -1,10 +1,15 @@
 import axios from "axios";
-import {signOut} from "next-auth/react";
+import {signOut, useSession} from "next-auth/react";
 export default function Disconnection(){
-
+    const {data: session} = useSession()
     function sendDeconnection(){
-        axios.get("http://localhost:8080/connection/logout.php")
-        signOut()
+        if(session){
+            let formData = new FormData
+            formData.append("sessionId", session?.user.sessionId)
+            axios.post("http://localhost:8081/connection/logout.php", formData)
+            signOut()
+        }
+
 
     }
 

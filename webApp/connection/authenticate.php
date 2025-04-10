@@ -59,6 +59,7 @@ $hashedPassword = $row["password"];
           "id" => $id,
           "email" => $_POST['username'],
           "name" => $firstname . ' ' . $lastname,
+          "sessionId" => $sessionId,
     ];
 
       echo json_encode($response, JSON_NUMERIC_CHECK);

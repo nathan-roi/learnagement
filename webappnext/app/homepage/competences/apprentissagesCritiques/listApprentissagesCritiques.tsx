@@ -100,9 +100,8 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
                 {/* Affichage des APC*/}
                 {(!isEmpty(apprentissagesCritiques) && levelClicked >= 0 && Object.keys(apcAsModule).length > 0) && (
                     apprentissagesCritiques[levelClicked].map((apc: apprentissageCritique) => (
-                        <div>
+                        <div key={apc.id_apprentissage_critique}>
                             <div id={apc.id_apprentissage_critique.toString()}
-                                 key={apc.id_apprentissage_critique}
                                  className={`p-2 font-semibold shadow-md rounded-lg 
                              ${(apc.id_apprentissage_critique in Object.keys(apcAsModule)) ?
                                      'bg-white cursor-pointer' : 'bg-gray-100'}

@@ -13,8 +13,9 @@ export default function Filieres(){
         if (status === "authenticated"){
             let form_data = new FormData()
             form_data.append("userId", session?.user.id)
+            form_data.append("sessionId", session?.user.sessionId)
             console.log(form_data)
-            axios.post("http://localhost:8080/select/selectFilieres.php", form_data)
+            axios.post("http://localhost:8081/select/selectFilieres.php", form_data)
                 .then(response => {
                     console.log(response.data)
                     setNomFilieres(response.data)
