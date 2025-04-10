@@ -1,13 +1,5 @@
 version: "3.6"
 services:
-  nginx:
-    image: nginx:latest
-    ports:
-      - "8081:80"  # Nginx écoute sur le port 8081 de l'hôte
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-    depends_on:
-      - php
   php:
     build: .
     restart: always
