@@ -4,6 +4,7 @@ import axios from "axios";
 import {useEffect, useState} from "react";
 import {useInfosModuleStore} from "@/app/store/useInfosModuleStore";
 import {useSession} from "next-auth/react";
+
 import Loader from "@/app/indicators/loader";
 
 export default function ListModule({homepageShown}:{homepageShown:boolean}){
@@ -14,16 +15,16 @@ export default function ListModule({homepageShown}:{homepageShown:boolean}){
 
     useEffect(() => {
 
-        if (status === "authenticated"){
+        if (session){
             let form_data = new FormData
-            form_data.append("userId", session?.user.id)
-            axios.post("http://localhost:8080/list/listResponsableModule.php", form_data)
+            form_data.append("userId", session.user.id)
+            axios.post("/api/proxy/list/listResponsableModule", form_data, {withCredentials: true})
                 .then(response => {
                     setListeModules(response.data)
                 })
         }
 
-    }, [status]);
+    }, [session]);
 
     useEffect(() => {
         if (homepageShown){
@@ -43,7 +44,7 @@ export default function ListModule({homepageShown}:{homepageShown:boolean}){
 
         let form_data = new FormData()
         form_data.append("id_module", id_module)
-        axios.post("http://localhost:8080/select/selectInfosModule.php",form_data)
+        axios.post("/api/proxy/select/selectInfosModule",form_data, {withCredentials: true})
             .then(response => {
                 let data = response.data
                 setModule(data)
@@ -51,25 +52,28 @@ export default function ListModule({homepageShown}:{homepageShown:boolean}){
             })
     }
 
-    if (status == "authenticated"){
-        return (
-            <div className={"h-3/4 overflow-y-auto"}>
-                {listeModules.map(module =>
-                    <div key={module.id_module} id={String(module.id_module)} className={`w-full h-20 mb-2.5 pl-2.5 rounded-lg hover:bg-usmb-blue cursor-pointer 
-                    ${moduleClicked === module.id_module ? 'bg-usmb-blue' : 'bg-usmb-cyan'}`} onClick={getModuleInfos}>
-                        <p className={"font-medium"}>{module.nom}</p>
-                        <p>{module.code_module}</p>
+
+    return (
+        <>
+            {
+                status === "authenticated" ? (
+                    <div className={"h-3/4 overflow-y-auto"}>
+                        {listeModules.map(module =>
+                            <div key={module.id_module} id={String(module.id_module)} className={`w-full h-20 mb-2.5 pl-2.5 rounded-lg hover:bg-usmb-blue cursor-pointer 
+                            ${moduleClicked === module.id_module ? 'bg-usmb-blue' : 'bg-usmb-cyan'}`} onClick={getModuleInfos}>
+                                <p className={"font-medium"}>{module.nom}</p>
+                                <p>{module.code_module}</p>
+                            </div>
+                        )}
                     </div>
-                )}
-            </div>
-        )
-    }else{
-        return (
-            <div className={"h-3/4 overflow-y-auto"}>
-                <Loader />
-            </div>
-        )
-    }
+                ) : (
+                    <div className="flex justify-center">
+                        <Loader />
+                    </div>
+                )
+            }
+        </>
+    )
 
 
 }

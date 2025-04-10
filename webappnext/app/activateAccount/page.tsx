@@ -5,7 +5,7 @@ import Link from "next/link";
 import bcrypt from 'bcryptjs';
 
 import AlertBox from "../indicators/alertBox";
-import {useSession} from "next-auth/react";
+import Loader from "@/app/indicators/loader";
 
 export default function ActivateAccount() {
     const [pwd, setPwd] = useState('')
@@ -13,8 +13,8 @@ export default function ActivateAccount() {
     const [resCopy, setResCopy] = useState(false)
     const [isVisible, setIsVisible] = useState(false)
     const [wantCopy, setWantCopy] = useState(false) // Permet de savoir si le bouton est cliqué
-    const {data: session} = useSession()
-    console.log(session)
+    const [loading, setLoading] = useState(true)
+
     useEffect(() => {
 
         setIsVisible(true)
@@ -28,6 +28,7 @@ export default function ActivateAccount() {
 
 
     }, [wantCopy]);
+
     async function hashPassword(event:any) {
         event.preventDefault()
         let form = event.currentTarget

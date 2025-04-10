@@ -15,31 +15,23 @@ import CustomNode from "@/app/modules/maquetteModule/customNode";
 import floatingConnectionLine from "@/app/modules/maquetteModule/floatingConnectionLine";
 import CourseCard from "../maquetteSequence/courseCard";
 
-export default function MaquetteFlow({
-  initialNodes,
-  initialEdges,
-  setWidth,
-}: {
-  initialNodes: any;
-  initialEdges: any;
-  setWidth: any;
-}) {
+interface CourseData {
+  label?: string;
+  moduleCode?: string;
+  session?: string;
+  duration?: number;
+  color?: string;
+  typeCourse?: string;
+  currentNumber?: number;
+  totalNumber?: number;
+}
+
+export default function MaquetteFlow({initialNodes, initialEdges, setWidth}:{ initialNodes: any, initialEdges: any, setWidth: any}) {
   const componentRef = useRef<HTMLDivElement>(null);
   const { fitView } = useReactFlow();
   const [majWidth, setMajWidth] = useState(0);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-
-  interface CourseData {
-    label?: string;
-    moduleCode?: string;
-    session?: string;
-    duration?: number;
-    color?: string;
-    typeCourse?: string;
-    currentNumber?: number;
-    totalNumber?: number;
-  }
 
   const [displayCardCourse, setDisplayCardCourse] = useState<CourseData>({});
 

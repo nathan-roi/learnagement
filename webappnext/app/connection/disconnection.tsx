@@ -2,7 +2,10 @@ import axios from "axios";
 import {signOut} from "next-auth/react";
 export default function Disconnection(){
     function sendDeconnection(){
-        axios.get("http://localhost:8081/connection/logout.php")
+        axios.get("/api/proxy/connection/logout", {withCredentials: true})
+            .catch((error) => {
+                console.log(error)
+            })
         signOut()
     }
 

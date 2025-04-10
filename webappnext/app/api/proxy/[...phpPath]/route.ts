@@ -3,25 +3,34 @@ import axios from "axios";
 import { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
+    return handleRequest(req, 'POST');
+}
+
+export async function GET(req: NextRequest) {
+    return handleRequest(req, 'GET');
+}
+
+export async function handleRequest(req: NextRequest, method: string) {
     // Récupère tout ce qu’il y a après /api/proxy/
     const fullPath = req.nextUrl.pathname.replace(/^\/api\/proxy\//, "");
-
     // Récupère le type de content utilisé
     const contentType = req.headers.get("content-type") || "application/x-www-form-urlencoded";
-
     // Récupère le corps tel quel
-    const body = await req.text();
+    const body = method === 'POST' ? await req.text() : undefined;
 
     try {
         const cookie = req.headers.get("cookie") || "";
 
-        const response = await axios.post(`http://php/${fullPath}.php`, body, {
+        const response = await axios({
+            method: method,
+            url: `http://php/${fullPath}.php`,
+            data: body,
             headers: {
                 "Content-Type": contentType,
                 Cookie: cookie
             },
             withCredentials: true,
-        });
+        })
 
         return new Response(JSON.stringify(response.data), {
             status: response.status,

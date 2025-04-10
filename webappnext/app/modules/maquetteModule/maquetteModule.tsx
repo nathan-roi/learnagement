@@ -24,20 +24,18 @@ export default function maquetteModule({
     let form_data = new FormData();
 
     form_data.append("code_module", code_module);
-    axios
-      .post("http://localhost:8080/select/selectMaquette.php", form_data)
-      .then((response) => {
-        if (response.data[0] != false) {
-          console.log(response);
-          setMaquette(response.data);
-          setIsLoading(false);
-        } else {
-          console.error(response.data[1]);
-          setTimeout(() => {
+    axios.post("/api/proxy/select/selectMaquette", form_data, {withCredentials: true})
+        .then((response) => {
+          if (response.status == 200) {
+            setMaquette(response.data);
             setIsLoading(false);
-          }, 2000);
-        }
-      });
+          } else {
+            console.error(response.data);
+            setTimeout(() => {
+              setIsLoading(false);
+            }, 2000);
+          }
+        });
   }, [code_module]);
 
   /* création des nodes des edges (besoins de la largeur d'écran pour placer les nodes */

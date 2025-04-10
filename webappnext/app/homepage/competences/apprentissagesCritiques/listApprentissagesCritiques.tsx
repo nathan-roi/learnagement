@@ -1,8 +1,9 @@
 import { useEffect, useState} from "react";
 import axios from "axios";
 import {isEmpty} from "@jsonjoy.com/util/lib/isEmpty";
-
+import {useSession} from "next-auth/react";
 import ModulesOfApprentissageCritique from "./modulesOfApprentissageCritique"
+
 
 interface ModuleOfAPC{
     id_apprentissage_critique: number,
@@ -16,6 +17,8 @@ interface ModulesOfAPC{
 }
 
 export default function listApprentissagesCritiques({idCompetence}:{idCompetence: number}) {
+    const {data: session} = useSession()
+
     const [apprentissagesCritiques, setApprentissagesCritiques] = useState<apprentissagesCritiquesStruct>({})
     const [apcAsModule, setApcAsModule] = useState<ModulesOfAPC>({})
 
@@ -38,7 +41,7 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
     useEffect(() => {
         let form_data = new FormData
         form_data.append("idCompetence", idCompetence.toString())
-        axios.post("http://localhost:8080/select/selectApprentissageCritique.php", form_data)
+        axios.post("/api/proxy/select/selectApprentissageCritique", form_data, {withCredentials: true})
             .then(response => {
                 let data = response.data
                 setApprentissagesCritiques(data)
@@ -47,13 +50,15 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
     }, [idCompetence]);
 
     useEffect(() => {
-        let form_data = new FormData
-        form_data.append("id_user", "18")
-        axios.post("http://localhost:8080/select/selectModulesOfAllAPC.php", form_data)
-            .then(response => {
-                let data = response.data
-                setApcAsModule(data)
-            })
+        if (session){
+            let form_data = new FormData
+            form_data.append("id_user", session.user.id)
+            axios.post("/api/proxy/select/selectModulesOfAllAPC", form_data, {withCredentials: true})
+                .then(response => {
+                    let data = response.data
+                    setApcAsModule(data)
+                })
+        }
     }, []);
 
     function levelOfApcToShow(event: any) {

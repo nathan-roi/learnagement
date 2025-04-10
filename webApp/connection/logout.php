@@ -8,9 +8,6 @@ session_start ();
 
 session_regenerate_id(true);
 
-// On d�truit les variables de notre session
-session_unset ();
-
 // On détruit notre session
 session_destroy ();
 
