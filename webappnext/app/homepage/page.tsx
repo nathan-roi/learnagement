@@ -2,7 +2,6 @@
 
 import axios from "axios";
 import { useInfosModuleStore } from "@/app/store/useInfosModuleStore";
-
 import Disconnection from "@/app/connection/disconnection";
 import ListModules from "@/app/modules/listModules";
 import InfosModule from "@/app/modules/infosModule"

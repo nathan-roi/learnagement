@@ -54,9 +54,11 @@ export default function MaquetteFlow({
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      fitView({ padding: 0.1, duration: 800 });
-    }, 300);
+      fitView({ padding: 0.1, duration: 700 });
+    }, 100);
+
     return () => clearTimeout(timeout);
+
   }, [majWidth, initialEdges, initialNodes]);
 
   useEffect(() => {

@@ -1,8 +1,9 @@
-import {ReactEventHandler, useEffect, useState} from "react";
+import { useEffect, useState} from "react";
 import axios from "axios";
 import {isEmpty} from "@jsonjoy.com/util/lib/isEmpty";
 
 import ModulesOfApprentissageCritique from "./modulesOfApprentissageCritique"
+
 interface ModuleOfAPC{
     id_apprentissage_critique: number,
     id_module: number,

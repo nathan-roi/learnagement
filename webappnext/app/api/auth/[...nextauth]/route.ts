@@ -1,13 +1,7 @@
-import NextAuth from "next-auth"
+import NextAuth, {User} from "next-auth"
 
 import Credentials from "next-auth/providers/credentials"
 import axios from "axios";
-
-interface User {
-    id: string;
-    email: string;
-    name: string;
-}
 
 const handler= NextAuth({
     providers: [
@@ -30,7 +24,6 @@ const handler= NextAuth({
                     const res = await axios.post("http://php/connection/authenticate.php", formData)
 
                     if (res.status === 200) {
-                        console.log(res.data)
                         return res.data as User
                     } else {
                         return null

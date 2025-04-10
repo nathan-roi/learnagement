@@ -10,7 +10,6 @@ include("../crud/VIEW_display.crud.php");
 include("../crud/function_rs_to_table.php");
 include("../functions_filter.php");
 
-session_id($_POST["sessionId"]);
 session_start();
 
 if (isset($_POST["userId"])) {

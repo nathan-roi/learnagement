@@ -1,6 +1,4 @@
 <?php
-session_start();
-
 header("Access-Control-Allow-Origin: http://localhost:40080"); // Activer CORS
 header("Access-Control-Allow-Credentials: true"); // Autoriser le partage de cookies
 
@@ -11,7 +9,7 @@ require_once("../functions.php");
 require_once("../functions_filter.php");
 include("../db_connection/connectDB.php");
 
-
+session_start();
 
 // Now we check if the data from the login form was submitted, isset() will check if the data exists.
 if ( !isset($_POST['username'], $_POST['password']) ) {
@@ -47,7 +45,6 @@ $hashedPassword = $row["password"];
       // Create sessions, so we know the user is logged in, they basically act like cookies but remember the data on the server.
       session_regenerate_id();
       $sessionId = session_id();
-      $_SESSION['userLogin'] = $_POST['username'];
       $_SESSION['userId'] = $id;
       $_SESSION['userFirstname'] = $firstname;
       $_SESSION['userLastname'] = $lastname;
@@ -58,12 +55,12 @@ $hashedPassword = $row["password"];
       $response = [
           "id" => $id,
           "email" => $_POST['username'],
-          "name" => $firstname . ' ' . $lastname,
-          "sessionId" => $sessionId,
+          "firstname" => $firstname,
+          "lastname" => $lastname,
     ];
 
       echo json_encode($response, JSON_NUMERIC_CHECK);
-      exit();
+      exit(0);
     }else {
           // Incorrect password
           echo json_encode([false, 'Incorrect  password !']);

@@ -4,7 +4,6 @@ header("Access-Control-Allow-Credentials: true"); // Autoriser le partage de coo
 
 
 // On demarre la session
-session_id($_POST["sessionId"]);
 session_start ();
 
 session_regenerate_id(true);
