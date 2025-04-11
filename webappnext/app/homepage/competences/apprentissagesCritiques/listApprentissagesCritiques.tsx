@@ -45,7 +45,6 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
             axios.post("/api/proxy/select/selectModulesOfAllAPC", form_data, {withCredentials: true})
                 .then(response => {
                     let data = response.data
-                    console.log(data)
                     setApcAsModule(data)
                 })
         }
@@ -76,7 +75,7 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
     function moveTooltip(event: React.MouseEvent){
         setTooltipPosition({x: event.clientX, y: event.clientY})
     }
-    console.log(apcAsModule)
+
     return(
         <div className={"w-2/4 px-1 flex flex-col gap-4"}>
             {/* Affichage des niveaux */}

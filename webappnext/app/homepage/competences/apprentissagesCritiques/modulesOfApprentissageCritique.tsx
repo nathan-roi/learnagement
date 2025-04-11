@@ -5,7 +5,9 @@ export default function modulesOfApprentissageCritique({listModules}:{listModule
             <p className={`border-t border-gray-300`}></p>
             <div className="p-2">
                 {listModules.map((module: ModuleOfApc) => (
-                    <p className="cursor-pointer text-sm">{module.code_module} - {module.nom}</p>
+                    <ul className={`list-disc list-inside text-sm/6`}>
+                        <li className="cursor-pointer">{module.code_module} - {module.nom}</li>
+                    </ul>
                 ))}
             </div>
 
