@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import React, {useEffect, useState} from "react";
 import Link from "next/link";
@@ -13,7 +13,6 @@ export default function ActivateAccount() {
     const [resCopy, setResCopy] = useState(false)
     const [isVisible, setIsVisible] = useState(false)
     const [wantCopy, setWantCopy] = useState(false) // Permet de savoir si le bouton est cliqué
-    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
 
@@ -76,6 +75,7 @@ export default function ActivateAccount() {
                     <Link href={"/connection"} className={"button-second"}>Retour</Link>
                 </div>
             </div>
+            {/*<p>Données reçues : {router}</p>*/}
         </main>
     );
 }

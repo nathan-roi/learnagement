@@ -3,36 +3,28 @@
 import axios from "axios";
 import {useEffect, useState} from "react";
 import {useInfosModuleStore} from "@/app/store/useInfosModuleStore";
+import {useListModulesStore} from "@/app/store/useListModulesStore";
 import {useSession} from "next-auth/react";
+import {useSearchParams} from "next/navigation";
 
 import Loader from "@/app/indicators/loader";
 import router from "next/router";
+import Link from "next/link";
 
-export default function ListModule({homepageShown}:{homepageShown:boolean}){
+export default function ListModule(){
     const {setModule} = useInfosModuleStore()
-    const [listeModules, setListeModules] = useState<Module["module"][]>([]);
+    const {listModules} = useListModulesStore()
     const [moduleClicked, setModuleClicked] = useState(-1)
+
     const {data: session, status} = useSession()
+    const searchParams = useSearchParams()
 
     useEffect(() => {
-
-        if (session){
-            let form_data = new FormData
-            form_data.append("userId", session.user.id)
-            axios.post("/api/proxy/list/listResponsableModule", form_data, {withCredentials: true})
-                .then(response => {
-                    setListeModules(response.data)
-                })
+        let id_module = searchParams.get("id_module")
+        if (id_module != undefined){
+            setModuleClicked(parseInt(id_module))
         }
-
-    }, [session]);
-
-    useEffect(() => {
-        if (homepageShown){
-            setModuleClicked(-1)
-        }
-    }, [homepageShown]);
-
+    }, [searchParams]);
 
     async function getModuleInfos(event:any){
         let id_module
@@ -49,7 +41,6 @@ export default function ListModule({homepageShown}:{homepageShown:boolean}){
             .then(response => {
                 let data = response.data
                 setModule(data)
-                setModuleClicked(data.id_module)
             })
     }
 
@@ -59,15 +50,17 @@ export default function ListModule({homepageShown}:{homepageShown:boolean}){
             {
                 status === "authenticated" ? (
                     <div className={"h-3/4 overflow-y-auto"}>
-                        {listeModules.map((module: ModuleInfos) =>
-                            <div key={module.id_module} id={String(module.id_module)}
-                                 className=
-                                     {`w-full h-20 mb-2.5 pl-2.5 rounded-lg hover:bg-usmb-blue cursor-pointer 
-                                     ${moduleClicked === module.id_module ? 'bg-usmb-blue' : 'bg-usmb-cyan'}`}
-                                 onClick={getModuleInfos}>
-                                <p className={"font-medium"}>{module.nom}</p>
-                                <p>{module.code_module}</p>
-                            </div>
+                        {listModules.map((module: ModuleInfos) =>
+                            <Link href={{pathname : '/modules', query: {id_module: module.id_module}}}>
+                                <div key={module.id_module} id={String(module.id_module)}
+                                     className=
+                                         {`w-full h-20 mb-2.5 pl-2.5 rounded-lg hover:bg-usmb-blue cursor-pointer 
+                                         ${moduleClicked === module.id_module ? 'bg-usmb-blue' : 'bg-usmb-cyan'}`}
+                                     onClick={getModuleInfos}>
+                                    <p className={"font-medium"}>{module.nom}</p>
+                                    <p>{module.code_module}</p>
+                                </div>
+                            </Link>
                         )}
                     </div>
                 ) : status === "loading" ? (
