@@ -6,6 +6,7 @@ import {useInfosModuleStore} from "@/app/store/useInfosModuleStore";
 import {useSession} from "next-auth/react";
 
 import Loader from "@/app/indicators/loader";
+import router from "next/router";
 
 export default function ListModule({homepageShown}:{homepageShown:boolean}){
     const {setModule} = useInfosModuleStore()
@@ -58,18 +59,25 @@ export default function ListModule({homepageShown}:{homepageShown:boolean}){
             {
                 status === "authenticated" ? (
                     <div className={"h-3/4 overflow-y-auto"}>
-                        {listeModules.map(module =>
-                            <div key={module.id_module} id={String(module.id_module)} className={`w-full h-20 mb-2.5 pl-2.5 rounded-lg hover:bg-usmb-blue cursor-pointer 
-                            ${moduleClicked === module.id_module ? 'bg-usmb-blue' : 'bg-usmb-cyan'}`} onClick={getModuleInfos}>
+                        {listeModules.map((module: ModuleInfos) =>
+                            <div key={module.id_module} id={String(module.id_module)}
+                                 className=
+                                     {`w-full h-20 mb-2.5 pl-2.5 rounded-lg hover:bg-usmb-blue cursor-pointer 
+                                     ${moduleClicked === module.id_module ? 'bg-usmb-blue' : 'bg-usmb-cyan'}`}
+                                 onClick={getModuleInfos}>
                                 <p className={"font-medium"}>{module.nom}</p>
                                 <p>{module.code_module}</p>
                             </div>
                         )}
                     </div>
-                ) : (
+                ) : status === "loading" ? (
                     <div className="flex justify-center">
                         <Loader />
                     </div>
+                ) : (
+                    <>
+                        {router.push('/connection')}
+                    </>
                 )
             }
         </>

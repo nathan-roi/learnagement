@@ -7,11 +7,7 @@ import { MarkerType, Position, ReactFlowProvider } from "@xyflow/react";
 import MaquetteFlow from "@/app/modules/maquetteModule/maquetteFlow";
 import Loader from "@/app/indicators/loader";
 
-export default function maquetteModule({
-  code_module,
-}: {
-  code_module: string;
-}) {
+export default function maquetteModule({code_module}: {code_module: string; }) {
   const [maquette, setMaquette] = useState([]);
   const [nodes, setNodes] = useState<object[]>([]);
   const [edges, setEdges] = useState<object[]>([]);

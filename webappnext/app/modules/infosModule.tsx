@@ -1,5 +1,5 @@
 "use client";
-import Maquette from './maquetteModule/maquetteModule'
+import MaquetteModule from './maquetteModule/maquetteModule'
 import {useInfosModuleStore} from "@/app/store/useInfosModuleStore";
 
 export default function InfosModule(){
@@ -17,7 +17,7 @@ export default function InfosModule(){
                     {module.hTP != null && <p>Heures TP : {module.hTP}</p>}
                 </div>
             </div>
-            {module.nom != null && <Maquette code_module={module.code_module}/>}
+            {module.nom != null && <MaquetteModule code_module={module.code_module}/>}
         </div>
     )
 }
