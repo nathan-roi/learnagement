@@ -1,11 +1,26 @@
 "use client"
 
-import Maquette from './maquetteModule/maquetteModule'
+import {useEffect, useState} from "react";
 import {useInfosModuleStore} from "@/app/store/useInfosModuleStore";
+import {useListModulesStore} from "@/app/store/useListModulesStore";
+import {useSearchParams} from "next/navigation";
+
 import SideMenu from "@/app/homepage/sideMenu"
+import Maquette from './maquetteModule/maquetteModule'
+
 
 export default function Page(){
-    const {module} = useInfosModuleStore()
+    const {module, setModule} = useInfosModuleStore()
+    const {listModules} = useListModulesStore()
+
+    const searchParams = useSearchParams()
+    const id_module = searchParams.get("id_module")
+
+    useEffect(() => {
+        if (id_module){
+            setModule(listModules[parseInt(id_module)])
+        }
+    }, [id_module]);
 
     return (
         <main className={"h-screen grid grid-cols-4"}>

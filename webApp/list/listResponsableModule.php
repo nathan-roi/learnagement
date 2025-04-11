@@ -13,4 +13,10 @@ include("../crud/function_rs_to_table.php");
 $id = $_POST['userId'];
 $listeModules = listMAQUETTE_moduleByIdResp($conn, $id);
 
-echo json_encode($listeModules, JSON_NUMERIC_CHECK);
+$indexedArray = [];
+foreach ($listeModules as $module) {
+    $id_module = $module["id_module"];
+    $indexedArray[$id_module] = $module;
+}
+
+echo json_encode($indexedArray, JSON_NUMERIC_CHECK);

@@ -50,7 +50,7 @@ export default function ListModule(){
             {
                 status === "authenticated" ? (
                     <div className={"h-3/4 overflow-y-auto"}>
-                        {listModules.map((module: ModuleInfos) =>
+                        {Object.values(listModules).map((module: ModuleInfos) =>
                             <Link href={{pathname : '/modules', query: {id_module: module.id_module}}}>
                                 <div key={module.id_module} id={String(module.id_module)}
                                      className=

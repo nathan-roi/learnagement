@@ -9,7 +9,7 @@ import {useEffect} from "react";
 
 export default function Home() {
     const {data: session} = useSession()
-    const {listModules, charged, setListModules, setCharged} = useListModulesStore()
+    const {charged, setListModules, setCharged} = useListModulesStore()
 
     useEffect(() => {
         if (session && !charged){
@@ -17,11 +17,12 @@ export default function Home() {
             form_data.append("userId", session.user.id)
             axios.post("/api/proxy/list/listResponsableModule", form_data, {withCredentials: true})
                 .then(response => {
+                    console.log(response.data)
                     setListModules(response.data)
-                    setCharged(true) // Permet de charger une seule ListModules, quand l'utilisateur se connecte pour la première fois
+                    setCharged(true) // Permet de charger une seule fois ListModules, quand l'utilisateur se connecte pour la première fois
                 })
         }
-    }, [session, charged]);
+    }, [session]);
 
     return (
         <>
