@@ -16,7 +16,12 @@ if(isset($_POST["id_user"])){
     $modulesOfAllAPCIndex = [];
 
     foreach ($modulesOfAllAPC as $item) {
-        $modulesOfAllAPCIndex[$item["id_apprentissage_critique"]] = $item;
+        if(!isset($modulesOfAllAPCIndex[$item["id_apprentissage_critique"]])){
+            $modulesOfAllAPCIndex[$item["id_apprentissage_critique"]] = [$item];
+        }else{
+            $modulesOfAllAPCIndex[$item["id_apprentissage_critique"]][] = $item;
+        }
+
     }
 
     echo json_encode($modulesOfAllAPCIndex, JSON_NUMERIC_CHECK);

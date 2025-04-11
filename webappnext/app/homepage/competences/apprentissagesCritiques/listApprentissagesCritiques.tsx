@@ -5,17 +5,6 @@ import {useSession} from "next-auth/react";
 import ModulesOfApprentissageCritique from "./modulesOfApprentissageCritique"
 
 
-interface ModuleOfAPC{
-    id_apprentissage_critique: number,
-    id_module: number,
-    code_module: string,
-    nom: string
-}
-
-interface ModulesOfAPC{
-    [key: number]: ModuleOfAPC
-}
-
 export default function listApprentissagesCritiques({idCompetence}:{idCompetence: number}) {
     const {data: session} = useSession()
 
@@ -56,6 +45,7 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
             axios.post("/api/proxy/select/selectModulesOfAllAPC", form_data, {withCredentials: true})
                 .then(response => {
                     let data = response.data
+                    console.log(data)
                     setApcAsModule(data)
                 })
         }
@@ -86,7 +76,7 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
     function moveTooltip(event: React.MouseEvent){
         setTooltipPosition({x: event.clientX, y: event.clientY})
     }
-
+    console.log(apcAsModule)
     return(
         <div className={"w-2/4 px-1 flex flex-col gap-4"}>
             {/* Affichage des niveaux */}
@@ -108,9 +98,11 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
                     apprentissagesCritiques[levelClicked].map((apc: apprentissageCritique) => (
                         <div key={apc.id_apprentissage_critique}>
                             <div id={apc.id_apprentissage_critique.toString()}
-                                 className={`p-2 font-semibold shadow-md rounded-lg 
-                             ${(apc.id_apprentissage_critique in Object.keys(apcAsModule)) ?
-                                     'bg-white cursor-pointer' : 'bg-gray-100'}
+                                 className={`p-2 shadow-md font-medium
+                                 ${(apc.id_apprentissage_critique in Object.keys(apcAsModule)) ? 
+                                     'bg-white cursor-pointer' : 'bg-gray-100'
+                                 }
+                                 ${idApcClicked === apc.id_apprentissage_critique ? 'rounded-t-lg' : 'rounded-lg'}
                                  `}
 
                                  onMouseOver={tooltip}
@@ -122,7 +114,11 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
                                 {apc.libelle_apprentissage}
 
                             </div>
-                            {idApcClicked >= 0 && idApcClicked === apc.id_apprentissage_critique && <ModulesOfApprentissageCritique listModules={apcAsModule[idApcClicked]} />}
+                            {
+                                idApcClicked >= 0 && idApcClicked === apc.id_apprentissage_critique && (
+                                    <ModulesOfApprentissageCritique listModules={apcAsModule[idApcClicked]} />
+                                )
+                            }
                         </div>
 
                     ))
@@ -133,7 +129,7 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
                     className="fixed bg-black text-white p-2 rounded-lg text-sm pointer-events-none"
                     style={{ left: `${tooltipPostion.x}px`, top: `${tooltipPostion.y}px` }}
                 >
-                    Vous n'avez pas de module pour cet apprentissage critique
+                    Vous n'avez pas de modules pour cet apprentissage critique
                 </div>
             )}
         </div>
