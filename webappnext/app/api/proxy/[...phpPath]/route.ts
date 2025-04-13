@@ -17,7 +17,7 @@ export async function handleRequest(req: NextRequest, method: string) {
     const contentType = req.headers.get("content-type") || "application/x-www-form-urlencoded";
     // Récupère le corps tel quel
     const body = method === 'POST' ? await req.text() : undefined;
-
+    console.log(fullPath)
     try {
         const cookie = req.headers.get("cookie") || "";
 

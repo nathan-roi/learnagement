@@ -9,6 +9,8 @@ require_once("../functions.php");
 require_once("../functions_filter.php");
 include("../db_connection/connectDB.php");
 
+
+ini_set('session.use_cookies', 0); // Permet d'éviter d'envoyer au front deux PHPSESSID
 session_start();
 
 // Now we check if the data from the login form was submitted, isset() will check if the data exists.
@@ -43,24 +45,33 @@ $hashedPassword = $row["password"];
     if (password_verify($_POST['password'], $hashedPassword)) {
       // Verification success! User has logged-in!
       // Create sessions, so we know the user is logged in, they basically act like cookies but remember the data on the server.
-      session_regenerate_id();
-      $sessionId = session_id();
-      $_SESSION['userId'] = $id;
-      $_SESSION['userFirstname'] = $firstname;
-      $_SESSION['userLastname'] = $lastname;
-      $_SESSION['start'] = time();
 
-      initFilter($conn, $id, $sessionId);
 
-      $response = [
-          "id" => $id,
-          "email" => $_POST['username'],
-          "firstname" => $firstname,
-          "lastname" => $lastname,
-    ];
+        session_regenerate_id(true);
+        $sessionId = session_id();
+        setcookie('PHPSESSID', $sessionId, [
+            'path' => '/',
+            'secure' => false, // Valable uniquement pour HTTPS
+            'httponly' => true,
+            'samesite' => 'Lax'
+        ]);
 
-      echo json_encode($response, JSON_NUMERIC_CHECK);
-      exit(0);
+        initFilter($conn, $id, $sessionId);
+
+        $_SESSION['userId'] = $id;
+        $_SESSION['userFirstname'] = $firstname;
+        $_SESSION['userLastname'] = $lastname;
+        $_SESSION['start'] = time();
+
+        $response = [
+            "id" => $id,
+            "email" => $_POST['username'],
+            "firstname" => $firstname,
+            "lastname" => $lastname,
+        ];
+
+        echo json_encode(['user' => $response, 'sessionId' => $sessionId], JSON_NUMERIC_CHECK);
+        exit(0);
     }else {
           // Incorrect password
           echo json_encode([false, 'Incorrect  password !']);

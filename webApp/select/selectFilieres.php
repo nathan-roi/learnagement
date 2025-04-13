@@ -10,12 +10,15 @@ include("../crud/VIEW_display.crud.php");
 include("../crud/function_rs_to_table.php");
 include("../functions_filter.php");
 
+
 session_start();
 
-if (isset($_POST["userId"])) {
+
+if (isset($_SESSION["userId"])) {
+    $userId = $_SESSION["userId"];
     $filieres = [];
 
-    $filieresUserResponsable = selectLNM_filiereByUserId($conn, $_POST["userId"]);
+    $filieresUserResponsable = selectLNM_filiereByUserId($conn, $userId);
     foreach ($filieresUserResponsable as $filiereUser) {
         $filieres[] = $filiereUser["nom_filiere"];
     }

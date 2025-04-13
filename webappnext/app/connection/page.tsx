@@ -1,8 +1,10 @@
 "use client"
-import {signIn, signOut, useSession} from "next-auth/react"
-
-import Link from "next/link";
 import React, {useState} from "react";
+import Link from "next/link";
+import {signIn} from "next-auth/react"
+
+
+
 
 
 export default function Page() {
@@ -36,7 +38,7 @@ export default function Page() {
                     {/*{loggError && <p className={"text-usmb-red self-center mb-7"}>{msgLoggErr}</p>}*/}
                     <button type="submit" className={"self-center bg-usmb-cyan"}>Se connecter</button>
                 </div>
-                <Link href={"/activateAccount"} className={"text-xs underline text-usmb-cyan cursor-pointer"}>Activer mon compte</Link>
+                <Link href={'/activateAccount'} className={"text-xs underline text-usmb-cyan cursor-pointer"}>Activer mon compte</Link>
             </form>
         </div>
     )

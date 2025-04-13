@@ -11,9 +11,7 @@ export default function Filieres(){
 
     useEffect(() => {
         if (status === "authenticated"){
-            let form_data = new FormData()
-            form_data.append("userId", session?.user.id)
-            axios.post('/api/proxy/select/selectFilieres', form_data, {withCredentials: true})
+            axios.get('/api/proxy/select/selectFilieres', {withCredentials: true})
                 .then(response => {
                     setNomFilieres(response.data)
                 })
