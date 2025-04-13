@@ -12,10 +12,12 @@ export default function ListModule({
   const [moduleClicked, setModuleClicked] = useState(-1);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8080/list/listResponsableModule.php")
-      .then((response) => {
-        setListeModules(response.data);
+    let form_data = new FormData
+    form_data.append("userId", '18')
+    axios.post("/api/proxy/list/listResponsableModule", form_data)
+        .then((response) => {
+          console.log(response)
+          setListeModules(response.data);
       });
   }, []);
 
@@ -25,9 +27,10 @@ export default function ListModule({
     }
   }, [homepageShown]);
 
-  const modulesAvecLien = listeModules.filter((m) => m.has_learning_unit);
-  const modulesSansLien = listeModules.filter((m) => !m.has_learning_unit);
+  const modulesAvecLien = listeModules.filter((m: ModuleInfos) => m.has_learning_unit);
+  const modulesSansLien = listeModules.filter((m: ModuleInfos) => !m.has_learning_unit);
 
+  console.log(listeModules)
   function renderModule(module: Module["module"], isWithoutLink = false) {
     return (
       <div
