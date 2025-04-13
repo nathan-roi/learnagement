@@ -7,6 +7,7 @@ import {useSearchParams} from "next/navigation";
 
 import SideMenu from "@/app/homepage/sideMenu"
 import Maquette from './maquetteModule/maquetteModule'
+import Link from "next/link";
 
 
 export default function Page(){
@@ -20,24 +21,34 @@ export default function Page(){
         if (id_module){
             setModule(listModules[parseInt(id_module)])
         }
-    }, [id_module]);
+    }, [id_module, listModules]);
 
     return (
         <main className={"h-screen grid grid-cols-4"}>
             <SideMenu />
             <div className={"col-span-3 overflow-y-auto"}>
                 <div className={"h-screen flex flex-col items-center"}>
-                    <div>
-                        <h1 className={"font-bold text-4xl mb-5"}>
-                            {(module.code_module != null && module.nom != null) && <>{module.code_module} - {module.nom}</>}
-                        </h1>
-                        <div className={"w-full flex justify-around font-bold"}>
-                            {module.hCM != null && <p>Heures CM : {module.hCM}</p>}
-                            {module.hTD != null && <p>Heures TD : {module.hTD}</p>}
-                            {module.hTP != null && <p>Heures TP : {module.hTP}</p>}
-                        </div>
-                    </div>
-                    {module.nom != null && <Maquette code_module={module.code_module}/>}
+                    {module != undefined ? (
+                        <>
+                            <div>
+                                <h1 className={"font-bold text-4xl mb-5"}>
+                                    {(module.code_module != null && module.nom != null) && <>{module.code_module} - {module.nom}</>}
+                                </h1>
+                                <div className={"w-full flex justify-around font-bold"}>
+                                    {module.hCM != null && <p>Heures CM : {module.hCM}</p>}
+                                    {module.hTD != null && <p>Heures TD : {module.hTD}</p>}
+                                    {module.hTP != null && <p>Heures TP : {module.hTP}</p>}
+                                </div>
+                            </div>
+                            {module.nom != null && <Maquette code_module={module.code_module}/>}
+                        </>
+                        ):(
+                            <div className={"w-fulll h-screen flex flex-col justify-center items-center gap-3"}>
+                                <p>Il semblerait qu'il y est une erreur !</p>
+                                <Link href={'/homepage'} className={"button"}>Retourner à l'acceuil</Link>
+                            </div>
+                    )
+                    }
                 </div>
             </div>
         </main>

@@ -21,7 +21,7 @@ const handler= NextAuth({
                 formData.append("password", credentials.password)
 
                 try {
-                    const res = await axios.post("http://php/connection/authenticate.php", formData)
+                    const res = await axios.post("http://php/connection/authenticate.php", formData, {withCredentials: true})
 
                     if (res.status === 200) {
                         return res.data as User

@@ -9,6 +9,7 @@ include("../db_connection/connectDB.php");
 include("../crud/MAQUETTE_module.crud.php");
 include("../crud/function_rs_to_table.php");
 
+session_start();
 
 $id = $_POST['userId'];
 $listeModules = listMAQUETTE_moduleByIdResp($conn, $id);

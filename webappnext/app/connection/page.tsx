@@ -13,8 +13,6 @@ export default function Page() {
     const [loggError, setLoggingError] = useState(false)
     const [msgLoggErr, setMsgLoggErr] = useState('')
 
-    const dataToPass = { key: 'value' };
-
     const credentialsAction = (formData: FormData) => {
         let credentials = Object.fromEntries(formData.entries())
         signIn("credentials", credentials)

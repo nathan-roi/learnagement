@@ -15,6 +15,7 @@ export default function Filieres(){
             form_data.append("userId", session?.user.id)
             axios.post('/api/proxy/select/selectFilieres', form_data, {withCredentials: true})
                 .then(response => {
+                    console.log(response.data)
                     setNomFilieres(response.data)
                 })
         }

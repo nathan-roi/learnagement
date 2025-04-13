@@ -43,24 +43,26 @@ $hashedPassword = $row["password"];
     if (password_verify($_POST['password'], $hashedPassword)) {
       // Verification success! User has logged-in!
       // Create sessions, so we know the user is logged in, they basically act like cookies but remember the data on the server.
-      session_regenerate_id();
-      $sessionId = session_id();
-      $_SESSION['userId'] = $id;
-      $_SESSION['userFirstname'] = $firstname;
-      $_SESSION['userLastname'] = $lastname;
-      $_SESSION['start'] = time();
 
-      initFilter($conn, $id, $sessionId);
+        session_regenerate_id();
+        $sessionId = session_id();
+        $_COOKIE['PHPSESSID'] = $sessionId;
+        $_SESSION['userId'] = $id;
+        $_SESSION['userFirstname'] = $firstname;
+        $_SESSION['userLastname'] = $lastname;
+        $_SESSION['start'] = time();
 
-      $response = [
-          "id" => $id,
-          "email" => $_POST['username'],
-          "firstname" => $firstname,
-          "lastname" => $lastname,
-    ];
+        initFilter($conn, $id, $sessionId);
 
-      echo json_encode($response, JSON_NUMERIC_CHECK);
-      exit(0);
+        $response = [
+            "id" => $id,
+            "email" => $_POST['username'],
+            "firstname" => $firstname,
+            "lastname" => $lastname,
+        ];
+
+        echo json_encode($response, JSON_NUMERIC_CHECK);
+        exit(0);
     }else {
           // Incorrect password
           echo json_encode([false, 'Incorrect  password !']);
