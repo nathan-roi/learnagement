@@ -21,7 +21,7 @@ export default function Homepage(){
                             </div>
                             <div className={"w-full self-start"}>
                                 <h3>Compétences par filières</h3>
-                                {/*<Filieres />*/}
+                                <Filieres />
                             </div>
                         </div>
                     </>

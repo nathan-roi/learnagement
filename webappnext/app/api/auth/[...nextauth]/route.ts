@@ -3,6 +3,8 @@ import NextAuth, {User} from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import axios from "axios";
 
+import SetCookie from "@/app/connection/setCookie"
+
 const handler= NextAuth({
     providers: [
         Credentials({
@@ -24,7 +26,9 @@ const handler= NextAuth({
                     const res = await axios.post("http://php/connection/authenticate.php", formData, {withCredentials: true})
 
                     if (res.status === 200) {
-                        return res.data as User
+                        const sessionId = res.data['sessionId']
+                        await SetCookie(sessionId)
+                        return res.data['user'] as User
                     } else {
                         return null
                     }
