@@ -11,13 +11,14 @@ import Link from "next/link";
 
 export default function ListModule(){
     const {data: session, status} = useSession()
-    const searchParams = useSearchParams()
     const {listModules} = useListModulesStore()
     const [moduleClicked, setModuleClicked] = useState(-1)
 
-    /* Permet de savoir le module qui est sélectionné et donc d'afficher d'une couleur différente la div en question */
+    /* Permet de connaitre le module qui est sélectionné et donc d'afficher d'une couleur différente la div en question */
+    const searchParams = useSearchParams()
+    const  id_module = searchParams.get("id_module")
+
     useEffect(() => {
-        let id_module = searchParams.get("id_module")
         if (id_module != undefined){
             setModuleClicked(parseInt(id_module))
         }
