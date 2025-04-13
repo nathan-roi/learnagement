@@ -60,10 +60,10 @@ export default function ListModule(){
 
             ) : modulesSansAPC.length > 0 && modulesAvecAPC.length == 0 ? (
                 <>
+                    <p>Aucun modules avec APC</p>
+                    <div className={"border-t border-gray-400 my-4"} />
                     <h4 className={'text-lg'}>Modules (sans APC)</h4>
                     {modulesSansAPC.map((m) => renderModule(m, true))}
-                    <div className={"border-t border-gray-400 my-4"} />
-                    <p>Aucun modules avec APC</p>
                 </>
             ):(
                 <>
