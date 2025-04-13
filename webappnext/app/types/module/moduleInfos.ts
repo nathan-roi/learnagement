@@ -14,5 +14,6 @@ type ModuleInfos = {
     id_responsable?: number,
     id_etat_module?: number,
     commentaire?: string,
-    modifiable?: number
+    modifiable?: number,
+    has_learning_unit: boolean
 }
