@@ -29,9 +29,8 @@ export default function ListModule(){
 
     function renderModule(module: ModuleInfos, has_learning_unit = false) {
         return (
-            <Link href={{pathname : '/modules', query: {id_module: module.id_module}}}>
+            <Link  key={module.id_module} href={{pathname : '/modules', query: {id_module: module.id_module}}}>
                 <div
-                    key={module.id_module}
                     id={String(module.id_module)}
                     className={`w-full h-20 mb-2.5 pl-2.5 rounded-lg cursor-pointer ${
                         has_learning_unit ? 
