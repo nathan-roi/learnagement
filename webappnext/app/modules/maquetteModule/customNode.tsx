@@ -3,37 +3,28 @@ import { Handle, Position } from "@xyflow/react";
 import axios from "axios";
 import { useInfosModuleStore } from "@/app/store/useInfosModuleStore";
 
-function CustomNode({
-  data,
-  setDisplayCardCourse,
-}: {
-  data: any;
-  setDisplayCardCourse: (course: any) => void;
-}) {
+function CustomNode({data, setDisplayCardCourse}: { data: any, setDisplayCardCourse: (course: any) => void}){
   const { module } = useInfosModuleStore();
 
   const handleClick = (e: any) => {
     e.stopPropagation();
-    console.log("Custom Node Clicked:", data);
-
+    
     const formData = new FormData();
     formData.append("input", data.label);
     formData.append("module", module.code_module);
 
-    axios
-      .post("http://localhost:8080/select/selectSeance.php", formData)
-      .then((response) => {
-        console.log("API Response:", response);
-        setDisplayCardCourse({
-          label: data.label,
-          moduleCode: response.data.moduleCode,
-          session: data.session,
-          duration: response.data.duree_h,
-          color: data.color,
-          typeCourse: response.data.typeCourse,
-          currentNumber: response.data.currentNumber,
-          totalNumber: response.data.totalNumber,
-        });
+    axios.post("/api/proxy/select/selectSeance", formData, {withCredentials: true})
+        .then((response) => {
+          setDisplayCardCourse({
+            label: data.label,
+            moduleCode: response.data.moduleCode,
+            session: data.session,
+            duration: response.data.duree_h,
+            color: data.color,
+            typeCourse: response.data.typeCourse,
+            currentNumber: response.data.currentNumber,
+            totalNumber: response.data.totalNumber,
+          });
       })
       .catch((error) => {
         console.error("API Error:", error);

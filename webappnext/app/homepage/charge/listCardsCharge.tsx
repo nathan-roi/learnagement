@@ -1,9 +1,8 @@
 import axios from "axios";
 import {useEffect, useState} from "react";
-import { useUserInfosStore } from "@/app/store/useUserInfosStore";
-
-import CardCharge from "@/app/homepage/charge/cardCharge";
 import { ChargeState, ChargeType } from "@/app/types/charge/charges";
+import {useSession} from "next-auth/react";
+import CardCharge from "@/app/homepage/charge/cardCharge";
 
 
 export default function ListCardsCharge(){
@@ -13,26 +12,26 @@ export default function ListCardsCharge(){
         TD: -1,
         TP: -1
     })
-
-    const {user} = useUserInfosStore()
+    const {data: session} = useSession()
 
     const chargeTotCmTdTp = charges.CM + charges.TD + charges.TP
 
     useEffect(() => {
+        if (session){
+            let form_data = new FormData()
+            form_data.append("user_id", session.user.id)
+            axios.post("/api/proxy/select/selectChargeEnseignant", form_data,{withCredentials: true})
+                .then(response => {
+                    if (response.data[0] != false){
+                        setCharges(response.data)
+                    }else{
+                        console.log('erreur')
+                    }
 
-        let form_data = new FormData()
-        form_data.append("user_id", user.userId)
-        axios.post("http://localhost:8080/select/selectChargeEnseignant.php", form_data)
-            .then(response => {
-                if (response.data[0] != false){
-                    setCharges(response.data)
-                }else{
-                    console.log('erreur')
-                }
+                })
+        }
 
-            })
-
-    }, [user.userId]);
+    }, [session]);
 
     const chargeTypes: ChargeType[] = ['CM', 'TD', 'TP'];
 

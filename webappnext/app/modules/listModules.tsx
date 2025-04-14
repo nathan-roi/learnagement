@@ -1,58 +1,108 @@
-import axios from "axios";
+"use client"
+
 import {useEffect, useState} from "react";
-import {useInfosModuleStore} from "@/app/store/useInfosModuleStore";
+import {useListModulesStore} from "@/app/store/useListModulesStore";
+import {useSession} from "next-auth/react";
+import {useSearchParams} from "next/navigation";
 
+import Loader from "@/app/indicators/loader";
+import router from "next/router";
+import Link from "next/link";
 
-export default function ListModule({homepageShown}:{homepageShown:boolean}){
-    const {setModule} = useInfosModuleStore()
-    const [listeModules, setListeModules] = useState<Module["module"][]>([]);
+export default function ListModule(){
+    const {data: session, status} = useSession()
+    const {listModules} = useListModulesStore()
     const [moduleClicked, setModuleClicked] = useState(-1)
 
-    useEffect(() => {
-
-        axios.get("http://localhost:8080/list/listResponsableModule.php")
-            .then(response => {
-                setListeModules(response.data)
-            })
-
-    }, []);
+    /* Permet de connaitre le module qui est sélectionné et donc d'afficher d'une couleur différente la div en question */
+    const searchParams = useSearchParams()
+    const  id_module = searchParams.get("id_module")
 
     useEffect(() => {
-        if (homepageShown){
-            setModuleClicked(-1)
+        if (id_module != undefined){
+            setModuleClicked(parseInt(id_module))
         }
-    }, [homepageShown]);
+    }, [searchParams]);
 
-    const listeModulesHTML = listeModules.map(module =>
-            <div key={module.id_module} id={String(module.id_module)} className={`w-full h-20 mb-2.5 pl-2.5 rounded-lg hover:bg-usmb-blue cursor-pointer 
-            ${moduleClicked === module.id_module ? 'bg-usmb-blue' : 'bg-usmb-cyan'}`} onClick={getModuleInfos}>
-                <p className={"font-medium"}>{module.nom}</p>
-                <p>{module.code_module}</p>
-            </div>
-    )
+    const modulesAvecAPC = Object.values(listModules).filter((m: ModuleInfos) => m.has_learning_unit);
+    const modulesSansAPC = Object.values(listModules).filter((m: ModuleInfos) => !m.has_learning_unit);
 
-    async function getModuleInfos(event:any){
-        let id_module
-
-        if (event.target.localName == "div"){
-            id_module = event.target.id //div cliqué
-        }else{
-            id_module = event.target.parentElement.id // enfant de la div cliqué
-        }
-
-        let form_data = new FormData()
-        form_data.append("id_module", id_module)
-        axios.post("http://localhost:8080/select/selectInfosModule.php",form_data)
-            .then(response => {
-                let data = response.data
-                setModule(data)
-                setModuleClicked(data.id_module)
-            })
+    function renderModule(module: ModuleInfos, has_learning_unit = false) {
+        return (
+            <Link  key={module.id_module} href={{pathname : '/modules', query: {id_module: module.id_module}}}>
+                <div
+                    id={String(module.id_module)}
+                    className={`w-full h-20 mb-2.5 pl-2.5 rounded-lg cursor-pointer ${
+                        has_learning_unit ? 
+                            `border border-red-500 text-gray-300 hover:bg-red-500/80 ${moduleClicked === module.id_module ? "bg-red-500/80" : "bg-red-500/60"   }`
+                            : 
+                            `hover:bg-usmb-blue ${ moduleClicked === module.id_module ? "bg-usmb-blue" : "bg-usmb-cyan" }`
+                        }`
+                    }
+                >
+                    <p className={"font-medium"}>{module.nom}</p>
+                    <p>{module.code_module}</p>
+                </div>
+            </Link>
+        );
     }
 
     return (
         <div className={"h-3/4 overflow-y-auto"}>
-            {listeModulesHTML}
+            {modulesAvecAPC.length > 0 && modulesSansAPC.length > 0 ? (
+                <>
+                    <h4>Modules (avec APC)</h4>
+                    {modulesAvecAPC.map((m) => renderModule(m))}
+                    <div className={"border-t border-gray-400 my-4"} />
+                    <h4>Modules (sans APC)</h4>
+                    {modulesSansAPC.map((m) => renderModule(m, true))}
+                </>
+
+            ) : modulesSansAPC.length > 0 && modulesAvecAPC.length == 0 ? (
+                <>
+                    <p>Aucun modules avec APC</p>
+                    <div className={"border-t border-gray-400 my-4"} />
+                    <h4 className={'text-lg'}>Modules (sans APC)</h4>
+                    {modulesSansAPC.map((m) => renderModule(m, true))}
+                </>
+            ):(
+                <>
+                    <h4 className={'text-lg'}>Modules (avec APC)</h4>
+                    {modulesAvecAPC.map((m) => renderModule(m, true))}
+                    <div className={"border-t border-gray-400 my-4"} />
+                    <p>Aucun modules sans APC</p>
+                </>
+            )}
+
         </div>
-    )
+    );
+
+    // return (
+    //     <>
+    //         {
+    //             status === "authenticated" ? (
+    //                 <div className={"h-3/4 overflow-y-auto"}>
+    //                     {listeModules.map((module: ModuleInfos) =>
+    //                         <div key={module.id_module} id={String(module.id_module)}
+    //                              className=
+    //                                  {`w-full h-20 mb-2.5 pl-2.5 rounded-lg hover:bg-usmb-blue cursor-pointer
+    //                                  ${moduleClicked === module.id_module ? 'bg-usmb-blue' : 'bg-usmb-cyan'}`}
+    //                              onClick={getModuleInfos}>
+    //                             <p className={"font-medium"}>{module.nom}</p>
+    //                             <p>{module.code_module}</p>
+    //                         </div>
+    //                     )}
+    //                 </div>
+    //             ) : status === "loading" ? (
+    //                 <div className="flex justify-center">
+    //                     <Loader />
+    //                 </div>
+    //             ) : (
+    //                 <>
+    //                     {router.push('/connection')}
+    //                 </>
+    //             )
+    //         }
+    //     </>
+    // )
 }

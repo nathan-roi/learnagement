@@ -1,10 +1,11 @@
-"use client";
+"use client"
 
 import React, {useEffect, useState} from "react";
 import Link from "next/link";
 import bcrypt from 'bcryptjs';
 
 import AlertBox from "../indicators/alertBox";
+import Loader from "@/app/indicators/loader";
 
 export default function ActivateAccount() {
     const [pwd, setPwd] = useState('')
@@ -26,6 +27,7 @@ export default function ActivateAccount() {
 
 
     }, [wantCopy]);
+
     async function hashPassword(event:any) {
         event.preventDefault()
         let form = event.currentTarget
@@ -70,9 +72,10 @@ export default function ActivateAccount() {
                 {(hash != "Erreur hashage" && pwd != '' ) && hash}
                 <div className={"flex items-center gap-5"}>
                     <button value="copy" onClick={copyHash}>Copier</button>
-                    <Link href={"/"} className={"button-second"}>Retour</Link>
+                    <Link href={"/connection"} className={"button-second"}>Retour</Link>
                 </div>
             </div>
+            {/*<p>Données reçues : {router}</p>*/}
         </main>
     );
 }

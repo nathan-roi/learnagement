@@ -58,7 +58,7 @@ function listMAQUETTE_module($conn) {
 }
 
 function listMAQUETTE_moduleByIdResp($conn, $id) {
-    $sql = "SELECT * FROM `MAQUETTE_module` WHERE `id_responsable`=$id";
+    $sql = "SELECT * FROM `MAQUETTE_module` WHERE `id_responsable`='$id'";
     $res = mysqli_query($conn, $sql);
     $rs = rs_to_table($res);
     return $rs;
