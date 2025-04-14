@@ -31,44 +31,34 @@ export default function Filieres(){
         <>
             <div id="cards-container" className={"w-full px-3 flex flex-wrap justify-center gap-10 gap-y-8"}>
                 {nomFilieres.length > 0 ? (
-                    nomFilieres.map((nom: string, index: number) =>
-                        <div key={index} onClick={(event:any): void => {filiereClicked(event.target.innerText)}} className={"w-60 h-16 flex justify-center items-center rounded-lg shadow-default cursor-pointer"}>
+                    nomFilieres.map((nom: string, index: number) => (
+                        <div
+                            key={index}
+                            onClick={(event: any): void => {
+                                filiereClicked(event.target.innerText);
+                            }}
+                            className={
+                                "w-60 h-16 flex justify-start items-center rounded-lg shadow-default cursor-pointer gap-2 px-2"
+                            }
+                        >
+                            <img
+                                src={nom[0] === "POLYTECH" ? polytechLogo.src : usmbLogo.src}
+                                alt="logo"
+                                className="w-8 h-8 object-contain"
+                            />
                             <p className={"font-semibold"}>{nom[0]}</p>
-                        </div>)
+                        </div>
+                    ))
                 ) : (
                     <p>Aucune filière disponible.</p>
                 )}
             </div>
-            {nomFiliereClicked.length > 0 && <ModaleFiliere nomFiliere={nomFiliereClicked} setNomFiliere={setNomFiliereClicked}/>}
-    {/*        {nomFilieres.length > 0 ? (*/}
-    {/*            nomFilieres.map((nom: string, index: number) => (*/}
-    {/*                <div*/}
-    {/*                    key={index}*/}
-    {/*                    onClick={(event: any): void => {*/}
-    {/*                        filiereClicked(event.target.innerText);*/}
-    {/*                    }}*/}
-    {/*                    className={*/}
-    {/*                        "w-60 h-16 flex justify-start items-center rounded-lg shadow-default cursor-pointer gap-2 px-2"*/}
-    {/*                    }*/}
-    {/*                >*/}
-    {/*                    <img*/}
-    {/*                        src={nom[0] === "POLYTECH" ? polytechLogo.src : usmbLogo.src}*/}
-    {/*                        alt="logo"*/}
-    {/*                        className="w-8 h-8 object-contain"*/}
-    {/*                    />*/}
-    {/*                    <p className={"font-semibold"}>{nom[0]}</p>*/}
-    {/*                </div>*/}
-    {/*            ))*/}
-    {/*        ) : (*/}
-    {/*            <p>Aucune filière disponible.</p>*/}
-    {/*        )}*/}
-    {/*    </div>*/}
-    {/*{nomFiliereClicked.length > 0 && (*/}
-    {/*    <ModaleFiliere*/}
-    {/*        nomFiliere={nomFiliereClicked}*/}
-    {/*        setNomFiliere={setNomFiliereClicked}*/}
-    {/*    />*/}
-    {/*)}*/}
+            {nomFiliereClicked.length > 0 && (
+                 <ModaleFiliere
+                     nomFiliere={nomFiliereClicked}
+                    setNomFiliere={setNomFiliereClicked}
+                />
+            )}
         </>
     )
 }
