@@ -14,29 +14,31 @@ export default function ListModule(){
     const {listModules} = useListModulesStore()
     const [moduleClicked, setModuleClicked] = useState(-1)
 
-    /* Permet de connaitre le module qui est sélectionné et donc d'afficher d'une couleur différente la div en question */
     const searchParams = useSearchParams()
     const  id_module = searchParams.get("id_module")
-
+    //console.log("Session status:", status);
+    //console.log("Modules dans listModules store:", listModules);
     useEffect(() => {
         if (id_module != undefined){
             setModuleClicked(parseInt(id_module))
         }
     }, [searchParams]);
 
-    const modulesAvecAPC = Object.values(listModules).filter((m: ModuleInfos) => m.has_learning_unit);
-    const modulesSansAPC = Object.values(listModules).filter((m: ModuleInfos) => !m.has_learning_unit);
+    const modulesAvecAPC = Object.values(listModules).filter((m: ModuleInfos) => m.has_learning_unit ===1);
+    const modulesSansAPC = Object.values(listModules).filter((m: ModuleInfos) => m.has_learning_unit ===0);
+    // console.log("Avec:",modulesAvecAPC);
+    // console.log("Sans:",modulesSansAPC);
+    function renderModule(module: ModuleInfos) {
+        const hasAPC = module.has_learning_unit === 1;
 
-    function renderModule(module: ModuleInfos, has_learning_unit = false) {
         return (
             <Link  key={module.id_module} href={{pathname : '/modules', query: {id_module: module.id_module}}}>
                 <div
                     id={String(module.id_module)}
                     className={`w-full h-20 mb-2.5 pl-2.5 rounded-lg cursor-pointer ${
-                        has_learning_unit ? 
-                            `border border-red-500 text-gray-300 hover:bg-red-500/80 ${moduleClicked === module.id_module ? "bg-red-500/80" : "bg-red-500/60"   }`
-                            : 
-                            `hover:bg-usmb-blue ${ moduleClicked === module.id_module ? "bg-usmb-blue" : "bg-usmb-cyan" }`
+                        hasAPC 
+                        ? `hover:bg-usmb-blue ${ moduleClicked === module.id_module ? "bg-usmb-blue" : "bg-usmb-cyan" }`
+                        : `border border-red-500 text-gray-300 hover:bg-red-500/80 ${moduleClicked === module.id_module ? "bg-red-500/80" : "bg-red-500/60"   }` 
                         }`
                     }
                 >
@@ -55,7 +57,7 @@ export default function ListModule(){
                     {modulesAvecAPC.map((m) => renderModule(m))}
                     <div className={"border-t border-gray-400 my-4"} />
                     <h4>Modules (sans APC)</h4>
-                    {modulesSansAPC.map((m) => renderModule(m, true))}
+                    {modulesSansAPC.map((m) => renderModule(m))}
                 </>
 
             ) : modulesSansAPC.length > 0 && modulesAvecAPC.length == 0 ? (
@@ -63,12 +65,12 @@ export default function ListModule(){
                     <p>Aucun modules avec APC</p>
                     <div className={"border-t border-gray-400 my-4"} />
                     <h4 className={'text-lg'}>Modules (sans APC)</h4>
-                    {modulesSansAPC.map((m) => renderModule(m, true))}
+                    {modulesSansAPC.map((m) => renderModule(m))}
                 </>
             ):(
                 <>
                     <h4 className={'text-lg'}>Modules (avec APC)</h4>
-                    {modulesAvecAPC.map((m) => renderModule(m, true))}
+                    {modulesAvecAPC.map((m) => renderModule(m))}
                     <div className={"border-t border-gray-400 my-4"} />
                     <p>Aucun modules sans APC</p>
                 </>
