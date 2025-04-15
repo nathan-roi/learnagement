@@ -14,6 +14,8 @@
 
     $id = $_SESSION['userId'];
     $listeModules = listMAQUETTE_module_with_learning_unit($conn, $id);
+
+    $indexedArray = [];
     foreach ($listeModules as $module) {
         $id_module = $module["id_module"];
         $indexedArray[$id_module] = $module;
