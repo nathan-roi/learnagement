@@ -13,11 +13,9 @@ services:
     restart: always
     ports:
       - "40080:3000"
-    environment:
-      NEXTAUTH_SECRET: Jo3qwfL3R/kmA2emVkz1di9lkXKzAApxV3xULoqmSxg=
     volumes:
       - ../webappnext:/app
-      - /app/node_modules
+      - ../webappnext/node_modules:/app/node_modules
     working_dir: /app
     command: npm run dev
   mysql:
