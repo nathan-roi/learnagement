@@ -76,3 +76,22 @@ function updateMAQUETTE_module($conn, $id,$id_module, $code_module, $nom, $ECTS,
     $res = mysqli_query($conn, $sql);
     return $res;
 }
+
+function listMAQUETTE_module_with_learning_unit($conn, $id)
+{
+    $sql = "
+        SELECT 
+            m.*, 
+            EXISTS (
+                SELECT 1 
+                FROM MAQUETTE_module_as_learning_unit mlul 
+                WHERE mlul.id_module = m.id_module
+            ) AS has_learning_unit
+        FROM MAQUETTE_module m
+        WHERE m.id_responsable = $id
+    ";
+
+    $res = mysqli_query($conn, $sql);
+    $rs = rs_to_table($res);
+    return $rs;
+}
