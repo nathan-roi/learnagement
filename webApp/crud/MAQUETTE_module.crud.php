@@ -58,7 +58,7 @@ function listMAQUETTE_module($conn) {
 }
 
 function listMAQUETTE_moduleByIdResp($conn, $id) {
-    $sql = "SELECT * FROM `MAQUETTE_module` WHERE `id_responsable`=$id";
+    $sql = "SELECT * FROM `MAQUETTE_module` WHERE `id_responsable`='$id'";
     $res = mysqli_query($conn, $sql);
     $rs = rs_to_table($res);
     return $rs;
@@ -75,4 +75,23 @@ function updateMAQUETTE_module($conn, $id,$id_module, $code_module, $nom, $ECTS,
     $sql = "UPDATE `MAQUETTE_module` SET `id_module`='$id_module', `code_module`='$code_module', `nom`='$nom', `ECTS`='$ECTS', `id_discipline`='$id_discipline', `id_semestre`='$id_semestre', `hCM`='$hCM', `hTD`='$hTD', `hTP`='$hTP', `hTPTD`='$hTPTD', `hPROJ`='$hPROJ', `hPersonnelle`='$hPersonnelle', `id_responsable`='$id_responsable', `id_etat_module`='$id_etat_module', `commentaire`='$commentaire', `modifiable`='$modifiable' WHERE `id` = $id";
     $res = mysqli_query($conn, $sql);
     return $res;
+}
+
+function listMAQUETTE_module_with_learning_unit($conn, $id)
+{
+    $sql = "
+        SELECT 
+            m.*, 
+            EXISTS (
+                SELECT 1 
+                FROM MAQUETTE_module_as_learning_unit mlul 
+                WHERE mlul.id_module = m.id_module
+            ) AS has_learning_unit
+        FROM MAQUETTE_module m
+        WHERE m.id_responsable = $id
+    ";
+
+    $res = mysqli_query($conn, $sql);
+    $rs = rs_to_table($res);
+    return $rs;
 }

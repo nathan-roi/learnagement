@@ -15,31 +15,23 @@ import CustomNode from "@/app/modules/maquetteModule/customNode";
 import floatingConnectionLine from "@/app/modules/maquetteModule/floatingConnectionLine";
 import CourseCard from "../maquetteSequence/courseCard";
 
-export default function MaquetteFlow({
-  initialNodes,
-  initialEdges,
-  setWidth,
-}: {
-  initialNodes: any;
-  initialEdges: any;
-  setWidth: any;
-}) {
+interface CourseData {
+  label?: string;
+  moduleCode?: string;
+  session?: string;
+  duration?: number;
+  color?: string;
+  typeCourse?: string;
+  currentNumber?: number;
+  totalNumber?: number;
+}
+
+export default function MaquetteFlow({initialNodes, initialEdges, setWidth}:{ initialNodes: any, initialEdges: any, setWidth: any}) {
   const componentRef = useRef<HTMLDivElement>(null);
   const { fitView } = useReactFlow();
   const [majWidth, setMajWidth] = useState(0);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-
-  interface CourseData {
-    label?: string;
-    moduleCode?: string;
-    session?: string;
-    duration?: number;
-    color?: string;
-    typeCourse?: string;
-    currentNumber?: number;
-    totalNumber?: number;
-  }
 
   const [displayCardCourse, setDisplayCardCourse] = useState<CourseData>({});
 
@@ -54,9 +46,11 @@ export default function MaquetteFlow({
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      fitView({ padding: 0.1, duration: 800 });
-    }, 300);
+      fitView({ padding: 0.1, duration: 700 });
+    }, 100);
+
     return () => clearTimeout(timeout);
+
   }, [majWidth, initialEdges, initialNodes]);
 
   useEffect(() => {

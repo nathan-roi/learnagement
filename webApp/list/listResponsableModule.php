@@ -1,6 +1,7 @@
 <?php
     header("Access-Control-Allow-Origin: http://localhost:40080"); // Activer CORS
     header("Access-Control-Allow-Credentials: true"); // Autoriser le partage de cookies
+    header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 
     header("Content-Type: application/json");
 
@@ -12,6 +13,11 @@
     session_start();
 
     $id = $_SESSION['userId'];
-    $listeModules = listMAQUETTE_moduleByIdResp($conn, $id);
+    $listeModules = listMAQUETTE_module_with_learning_unit($conn, $id);
 
-    echo json_encode($listeModules, JSON_NUMERIC_CHECK);
+    $indexedArray = [];
+    foreach ($listeModules as $module) {
+        $id_module = $module["id_module"];
+        $indexedArray[$id_module] = $module;
+    }
+    echo json_encode($indexedArray, JSON_NUMERIC_CHECK);

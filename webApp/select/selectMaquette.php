@@ -30,10 +30,9 @@
         $rsMaquette = selectMAQUETTE_module($conn, $code_module);
 
         $maquette = removeDuplicatesFromNestedArray($rsMaquette); // Suppression des doublons existants
-        $strMaquette = json_encode($maquette); // Envoie pour le Js
 
-        echo $strMaquette;
+        echo json_encode($maquette);
     }else{
-        echo json_encode([false, "Error code_module undefined"]);
+        echo json_encode("Error code_module undefined");
     }
 

@@ -1,7 +1,6 @@
 import {useEffect, useState} from "react";
 
 export default function listCompetences({infosCompetences, setIdCompetenceClicked}:{infosCompetences: infosCompetence[], setIdCompetenceClicked:any}){
-
     const [competenceClicked, setCompetenceCLicked] = useState(-1)
 
     useEffect(() => {
@@ -11,6 +10,7 @@ export default function listCompetences({infosCompetences, setIdCompetenceClicke
             setIdCompetenceClicked(default_competence)
         }
     }, [infosCompetences]);
+
     return(
         <div className={"mb-8"}>
             <h4>Compétences de la filière</h4>
