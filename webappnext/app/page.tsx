@@ -21,7 +21,7 @@ export default function Home() {
   useEffect(() => {
     setIsLoading(true);
   
-    axios.get('http://localhost:8080/get_filieres.php')
+    axios.get('/api/proxy/get_filieres')
       .then((response) => {
         console.log('Données reçues:', response.data);  // Ajoute cette ligne pour voir les données
         setFilieres(response.data);
