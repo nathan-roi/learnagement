@@ -6,10 +6,12 @@ import {useSession} from "next-auth/react";
 import {useSearchParams} from "next/navigation";
 
 import Link from "next/link";
+import axios from "axios";
 
 export default function ListModule(){
     const {listModules} = useListModulesStore()
     const [moduleClicked, setModuleClicked] = useState(-1)
+    const [idModulesHasApc, setIdModulesHasApc] = useState<string[]>([])
 
     const searchParams = useSearchParams()
     const  id_module = searchParams.get("id_module")
@@ -20,19 +22,27 @@ export default function ListModule(){
         }
     }, [searchParams]);
 
-    const modulesAvecAPC = Object.values(listModules).filter((m: ModuleInfos) => m.has_learning_unit);
-    const modulesSansAPC = Object.values(listModules).filter((m: ModuleInfos) => !m.has_learning_unit);
+    useEffect(() => {
+        let form_data = new FormData
+        form_data.append("indexBy", "id_module")
+        axios.post("/api/proxy/select/selectModulesOfAllAPC", form_data, {withCredentials: true})
+            .then(response => {
+                let data = response.data
+                setIdModulesHasApc(Object.keys(data))
+            })
+    }, []);
 
-    function renderModule(module: ModuleInfos) {
-        const hasAPC = module.has_learning_unit;
+    const modulesAvecAPC = Object.values(listModules).filter((m: ModuleInfos) => idModulesHasApc.includes(m.id_module.toString()));
+    const modulesSansAPC = Object.values(listModules).filter((m: ModuleInfos) => !idModulesHasApc.includes(m.id_module.toString()));
 
+    function renderModule(module: ModuleInfos, hasAPC: boolean) {
         return (
             <Link  key={module.id_module} href={{pathname : '/modules', query: {id_module: module.id_module}}}>
                 <div
                     id={String(module.id_module)}
                     className={`w-full h-20 mb-2.5 pl-2.5 rounded-lg cursor-pointer ${
-                        hasAPC 
-                        ? `hover:bg-usmb-blue ${ moduleClicked === module.id_module ? "bg-usmb-blue" : "bg-usmb-cyan" }`
+                        hasAPC ?
+                            `hover:bg-usmb-blue ${ moduleClicked === module.id_module ? "bg-usmb-blue" : "bg-usmb-cyan" }`
                         : `border border-red-500 text-gray-300 hover:bg-red-500/80 ${moduleClicked === module.id_module ? "bg-red-500/80" : "bg-red-500/60"   }` 
                         }`
                     }
@@ -49,10 +59,10 @@ export default function ListModule(){
             {modulesAvecAPC.length > 0 && modulesSansAPC.length > 0 ? (
                 <>
                     <h4>Modules (avec APC)</h4>
-                    {modulesAvecAPC.map((m) => renderModule(m))}
+                    {modulesAvecAPC.map((module: ModuleInfos) => renderModule(module, true))}
                     <div className={"border-t border-gray-400 my-4"} />
                     <h4>Modules (sans APC)</h4>
-                    {modulesSansAPC.map((m) => renderModule(m))}
+                    {modulesSansAPC.map((module: ModuleInfos) => renderModule(module, false))}
                 </>
 
             ) : modulesSansAPC.length > 0 && modulesAvecAPC.length == 0 ? (
@@ -60,12 +70,12 @@ export default function ListModule(){
                     <p>Aucun modules avec APC</p>
                     <div className={"border-t border-gray-400 my-4"} />
                     <h4 className={'text-lg'}>Modules (sans APC)</h4>
-                    {modulesSansAPC.map((m) => renderModule(m))}
+                    {modulesSansAPC.map((module: ModuleInfos) => renderModule(module, false))}
                 </>
             ):(
                 <>
                     <h4 className={'text-lg'}>Modules (avec APC)</h4>
-                    {modulesAvecAPC.map((m) => renderModule(m))}
+                    {modulesAvecAPC.map((module: ModuleInfos) => renderModule(module, true))}
                     <div className={"border-t border-gray-400 my-4"} />
                     <p>Aucun modules sans APC</p>
                 </>

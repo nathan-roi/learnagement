@@ -38,7 +38,9 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
     }, [idCompetence]);
 
     useEffect(() => {
-        axios.get("/api/proxy/select/selectModulesOfAllAPC", {withCredentials: true})
+        let form_data = new FormData
+        form_data.append("indexBy", "id_apprentissage_critique")
+        axios.post("/api/proxy/select/selectModulesOfAllAPC", form_data, {withCredentials: true})
             .then(response => {
                 setApcAsModule(response.data)
             })
