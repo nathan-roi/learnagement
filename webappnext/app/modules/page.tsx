@@ -10,11 +10,14 @@ import Maquette from './maquetteModule/maquetteModule'
 import Link from "next/link";
 import axios from "axios";
 
-
+interface apcOfModule{
+    id_apprentissage_critique: number,
+    libelle_apprentissage: string
+}
 export default function Page(){
     const {module, setModule} = useInfosModuleStore()
     const {listModules} = useListModulesStore()
-
+    const [listApc, setListApc] = useState<apcOfModule[]>([])
     const searchParams = useSearchParams()
     const id_module = searchParams.get("id_module")
 
@@ -31,6 +34,7 @@ export default function Page(){
             axios.post('/api/proxy/select/selectAPCbyIdModule',form_data,{withCredentials: true})
                 .then(response => {
                     console.log(response.data)
+                    setListApc(response.data)
                 })
         }
 
@@ -52,6 +56,14 @@ export default function Page(){
                                     {module.hTD != null && <p>Heures TD : {module.hTD}</p>}
                                     {module.hTP != null && <p>Heures TP : {module.hTP}</p>}
                                 </div>
+
+                                <ul className={"m-2 mt-4 list-disc list-inside"}>
+                                    {listApc.length > 0 && (
+                                        listApc.map((apc: apcOfModule) => (
+                                            <li>{apc.libelle_apprentissage}</li>
+                                        ))
+                                    )}
+                                </ul>
                             </div>
                             {module.nom != null && <Maquette code_module={module.code_module}/>}
                         </>
