@@ -60,7 +60,7 @@ export default function Page(){
                                 <ul className={"m-2 mt-4 list-disc list-inside"}>
                                     {listApc.length > 0 && (
                                         listApc.map((apc: apcOfModule) => (
-                                            <li>{apc.libelle_apprentissage}</li>
+                                            <li key={apc.id_apprentissage_critique}>{apc.libelle_apprentissage}</li>
                                         ))
                                     )}
                                 </ul>
