@@ -8,6 +8,7 @@ import {useSearchParams} from "next/navigation";
 import SideMenu from "@/app/homepage/sideMenu"
 import Maquette from './maquetteModule/maquetteModule'
 import Link from "next/link";
+import axios from "axios";
 
 
 export default function Page(){
@@ -22,6 +23,18 @@ export default function Page(){
             setModule(listModules[parseInt(id_module)])
         }
     }, [id_module, listModules]);
+
+    useEffect(() => {
+        if (id_module){
+            let form_data = new FormData()
+            form_data.append("id_module", id_module)
+            axios.post('/api/proxy/select/selectAPCbyIdModule',form_data,{withCredentials: true})
+                .then(response => {
+                    console.log(response.data)
+                })
+        }
+
+    }, [id_module]);
 
     return (
         <main className={"h-screen grid grid-cols-4"}>
