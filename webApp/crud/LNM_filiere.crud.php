@@ -14,12 +14,33 @@ function updateLNM_filiere($conn, $id,$id_filiere, $nom_filiere, $nom_long, $id_
     $res = mysqli_query($conn, $sql);
     return $res;
 }
+
+// function listLNM_filiere($conn) {
+//     $sql = "SELECT * FROM `LNM_filiere`";
+//     $res = mysqli_query($conn, $sql);
+//     $rs = rs_to_table($res);
+//     return $rs;
+// }
+
 function listLNM_filiere($conn) {
+    // Récupération des filières depuis la base de données
     $sql = "SELECT * FROM `LNM_filiere`";
     $res = mysqli_query($conn, $sql);
-    $rs = rs_to_table($res);
-    return $rs;
+
+    // Vérification des erreurs de la requête
+    if (!$res) {
+        return ['error' => 'Erreur lors de la récupération des données: ' . mysqli_error($conn)];
+    }
+
+    // Transformation du résultat en tableau associatif
+    $filieres = [];
+    while ($row = mysqli_fetch_assoc($res)) {
+        $filieres[] = $row;
+    }
+
+    return $filieres;
 }
+
 
 function selectLNM_filiereByUserId($conn, $user_id) {
     $sql = "SELECT * FROM `LNM_filiere` WHERE `id_responsable`=$user_id;";
