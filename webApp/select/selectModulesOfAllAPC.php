@@ -9,9 +9,10 @@ include("../db_connection/connectDB.php");
 include("../crud/function_rs_to_table.php");
 include("../crud/APC_apprentissage_critique_as_module.crud.php");
 
+session_start();
 
-if(isset($_POST["id_user"])){
-    $id_user = $_POST["id_user"];
+if(isset($_SESSION["userId"])){
+    $id_user = $_SESSION["userId"];
     $modulesOfAllAPC = selectModulesOfAllAPC($conn, $id_user);
     $modulesOfAllAPCIndex = [];
 

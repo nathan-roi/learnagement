@@ -1,13 +1,12 @@
-import { useEffect, useState} from "react";
 import axios from "axios";
+
+import { useEffect, useState} from "react";
 import {isEmpty} from "@jsonjoy.com/util/lib/isEmpty";
-import {useSession} from "next-auth/react";
+
 import ModulesOfApprentissageCritique from "./modulesOfApprentissageCritique"
 
 
 export default function listApprentissagesCritiques({idCompetence}:{idCompetence: number}) {
-    const {data: session} = useSession()
-
     const [apprentissagesCritiques, setApprentissagesCritiques] = useState<apprentissagesCritiquesStruct>({})
     const [apcAsModule, setApcAsModule] = useState<ModulesOfAPC>({})
 
@@ -39,15 +38,10 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
     }, [idCompetence]);
 
     useEffect(() => {
-        if (session){
-            let form_data = new FormData
-            form_data.append("id_user", session.user.id)
-            axios.post("/api/proxy/select/selectModulesOfAllAPC", form_data, {withCredentials: true})
-                .then(response => {
-                    let data = response.data
-                    setApcAsModule(data)
-                })
-        }
+        axios.get("/api/proxy/select/selectModulesOfAllAPC", {withCredentials: true})
+            .then(response => {
+                setApcAsModule(response.data)
+            })
     }, []);
 
     function levelOfApcToShow(event: any) {
