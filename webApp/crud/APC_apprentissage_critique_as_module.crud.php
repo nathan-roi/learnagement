@@ -15,3 +15,18 @@ function selectModulesOfAllAPC($conn, $id_user)
 
     return rs_to_table($res);
 }
+
+function selectAPCbyIdModule($conn, $id_module){
+    $sql = "SELECT 
+                `id_apprentissage_critique`,
+                `MAQUETTE_module`.`id_module`,
+                `MAQUETTE_module`.`code_module`,
+                `MAQUETTE_module`.`nom`
+            FROM `APC_apprentissage_critique_as_module`
+            JOIN `MAQUETTE_module` ON `APC_apprentissage_critique_as_module`.`id_module` = `MAQUETTE_module`.`id_module`
+            WHERE `MAQUETTE_module`.`id_module` = $id_module;";
+
+    $res = mysqli_query($conn, $sql);
+
+    return rs_to_table($res);
+}
