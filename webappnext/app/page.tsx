@@ -1,71 +1,112 @@
-"use client";
+'use client';
 
-import axios from "axios";
-import React, {useState, useEffect} from "react";
-import { useUserInfosStore } from "./store/useUserInfosStore";
-import { useInfosModuleStore } from "@/app/store/useInfosModuleStore";
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
-import Connection from "@/app/connection/connection";
-import Disconnection from "@/app/connection/disconnection";
-import ListModules from "@/app/modules/listModules";
-import InfosModule from "@/app/modules/infosModule"
-import Loader from "@/app/indicators/loader";
-import Homepage from "@/app/homepage/homepage";
-import LinkHomepage from "@/app/homepage/linkHomepage";
+type Filiere = {
+  id: number;
+  id_filiere: string;
+  nom_filiere: string;
+  nom_long: string;
+  id_responsable: number;
+};
 
 export default function Home() {
-    axios.defaults.withCredentials = true // Autorise le partage de cookies (fonctionne pour les composants enfants)
-    const { user, setUser } = useUserInfosStore()
-    const { module } = useInfosModuleStore()
-    const [isLoading, setIsLoading] = useState(true)
+  const router = useRouter();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filieres, setFilieres] = useState<Filiere[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
+  useEffect(() => {
+    setIsLoading(true);
+  
+    axios.get('http://localhost:8080/get_filieres.php')
+      .then((response) => {
+        console.log('Données reçues:', response.data);  // Ajoute cette ligne pour voir les données
+        setFilieres(response.data);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.error('Erreur lors du fetch des filières :', err);
+        setIsLoading(false);
+      });
+  }, []);
+  
 
-    useEffect(() => {
-        setIsLoading(true)
+  const filteredFilieres = filieres.filter((filiere) =>
+    filiere.nom_filiere.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-        axios.get("http://localhost:8080/connection/isConnect.php")
-            .then(response => {
-                let data = response.data
-                setUser(data)
-                setIsLoading(false)
-            })
-    },[])
+  const goToConnection = () => {
+    router.push('/connection');
+  };
 
-    function shownHomepage(){
-        return module.code_module === "";
-    }
+  return (
+    <main className='w-screen h-screen'>
+      <header className='bg-usmb-dark-blue h-[12%] w-full grid grid-cols-4'>
+        <div className='col-span-1 h-full flex justify-center content-center flex-wrap'>
+          <div className='text-white text-2xl font-bold'>
+            <a href='https://www.univ-smb.fr/' className='cursor-pointer'>USMB</a>
+          </div>
+        </div>
 
-    return (
-        <>
-            {!user.loggedin ?
-                <main className={"h-screen flex items-center justify-center"}>
-                    {isLoading ? <Loader /> : <Connection />}
+        <div className='col-span-2 h-full flex content-center flex-wrap'>
+          <input
+            type='text'
+            id='research'
+            placeholder='Rechercher une filière'
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className='w-full rounded-full h-1/2 shadow-inner px-4'
+          />
+        </div>
 
-                </main>
-                :
-                <main className={"h-screen grid grid-cols-4"}>
-                    {/*Si pas d'infos utilisateurs ou alors loading on affiche le loader*/}
-                    {isLoading ? <Loader /> :
-                        <>
-                            <aside className={"h-screen col-span-1 p-2.5 bg-usmb-dark-blue text-white"}>
-                                <LinkHomepage />
-                                <ListModules homepageShown= {shownHomepage()} />
-                                <Disconnection />
-                            </aside>
-                            {/*Si aucun module affiché alors homepage s'affiche sinon le module*/}
-                            {shownHomepage() ?
-                                <div className={"col-span-3 overflow-y-auto"}>
-                                    <Homepage />
-                                </div>
-                                :
-                                <div className={"col-span-3 overflow-y-auto"}>
-                                    {Object.keys(module).length > 0 && <InfosModule />}
-                                </div>
-                            }
-                        </>
-                    }
-              </main>
-          }
-      </>
-    );
+        <div className='col-span-1 h-full flex justify-center content-center flex-wrap'>
+          <svg
+            onClick={goToConnection}
+            className='cursor-pointer h-6 w-6'
+            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+          >
+            <path fill="#ffffff" d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"/>
+          </svg>
+        </div>
+      </header>
+
+      <div className='h-[88%] pt-[2%] pb-[2%] grid grid-cols-3'>
+        <div className='col-span-2 border-r-[1px] border-[#C6C6C6] px-4'>
+          <div className='text-black opacity-50 italic'>Résultats</div>
+          <div className='flex flex-row flex-wrap gap-6 justify-center h-full overflow-y-auto'>
+
+              {isLoading ? (
+                <div className='text-gray-400 italic'>Chargement...</div>
+              ) : filteredFilieres.length === 0 ? (
+                <div className='text-gray-400 italic'>Aucune filière trouvée</div>
+              ) : (
+                filteredFilieres.map((filiere, index) => (
+                <div
+                  key={filiere.id ?? filiere.nom_filiere ?? index}
+                  className="group cursor-pointer flex flex-col justify-center items-center
+                  shadow-md shadow-black/30 rounded-lg p-2 my-2 h-1/6 w-1/4
+                  border border-[#C6C6C6] hover:bg-usmb-dark-blue hover:border-usmb-dark-blue"
+                >
+                  <div className="text-black text-2xl font-bold group-hover:text-white">
+                    {filiere.nom_filiere}
+                  </div>
+                  <div className="text-gray-400 text-xs ">
+                    {filiere.nom_long}
+                  </div>
+                </div>
+                ))
+              )}
+          </div>
+        </div>
+
+        <div className='col-span-1 px-4'>
+          <div className='text-black opacity-50 italic'>Dernières pages consultées</div>
+        </div>
+      </div>
+    </main>
+  );
 }
+
