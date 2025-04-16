@@ -1,7 +1,12 @@
 "use client"
+
 import React, {useState} from "react";
-import Link from "next/link";
+import Image from "next/image";
 import {signIn} from "next-auth/react"
+import Link from "next/link";
+
+import leftArrow from "@/public/left-arrow.png"
+
 
 
 
@@ -20,7 +25,9 @@ export default function Page() {
 
     return (
         <div className={"w-screen h-screen flex justify-center items-center"}>
-            <form className={"flex flex-col items-center justify-center pb-3 shadow-lg"} action={credentialsAction}>
+
+            <form className={"flex flex-col items-center justify-center pt-4 p-3 shadow-lg"} action={credentialsAction}>
+                <Link href={"/"} className={"self-start"}><Image src={leftArrow} alt="left arrow" width={24} height={24} /></Link>
                 <div className={"flex flex-col px-9 pb-9 pt-5"}>
                     <div className={"mb-2"}>
                         <label htmlFor="credentials-username">Login :</label>

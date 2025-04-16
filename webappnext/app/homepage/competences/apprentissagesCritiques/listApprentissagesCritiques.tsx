@@ -95,7 +95,7 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
                             <div id={apc.id_apprentissage_critique.toString()}
                                  className={`p-2 shadow-md font-medium
                                  ${(apc.id_apprentissage_critique in Object.keys(apcAsModule)) ? 
-                                     'bg-white cursor-pointer' : 'bg-gray-100'
+                                     'bg-white cursor-pointer' : 'bg-gray-100 cursor-not-allowed'
                                  }
                                  ${idApcClicked === apc.id_apprentissage_critique ? 'rounded-t-lg' : 'rounded-lg'}
                                  `}
