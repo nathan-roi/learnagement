@@ -2,8 +2,11 @@ import axios from "axios";
 
 import { useEffect, useState} from "react";
 import {isEmpty} from "@jsonjoy.com/util/lib/isEmpty";
+import plus from "@/public/plus.png"
+import moins from "@/public/signe-moins-dune-ligne-en-position-horizontale.png"
 
 import ModulesOfApprentissageCritique from "./modulesOfApprentissageCritique"
+import Image from "next/image";
 
 
 export default function listApprentissagesCritiques({idCompetence}:{idCompetence: number}) {
@@ -93,9 +96,9 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
                     apprentissagesCritiques[levelClicked].map((apc: apprentissageCritique) => (
                         <div key={apc.id_apprentissage_critique}>
                             <div id={apc.id_apprentissage_critique.toString()}
-                                 className={`p-2 shadow-md font-medium
+                                 className={`flex justify-center items-center p-2 shadow-md font-medium bg-white
                                  ${(apc.id_apprentissage_critique in Object.keys(apcAsModule)) ? 
-                                     'bg-white cursor-pointer' : 'bg-gray-100 cursor-not-allowed'
+                                     'cursor-pointer' : 'cursor-not-allowed'
                                  }
                                  ${idApcClicked === apc.id_apprentissage_critique ? 'rounded-t-lg' : 'rounded-lg'}
                                  `}
@@ -107,6 +110,15 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
                                  onClick={showModules}
                             >
                                 {apc.libelle_apprentissage}
+                                {(apc.id_apprentissage_critique in Object.keys(apcAsModule)) && (
+                                    <>
+                                        {idApcClicked >= 0 && idApcClicked === apc.id_apprentissage_critique ? (
+                                            <Image src={moins} alt={"plus"} width={24} className={"w-6 h-6"} />
+                                        ) : (
+                                            <Image src={plus} alt={"plus"} width={24} className={"w-6 h-6"} />
+                                        )}
+                                    </>
+                                )}
 
                             </div>
                             {

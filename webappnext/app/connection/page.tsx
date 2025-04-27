@@ -7,11 +7,6 @@ import Link from "next/link";
 
 import leftArrow from "@/public/left-arrow.png"
 
-
-
-
-
-
 export default function Page() {
     const [login, setLogin] = useState('')
     const [mdp, setMdp] = useState('')
