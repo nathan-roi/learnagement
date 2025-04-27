@@ -11,7 +11,13 @@ export default function modulesOfApprentissageCritique({listModules}:{listModule
                         return (
                             <Link key={module.id_module}
                                   href={{pathname: '/modules', query: {id_module: module.id_module}}}>
-                                <li className="cursor-pointer">{module.code_module} - {module.nom}</li>
+
+                                <li className="cursor-pointer">
+                                    <span className={"underline text-usmb-blue hover:text-usmb-dark-blue"}>
+                                        {module.code_module} - {module.nom}
+                                    </span>
+                                </li>
+
                             </Link>
                         );
                     })}

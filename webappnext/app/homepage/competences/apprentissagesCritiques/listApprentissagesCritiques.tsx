@@ -112,7 +112,7 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
                                 {apc.libelle_apprentissage}
                                 {(apc.id_apprentissage_critique in Object.keys(apcAsModule)) && (
                                     <>
-                                        {idApcClicked >= 0 && idApcClicked === apc.id_apprentissage_critique ? (
+                                        {idApcClicked > -1 && idApcClicked === apc.id_apprentissage_critique ? (
                                             <Image src={moins} alt={"plus"} width={24} className={"w-6 h-6"} />
                                         ) : (
                                             <Image src={plus} alt={"plus"} width={24} className={"w-6 h-6"} />
@@ -122,7 +122,7 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
 
                             </div>
                             {
-                                idApcClicked >= 0 && idApcClicked === apc.id_apprentissage_critique && (
+                                idApcClicked > -1 && idApcClicked === apc.id_apprentissage_critique && (
                                     <ModulesOfApprentissageCritique listModules={apcAsModule[idApcClicked]} />
                                 )
                             }
