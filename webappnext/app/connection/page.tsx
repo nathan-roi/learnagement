@@ -1,17 +1,27 @@
 "use client"
 
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Image from "next/image";
-import {signIn} from "next-auth/react"
+import {signIn, useSession} from "next-auth/react"
 import Link from "next/link";
 
 import leftArrow from "@/public/left-arrow.png"
+import {useRouter} from "next/navigation"
 
 export default function Page() {
+    const {data: session, status} = useSession()
+    const router = useRouter();
+
     const [login, setLogin] = useState('')
     const [mdp, setMdp] = useState('')
     const [loggError, setLoggingError] = useState(false)
     const [msgLoggErr, setMsgLoggErr] = useState('')
+
+    useEffect(() => {
+        if (status == 'authenticated'){
+            router.push('/homepage')
+        }
+    }, [session, router]);
 
     const credentialsAction = (formData: FormData) => {
         let credentials = Object.fromEntries(formData.entries())
@@ -20,7 +30,6 @@ export default function Page() {
 
     return (
         <div className={"w-screen h-screen flex justify-center items-center"}>
-
             <form className={"flex flex-col items-center justify-center pt-4 p-3 shadow-lg"} action={credentialsAction}>
                 <Link href={"/"} className={"self-start"}><Image src={leftArrow} alt="left arrow" width={24} height={24} /></Link>
                 <div className={"flex flex-col px-9 pb-9 pt-5"}>
@@ -43,5 +52,6 @@ export default function Page() {
                 <Link href={'/activateAccount'} className={"text-xs underline text-usmb-cyan cursor-pointer"}>Activer mon compte</Link>
             </form>
         </div>
+
     )
 }
