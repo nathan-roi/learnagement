@@ -5,7 +5,7 @@ import Link from "next/link";
 import bcrypt from 'bcryptjs';
 
 import AlertBox from "../indicators/alertBox";
-import Loader from "@/app/indicators/loader";
+import Loader from "@/app/indicators/loading";
 
 export default function ActivateAccount() {
     const [pwd, setPwd] = useState('')

@@ -5,7 +5,8 @@ import {useSession} from "next-auth/react";
 import {useListModulesStore} from "@/app/store/useListModulesStore";
 import SideMenu from "@/app/homepage/sideMenu"
 import Homepage from "@/app/homepage/homepage";
-import {useEffect} from "react";
+import {Suspense, useEffect} from "react";
+import Loader from "@/app/indicators/loading";
 
 export default function Home() {
     const {data: session} = useSession()
@@ -26,7 +27,7 @@ export default function Home() {
     return (
         <>
             <main className={"h-screen grid grid-cols-4"}>
-               <SideMenu />
+                <SideMenu />
                 <div className={"col-span-3 overflow-y-auto"}>
                     <Homepage />
                 </div>

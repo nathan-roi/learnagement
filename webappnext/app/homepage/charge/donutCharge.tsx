@@ -131,7 +131,6 @@
 //     );
 // }
 
-
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, Chart, Plugin } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import { useEffect } from "react";
