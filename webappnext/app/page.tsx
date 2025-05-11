@@ -1,3 +1,8 @@
+// Composant principal de l'application
+// Affiche la page d'accueil avec la liste des filières
+// Props: Aucune
+// Composants importés:
+
 'use client';
 
 import axios from 'axios';
@@ -12,6 +17,12 @@ type Filiere = {
   id_responsable: number;
 };
 
+/**
+ * Composant principal de l'application
+ * Affiche la page d'accueil avec la barre de recherche et la liste des filières
+ * 
+ * @returns {JSX.Element} Composant React
+ */
 export default function Home() {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');

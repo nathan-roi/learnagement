@@ -8,13 +8,15 @@ import AlertBox from "../indicators/alertBox";
 import Loader from "@/app/indicators/loading";
 
 export default function ActivateAccount() {
+    /* Page permettant d'activer son compte */
+
     const [pwd, setPwd] = useState('')
     const [hash, setHash] = useState('')
     const [resCopy, setResCopy] = useState(false)
     const [isVisible, setIsVisible] = useState(false)
     const [wantCopy, setWantCopy] = useState(false) // Permet de savoir si le bouton est cliqué
 
-    useEffect(() => {
+    useEffect(() => { /* Gère l'affichage du message 'copié' */
 
         setIsVisible(true)
         const timer = setTimeout(() => {

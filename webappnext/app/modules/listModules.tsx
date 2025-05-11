@@ -1,3 +1,11 @@
+// Composant de la liste des modules
+// Affiche la liste des modules avec leur statut (avec ou sans APC)
+// Props: Aucune
+// Composants importés:
+// - useListModulesStore: Store pour la gestion des modules
+// - useSession: Hook d'authentification
+// - useSearchParams: Hook pour accéder aux paramètres de recherche
+
 "use client"
 
 import {useEffect, useState} from "react";
@@ -8,6 +16,12 @@ import {useSearchParams} from "next/navigation";
 import Link from "next/link";
 import axios from "axios";
 
+/**
+ * Composant de la liste des modules
+ * Affiche la liste des modules avec leur statut (avec ou sans APC)
+ * 
+ * @returns {JSX.Element} Composant React
+ */
 export default function ListModule(){
     const {listModules} = useListModulesStore()
     const [moduleClicked, setModuleClicked] = useState(-1)

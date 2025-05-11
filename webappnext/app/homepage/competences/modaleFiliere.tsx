@@ -1,3 +1,14 @@
+// Composant de la modale des filières
+// Affiche les détails d'une filière sélectionnée
+// Props:
+// - nomFiliere: Tableau contenant le nom de la filière
+// - setNomFiliere: Fonction pour mettre à jour le nom de la filière
+// Composants importés:
+// - ListCompetences: Liste des compétences
+// - ComposantesEssentielles: Liste des composantes essentielles
+// - ListApprentissagesCritiques: Liste des apprentissages critiques
+// - cross: Image de la croix pour fermer la modale
+
 import {useEffect, useState} from "react";
 import Image from "next/image";
 import axios from "axios";
@@ -8,6 +19,14 @@ import ListApprentissagesCritiques from "@/app/homepage/competences/apprentissag
 
 import cross from "@/public/white-cross.png"
 
+/**
+ * Composant de la modale des filières
+ * Affiche les détails d'une filière sélectionnée
+ * 
+ * @param {string[]} nomFiliere - Nom de la filière sélectionnée
+ * @param {Function} setNomFiliere - Fonction pour mettre à jour le nom de la filière
+ * @returns {JSX.Element} Composant React
+ */
 export default function modaleFiliere({nomFiliere, setNomFiliere}: { nomFiliere: string[], setNomFiliere: any }) {
     const [infosCompetences, setInfosCompetences] = useState<infosCompetence[]>([])
     const [idCompetenceClicked, setIdCompetenceClicked] = useState<number>(-1)

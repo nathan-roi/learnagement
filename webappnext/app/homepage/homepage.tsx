@@ -1,3 +1,11 @@
+// Composant de la homepage
+// Affiche la page principale avec la charge de cours et les compétences
+// Props: Aucune
+// Composants importés:
+// - ListCardsCharge: Composant pour afficher la charge de cours
+// - Filieres: Composant pour afficher les filières
+// - Loader: Composant d'indicateur de chargement
+
 import {useSession} from "next-auth/react";
 import {Suspense, useEffect} from "react";
 import {useRouter} from "next/navigation";
@@ -6,8 +14,12 @@ import ListCardsCharge from "@/app/homepage/charge/listCardsCharge";
 import Filieres from "@/app/homepage/competences/filieres"
 import Loader from "@/app/indicators/loading";
 
-
-
+/**
+ * Composant de la homepage
+ * Affiche la page principale avec la charge de cours et les compétences
+ * 
+ * @returns {JSX.Element} Composant React
+ */
 export default function Homepage(){
     const {data: session, status} = useSession()
     const router = useRouter()

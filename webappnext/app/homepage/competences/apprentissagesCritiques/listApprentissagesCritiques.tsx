@@ -1,3 +1,11 @@
+// Composant de la liste des apprentissages critiques
+// Affiche la liste des apprentissages critiques d'une compétence
+// Props:
+// - idCompetence: Identifiant de la compétence
+// Composants importés:
+// - plus, moins: Images pour les boutons d'expansion
+// - ModulesOfApprentissageCritique: Liste des modules associés aux apprentissages critiques
+
 import axios from "axios";
 
 import { useEffect, useState} from "react";
@@ -9,6 +17,13 @@ import ModulesOfApprentissageCritique from "./modulesOfApprentissageCritique"
 import Image from "next/image";
 
 
+/**
+ * Composant de la liste des apprentissages critiques
+ * Affiche la liste des apprentissages critiques d'une compétence
+ * 
+ * @param {number} idCompetence - Identifiant de la compétence
+ * @returns {JSX.Element} Composant React
+ */
 export default function listApprentissagesCritiques({idCompetence}:{idCompetence: number}) {
     const [apprentissagesCritiques, setApprentissagesCritiques] = useState<apprentissagesCritiquesStruct>({})
     const [apcAsModule, setApcAsModule] = useState<ModulesOfAPC>({})

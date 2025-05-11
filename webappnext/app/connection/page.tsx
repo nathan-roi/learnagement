@@ -1,3 +1,7 @@
+// Composant de connexion
+// Gère l'authentification des utilisateurs
+// Props: Aucune
+
 "use client"
 
 import React, {useEffect, useState} from "react";
@@ -8,6 +12,12 @@ import Link from "next/link";
 import leftArrow from "@/public/left-arrow.png"
 import {useRouter} from "next/navigation"
 
+/**
+ * Composant de connexion
+ * Gère la page de connexion avec formulaire et gestion des erreurs
+ * 
+ * @returns {JSX.Element} Composant React
+ */
 export default function Page() {
     const {data: session, status} = useSession()
     const router = useRouter();

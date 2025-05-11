@@ -1,5 +1,18 @@
+// Composant des modules d'apprentissage critique
+// Affiche la liste des modules associés à un apprentissage critique
+// Props:
+// - listModules: Tableau des modules
+// Composants importés:
+
 import Link from "next/link";
 
+/**
+ * Composant des modules d'apprentissage critique
+ * Affiche la liste des modules associés à un apprentissage critique
+ * 
+ * @param {ModuleOfApc[]} listModules - Tableau des modules
+ * @returns {JSX.Element} Composant React
+ */
 export default function modulesOfApprentissageCritique({listModules}:{listModules:ModuleOfApc[]}){
 
     return(

@@ -43,7 +43,7 @@ export default function ListCardsCharge(){
         }else{
             return(
                 <div className={"w-full flex flex-grow justify-evenly"}>
-                    {charges.Charge == chargeTotCmTdTp ?
+                    {charges.Charge == chargeTotCmTdTp ? 
                         <CardCharge label={'TOTAL'} dataDonut={[charges.CM, charges.TD, charges.TP]}/>
                         :
                         <CardCharge label={'TOTAL'} dataDonut={[charges.CM, charges.TD, charges.TP, charges.Charge - chargeTotCmTdTp]}/>

@@ -1,3 +1,11 @@
+// Composant des filières
+// Affiche la liste des filières et gère l'ouverture de la modale
+// Props: Aucune
+// Composants importés:
+// - ModaleFiliere: Composant de la modale
+// - polytechLogo, usmbLogo: Images des logos
+// - Loader: Composant d'indicateur de chargement
+
 import axios from "axios";
 import {useEffect, useState} from "react";
 
@@ -7,6 +15,12 @@ import usmbLogo from "@/app/images/Logo_USMB_web_grand_RVB.png";
 
 import Loader from "@/app/indicators/loading";
 
+/**
+ * Composant des filières
+ * Affiche la liste des filières et gère l'ouverture de la modale
+ * 
+ * @returns {JSX.Element} Composant React
+ */
 export default function Filieres(){
     const [nomFilieres, setNomFilieres] = useState<string[]>([])
     const [nomFiliereClicked, setNomFiliereClicked] = useState([])

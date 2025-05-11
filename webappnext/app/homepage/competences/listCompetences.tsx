@@ -1,5 +1,20 @@
-import {useEffect, useState} from "react";
+// Composant de la liste des compétences
+// Affiche la liste des compétences d'une filière
+// Props:
+// - infosCompetences: Tableau des informations des compétences
+// - setIdCompetenceClicked: Fonction pour mettre à jour la compétence sélectionnée
+// Composants importés:
 
+import React, {useEffect, useState} from "react";
+
+/**
+ * Composant de la liste des compétences
+ * Affiche la liste des compétences d'une filière
+ * 
+ * @param {infosCompetence[]} infosCompetences - Tableau des informations des compétences
+ * @param {Function} setIdCompetenceClicked - Fonction pour mettre à jour la compétence sélectionnée
+ * @returns {JSX.Element} Composant React
+ */
 export default function listCompetences({infosCompetences, setIdCompetenceClicked}:{infosCompetences: infosCompetence[], setIdCompetenceClicked:any}){
     const [competenceClicked, setCompetenceCLicked] = useState(-1)
 

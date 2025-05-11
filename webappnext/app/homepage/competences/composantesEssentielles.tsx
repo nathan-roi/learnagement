@@ -1,3 +1,17 @@
+// Composant des composantes essentielles
+// Affiche la liste des composantes essentielles d'une compétence
+// Props:
+// - composanteEssentielle: Tableau des composantes essentielles
+// Composants importés:
+// - Aucun
+
+/**
+ * Composant des composantes essentielles
+ * Affiche la liste des composantes essentielles d'une compétence
+ * 
+ * @param {composanteEssentielle[]} composanteEssentielle - Tableau des composantes essentielles
+ * @returns {JSX.Element} Composant React
+ */
 export default function composantesEssentielles({composanteEssentielle}:{composanteEssentielle: composanteEssentielle[]}){
     return (
         <div className={"w-2/4 px-1"}>
