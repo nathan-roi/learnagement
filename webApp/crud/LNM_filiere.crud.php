@@ -23,8 +23,6 @@ function listLNM_filiere($conn) {
 }
 
 
-
-
 function listLNM_filiereByUserId($conn, $user_id) {
     $sql = "SELECT * FROM `LNM_filiere` WHERE `id_responsable`=$user_id;";
     $res = mysqli_query($conn, $sql);
@@ -32,7 +30,7 @@ function listLNM_filiereByUserId($conn, $user_id) {
     return $rs;
 }
 
-function selectLNM_filiereByName($conn, $name) {
+function listLNM_filiereByName($conn, $name) {
     $sql = "SELECT * FROM `LNM_filiere` WHERE `nom_filiere`='$name';";
     $res = mysqli_query($conn, $sql);
     $rs = rs_to_table($res)[0];

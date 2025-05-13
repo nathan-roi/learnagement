@@ -48,7 +48,7 @@ if (isset($_SESSION["userId"])) {
     // Construction du tableau contenant les informations des filières (id_filiere, nom_filiere...)
     for ($i = 0; $i < sizeof($filieres); $i++) {
         $nom_filiere = $filieres[$i];
-        $filiere = selectLNM_filiereByName($conn, $nom_filiere);
+        $filiere = listLNM_filiereByName($conn, $nom_filiere);
 
         $filieres[$i] = $filiere;
     }
