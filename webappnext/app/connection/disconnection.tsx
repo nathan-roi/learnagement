@@ -10,18 +10,11 @@ export default function Disconnection(){
     const resetStore = useListModulesStore.getState().reset
     const router = useRouter()
 
-    async function sendDeconnection() {
-        try {
-            await axios.get("/api/proxy/connection/logout", { withCredentials: true });
-            resetStore()
-            await signOut({ redirect: false })
-            router.push('/')
-        } catch (error) {
-            console.error("Erreur lors de la déconnexion :", error);
-        }
+    function sendDeconnection() {
+        axios.get("/api/proxy/connection/logout", { withCredentials: true })
+        resetStore()
+        signOut()
     }
-
-
 
     return(
         <LogoutIcon width={35} height={35} onClick={sendDeconnection} className={"clickable-animation cursor-pointer"}/>
