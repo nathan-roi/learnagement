@@ -9,7 +9,7 @@ function selectModulesOfAllAPC($conn, $id_user)
                 `MAQUETTE_module`.`nom`
             FROM `APC_apprentissage_critique_as_module`
             JOIN `MAQUETTE_module` ON `APC_apprentissage_critique_as_module`.`id_module` = `MAQUETTE_module`.`id_module`
-            WHERE `MAQUETTE_module`.`id_responsable` = $id_user;";
+            WHERE $id_user IS NULL OR `MAQUETTE_module`.`id_responsable` = $id_user;";
 
     $res = mysqli_query($conn, $sql);
 

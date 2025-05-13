@@ -2,6 +2,8 @@
 // Affiche la page d'accueil avec la liste des filières
 // Props: Aucune
 // Composants importés:
+// - Loader
+// - ModaleFiliere 
 
 'use client';
 
@@ -10,6 +12,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 import Loader from '@/app/indicators/loading';
+import ModaleFiliere from "@/app/homepage/competences/modaleFiliere";
 
 /**
  * Composant principal de l'application
@@ -21,6 +24,7 @@ export default function Home() {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
   const [filieres, setFilieres] = useState<Filiere[]>([]);
+  const [nomFiliereClicked, setNomFiliereClicked] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -45,7 +49,15 @@ export default function Home() {
 
   const goToConnection = () => {
     router.push('/connection');
-  };
+  }
+
+  function filiereClicked(str: string){
+    let filiere:Filiere|undefined = filieres.find((element: Filiere): boolean => str == element.nom_filiere)
+
+    if(filiere != undefined){
+      setNomFiliereClicked([filiere.nom_filiere, filiere.nom_long])
+    }
+  }
 
   return (
     <main className='w-screen h-screen'>
@@ -79,7 +91,7 @@ export default function Home() {
       </header>
 
       <div className='h-[88%] pt-[2%] pb-[2%] grid grid-cols-3'>
-        <div className='col-span-2 border-r-[1px] border-[#C6C6C6] px-4'>
+        <div className='col-span-3 border-r-[1px] border-[#C6C6C6] px-4'>
           <div className='text-black opacity-50 italic'>Résultats</div>
           <div className='flex flex-row flex-wrap gap-6 justify-center h-full overflow-y-auto'>
 
@@ -95,6 +107,10 @@ export default function Home() {
                   text-center
                   shadow-md shadow-black/30 rounded-lg p-2 my-2 h-1/6 w-1/4
                   border border-[#C6C6C6] hover:bg-usmb-dark-blue hover:border-usmb-dark-blue"
+
+                  onClick={(): void => {
+                    filiereClicked(filiere.nom_filiere);
+                  }}
                 >
                   <p className="text-black text-2xl font-bold group-hover:text-white">
                     {filiere.nom_filiere}
@@ -108,10 +124,16 @@ export default function Home() {
           </div>
         </div>
 
-        <div className='col-span-1 px-4'>
-          <div className='text-black opacity-50 italic'>Dernières pages consultées</div>
-        </div>
+        {/*<div className='col-span-1 px-4'>*/}
+        {/*  <div className='text-black opacity-50 italic'>Dernières pages consultées</div>*/}
+        {/*</div>*/}
       </div>
+      {nomFiliereClicked.length > 0 && (
+          <ModaleFiliere
+              nomFiliere={nomFiliereClicked}
+              setNomFiliere={setNomFiliereClicked}
+          />
+      )}
     </main>
   );
 }

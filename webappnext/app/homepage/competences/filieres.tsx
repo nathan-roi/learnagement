@@ -57,8 +57,8 @@ export default function Filieres(){
                         nomFilieres.map((nom: string, index: number) => (
                             <div
                                 key={index}
-                                onClick={(event: any): void => {
-                                    filiereClicked(event.target.innerText);
+                                onClick={(): void => {
+                                    filiereClicked(nom[0]);
                                 }}
                                 className={
                                     "w-60 h-16 flex justify-start items-center rounded-lg shadow-default cursor-pointer gap-2 px-2"

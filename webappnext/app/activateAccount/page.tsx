@@ -77,7 +77,6 @@ export default function ActivateAccount() {
                     <Link href={"/connection"} className={"button-second"}>Retour</Link>
                 </div>
             </div>
-            {/*<p>Données reçues : {router}</p>*/}
         </main>
     );
 }

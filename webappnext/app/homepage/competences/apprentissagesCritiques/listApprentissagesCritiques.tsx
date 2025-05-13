@@ -61,6 +61,7 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
         axios.post("/api/proxy/select/selectModulesOfAllAPC", form_data, {withCredentials: true})
             .then(response => {
                 setApcAsModule(response.data)
+                console.log(response.data)
             })
     }, []);
 
@@ -111,7 +112,7 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
                     apprentissagesCritiques[levelClicked].map((apc: apprentissageCritique) => (
                         <div key={apc.id_apprentissage_critique}>
                             <div id={apc.id_apprentissage_critique.toString()}
-                                 className={`flex justify-center items-center p-2 shadow-md font-medium bg-white
+                                 className={`flex justify-between items-center p-2 shadow-md font-medium bg-white
                                  ${(apc.id_apprentissage_critique in Object.keys(apcAsModule)) ? 
                                      'cursor-pointer' : 'cursor-not-allowed'
                                  }

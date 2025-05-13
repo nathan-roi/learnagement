@@ -11,8 +11,13 @@ include("../crud/APC_apprentissage_critique_as_module.crud.php");
 
 session_start();
 
-if(isset($_SESSION["userId"]) && isset($_POST["indexBy"])){
-    $id_user = $_SESSION["userId"];
+if(isset($_POST["indexBy"])){
+    if (isset($_SESSION["userId"])){
+        $id_user = $_SESSION["userId"];
+    }else{
+        $id_user = 'null';
+    }
+
     $indexBy = $_POST["indexBy"];
 
     $modulesOfAllAPC = selectModulesOfAllAPC($conn, $id_user);
