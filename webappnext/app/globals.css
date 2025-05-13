@@ -35,3 +35,7 @@ input {
 .foreground-full{
     @apply absolute top-0 left-0 w-screen h-screen bg-black bg-opacity-50
 }
+
+.clickable-animation{
+    @apply transition-transform hover:scale-105 active:scale-95
+}

@@ -8,11 +8,11 @@
 // - Loader: Composant d'indicateur de chargement
 
 import Link from "next/link";
-import LinkHomepage from "@/app/homepage/linkHomepage";
 import ListModules from "@/app/modules/listModules";
 import Disconnection from "@/app/connection/disconnection";
-import {Suspense} from "react";
-import Loader from "@/app/indicators/loading";
+
+import HomeIcon from "@/public/homepage.svg";
+import ListFiliereIcon from "@/public/list.svg"
 
 /**
  * Composant du menu latéral
@@ -22,12 +22,15 @@ import Loader from "@/app/indicators/loading";
  */
 export default function sideMenu(){
     return (
-        <aside className={"h-screen col-span-1 p-2.5 bg-usmb-dark-blue text-white"}>
-            <Link href={'/homepage'}><LinkHomepage /></Link>
-            <Suspense fallback={<Loader />}>
-                <ListModules />
-            </Suspense>
-            <Disconnection />
+        <aside className={"col-span-1 h-screen p-2.5 flex flex-col justify-between items-center bg-usmb-dark-blue text-white"}>
+            <ListModules />
+            <div className={"w-full flex justify-center"}>
+                <div className={"w-full flex flex-row justify-between items-center"}>
+                    <Disconnection />
+                    <Link href={'/homepage'}><HomeIcon width={28} height={28} className={"clickable-animation"} /></Link>
+                    <Link href={'/'}><ListFiliereIcon width={38} height={38} className={"clickable-animation"} /></Link>
+                </div>
+            </div>
         </aside>
     )
 }

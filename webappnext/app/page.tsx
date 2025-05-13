@@ -69,7 +69,7 @@ export default function Home() {
         </div>
 
         <div className='col-span-1 h-full flex justify-center content-center flex-wrap'>
-          <Link href={'/connection'}><ProfilIcon className='cursor-pointer' /></Link>
+          <Link href={'/connection'}><ProfilIcon className={'clickable-animation cursor-pointer'} /></Link>
         </div>
       </header>
       {isLoading ? <Loader /> : <ListFilieres filieres={filteredFilieres} />}

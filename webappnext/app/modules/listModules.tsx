@@ -51,10 +51,10 @@ export default function ListModule(){
 
     function renderModule(module: ModuleInfos, hasAPC: boolean) {
         return (
-            <Link  key={module.id_module} href={{pathname : '/modules', query: {id_module: module.id_module}}}>
+            <Link  key={module.id_module} href={{pathname : '/modules', query: {id_module: module.id_module}}} className={"flex justify-center items-center"}>
                 <div
                     id={String(module.id_module)}
-                    className={`w-full h-20 mb-2.5 pl-2.5 rounded-lg cursor-pointer ${
+                    className={`clickable-animation w-[95%] h-20 mb-2.5 pl-2.5 rounded-lg cursor-pointer ${
                         hasAPC ?
                             `hover:bg-usmb-blue ${ moduleClicked === module.id_module ? "bg-usmb-blue" : "bg-usmb-cyan" }`
                         : `border border-red-500 text-gray-300 hover:bg-red-500/80 ${moduleClicked === module.id_module ? "bg-red-500/80" : "bg-red-500/60"   }` 
@@ -69,7 +69,7 @@ export default function ListModule(){
     }
 
     return (
-        <div className={"h-3/4 overflow-y-auto"}>
+        <div className={"h-3/4 flex flex-col overflow-y-auto"}>
             {modulesAvecAPC.length > 0 && modulesSansAPC.length > 0 ? (
                 <>
                     <h4>Modules (avec APC)</h4>
