@@ -9,13 +9,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-type Filiere = {
-  id: number;
-  id_filiere: string;
-  nom_filiere: string;
-  nom_long: string;
-  id_responsable: number;
-};
+import Loader from '@/app/indicators/loading';
 
 /**
  * Composant principal de l'application
@@ -32,7 +26,7 @@ export default function Home() {
   useEffect(() => {
     setIsLoading(true);
   
-    axios.get('/api/proxy/get_filieres')
+    axios.get('/api/proxy/list/listAllFilieres', {withCredentials: true})
       .then((response) => {
         console.log('Données reçues:', response.data);  // Ajoute cette ligne pour voir les données
         setFilieres(response.data);
@@ -90,7 +84,7 @@ export default function Home() {
           <div className='flex flex-row flex-wrap gap-6 justify-center h-full overflow-y-auto'>
 
               {isLoading ? (
-                <div className='text-gray-400 italic'>Chargement...</div>
+                <Loader />
               ) : filteredFilieres.length === 0 ? (
                 <div className='text-gray-400 italic'>Aucune filière trouvée</div>
               ) : (
@@ -98,15 +92,16 @@ export default function Home() {
                 <div
                   key={filiere.id ?? filiere.nom_filiere ?? index}
                   className="group cursor-pointer flex flex-col justify-center items-center
+                  text-center
                   shadow-md shadow-black/30 rounded-lg p-2 my-2 h-1/6 w-1/4
                   border border-[#C6C6C6] hover:bg-usmb-dark-blue hover:border-usmb-dark-blue"
                 >
-                  <div className="text-black text-2xl font-bold group-hover:text-white">
+                  <p className="text-black text-2xl font-bold group-hover:text-white">
                     {filiere.nom_filiere}
-                  </div>
-                  <div className="text-gray-400 text-xs ">
+                  </p>
+                  <p className="text-gray-400 text-xs ">
                     {filiere.nom_long}
-                  </div>
+                  </p>
                 </div>
                 ))
               )}
