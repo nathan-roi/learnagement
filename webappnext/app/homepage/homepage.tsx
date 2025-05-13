@@ -39,7 +39,6 @@ export default function Homepage(){
         axios.get('/api/proxy/list/listUserFilieres', {withCredentials: true})
             .then(response => {
                 if (response.status == 200){
-                    console.log(response.data)
                     setNomFilieres(response.data)
                     setIsLoading(false)
                 }else{

@@ -127,18 +127,9 @@ export default function ListApprentissagesCritiques({idCompetence}:{idCompetence
                                 )
                             }
                         </div>
-
                     ))
                 )}
             </div>
-            {showTooltip && (
-                <div
-                    className="fixed bg-black text-white p-2 rounded-lg text-sm pointer-events-none"
-                    style={{ left: `${tooltipPostion.x}px`, top: `${tooltipPostion.y}px` }}
-                >
-                    Vous n'avez pas de modules pour cet apprentissage critique
-                </div>
-            )}
         </div>
     )
 }

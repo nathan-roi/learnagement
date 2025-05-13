@@ -20,7 +20,7 @@ export default function ComposantesEssentielles({composantesEssentielles}:{compo
                 {composantesEssentielles.length > 0  ? composantesEssentielles.map((composante: composanteEssentielle) => (
                         <li key={composante.id_composante_essentielle}>{composante.libelle_composante_essentielle}</li>
                     )):
-                    <p>Pas d'informations dispo sur les composantes essentielles</p>
+                    <p>Pas d'informations disponibles sur les composantes essentielles</p>
                 }
             </ul>
         </div>

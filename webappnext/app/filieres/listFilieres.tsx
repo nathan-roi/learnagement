@@ -12,8 +12,8 @@ import {useEffect, useState} from "react";
 import ModaleFiliere from "@/app/filieres/modaleFiliere";
 import Loader from "@/app/indicators/loading";
 
-import polytechLogo from "@/app/images/Logo_Reseau_Polytech.svg";
-import usmbLogo from "@/app/images/Logo_USMB_web_grand_RVB.png";
+import polytechLogo from "@/public/logos/Logo_Reseau_Polytech.svg";
+import usmbLogo from "@/public/logos/Logo_USMB_web_grand_RVB.png";
 
 
 

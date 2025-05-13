@@ -33,6 +33,14 @@ export default function ModaleFiliere({nomFiliere, setNomFiliere}: { nomFiliere:
     const [composantesEssentielles, setComposantesEssentielles] = useState<composanteEssentielle[]>([])
 
     useEffect(() => {
+        // Désactivation du scroll de la page en fond de la modale quand la modale s'ouvre.
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = 'auto';
+        };
+    }, []);
+
+    useEffect(() => {
         let form_data = new FormData
         form_data.append("nom_filiere", nomFiliere[0])
         axios.post("/api/proxy/select/selectCompetencesOfFiliere", form_data, {withCredentials: true})
@@ -86,7 +94,7 @@ export default function ModaleFiliere({nomFiliere, setNomFiliere}: { nomFiliere:
                     <ListCompetences infosCompetences={infosCompetences} setIdCompetenceClicked={setIdCompetenceClicked} />
                     <div className={"w-full flex flex-row justify-between"}>
                         <ComposantesEssentielles composantesEssentielles={composantesEssentielles}/>
-                        {idCompetenceClicked >= 0 ? <ListApprentissagesCritiques idCompetence={idCompetenceClicked}/> : <>{idCompetenceClicked}</>}
+                        {idCompetenceClicked >= 0 && <ListApprentissagesCritiques idCompetence={idCompetenceClicked}/>}
                     </div>
                 </div>
             </div>

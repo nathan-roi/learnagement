@@ -21,21 +21,21 @@ body {
 
 .image-campus {
   position: relative;
-  overflow: hidden; /* Assurez-vous d'appliquer un débordement caché pour masquer les images dépassant du conteneur */
+  overflow: hidden; /* Assurez-vous d'appliquer un débordement caché pour masquer les logos dépassant du conteneur */
 }
   
 
-/* Créez une animation pour faire défiler les images */
+/* Créez une animation pour faire défiler les logos */
 @keyframes imageScroll {
   0% {
     transform: translateY(0);
   }
   100% {
-    transform: translateY(-100%); /* Ajustez cette valeur en fonction de la hauteur des images et du défilement souhaité */
+    transform: translateY(-100%); /* Ajustez cette valeur en fonction de la hauteur des logos et du défilement souhaité */
   }
 }
 
-/* Appliquez l'animation aux images */
+/* Appliquez l'animation aux logos */
 .image-campus img {
   width: 100%;
   height: auto;
