@@ -16,14 +16,14 @@ export async function handleRequest(req: NextRequest, method: string) {
     // Récupère le type de content utilisé
     const contentType = req.headers.get("content-type") || "application/x-www-form-urlencoded";
     // Récupère le corps tel quel
-    const body = method === 'POST' ? await req.text() : undefined;
-    console.log(fullPath)
+    const body = method === 'POST' ? await req.text() : undefined; // pas de body pour GET
+
     try {
         const cookie = req.headers.get("cookie") || "";
 
         const response = await axios({
             method: method,
-            url: `http://php/${fullPath}.php`,
+            url: `http://php/${fullPath}.php`, // 'php' correspond au nom docker du container php
             data: body,
             headers: {
                 "Content-Type": contentType,
