@@ -61,7 +61,6 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
         axios.post("/api/proxy/select/selectModulesOfAllAPC", form_data, {withCredentials: true})
             .then(response => {
                 setApcAsModule(response.data)
-                console.log(response.data)
             })
     }, []);
 
@@ -125,13 +124,13 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
 
                                  onClick={showModules}
                             >
-                                {apc.libelle_apprentissage}
+                                <p className={"max-w-[90%]"}>{apc.libelle_apprentissage}</p>
                                 {(apc.id_apprentissage_critique in Object.keys(apcAsModule)) && (
                                     <>
                                         {idApcClicked > -1 && idApcClicked === apc.id_apprentissage_critique ? (
-                                            <Image src={moins} alt={"plus"} width={24} className={"w-6 h-6"} />
+                                            <Image src={moins} alt={"icon moins"} width={24} className={"w-6 h-6"} />
                                         ) : (
-                                            <Image src={plus} alt={"plus"} width={24} className={"w-6 h-6"} />
+                                            <Image src={plus} alt={"icon plus"} width={24} className={"w-6 h-6"} />
                                         )}
                                     </>
                                 )}

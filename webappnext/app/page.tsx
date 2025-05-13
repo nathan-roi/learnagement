@@ -3,7 +3,7 @@
 // Props: Aucune
 // Composants importés:
 // - Loader
-// - ModaleFiliere 
+// - ModaleFiliere
 
 'use client';
 
@@ -32,7 +32,6 @@ export default function Home() {
   
     axios.get('/api/proxy/list/listAllFilieres', {withCredentials: true})
       .then((response) => {
-        console.log('Données reçues:', response.data);  // Ajoute cette ligne pour voir les données
         setFilieres(response.data);
         setIsLoading(false);
       })
@@ -105,8 +104,8 @@ export default function Home() {
                   key={filiere.id ?? filiere.nom_filiere ?? index}
                   className="group cursor-pointer flex flex-col justify-center items-center
                   text-center
-                  shadow-md shadow-black/30 rounded-lg p-2 my-2 h-1/6 w-1/4
-                  border border-[#C6C6C6] hover:bg-usmb-dark-blue hover:border-usmb-dark-blue"
+                  shadow-md shadow-[rgba(193,193,193,0.45)] rounded-lg p-2 my-2 h-1/6 w-1/4
+                  border border-[#e5e7eb] hover:bg-usmb-dark-blue hover:border-usmb-dark-blue"
 
                   onClick={(): void => {
                     filiereClicked(filiere.nom_filiere);

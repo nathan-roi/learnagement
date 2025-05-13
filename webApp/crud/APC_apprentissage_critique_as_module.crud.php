@@ -6,7 +6,8 @@ function selectModulesOfAllAPC($conn, $id_user)
                 `id_apprentissage_critique`,
                 `MAQUETTE_module`.`id_module`,
                 `MAQUETTE_module`.`code_module`,
-                `MAQUETTE_module`.`nom`
+                `MAQUETTE_module`.`nom`,
+                `MAQUETTE_module`.`id_responsable`
             FROM `APC_apprentissage_critique_as_module`
             JOIN `MAQUETTE_module` ON `APC_apprentissage_critique_as_module`.`id_module` = `MAQUETTE_module`.`id_module`
             WHERE $id_user IS NULL OR `MAQUETTE_module`.`id_responsable` = $id_user;";

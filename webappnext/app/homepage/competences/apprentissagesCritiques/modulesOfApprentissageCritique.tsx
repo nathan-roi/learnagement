@@ -5,6 +5,7 @@
 // Composants importés:
 
 import Link from "next/link";
+import {useSession} from "next-auth/react";
 
 /**
  * Composant des modules d'apprentissage critique
@@ -14,6 +15,8 @@ import Link from "next/link";
  * @returns {JSX.Element} Composant React
  */
 export default function modulesOfApprentissageCritique({listModules}:{listModules:ModuleOfApc[]}){
+    const {data: session, status} = useSession()
+    console.log(listModules)
 
     return(
         <div className={`shadow-md rounded-b-lg bg-white`}>
