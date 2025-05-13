@@ -55,9 +55,13 @@ const handler= NextAuth({
         },
 
         async redirect({ url, baseUrl }) {
+
             // Rediriger vers une page spécifique après la connexion
-            return '/homepage'; // Remplacez par la page souhaitée
+            return '/homepage';
         }
+    },
+    pages: {
+        signIn: "/connection", // page de connexion par défaut
     },
     secret: process.env.NEXTAUTH_SECRET
 })
