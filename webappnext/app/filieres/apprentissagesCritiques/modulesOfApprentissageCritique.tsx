@@ -14,7 +14,7 @@ import {useSession} from "next-auth/react";
  * @param {ModuleOfApc[]} listModules - Tableau des modules
  * @returns {JSX.Element} Composant React
  */
-export default function modulesOfApprentissageCritique({listModules}:{listModules:ModuleOfApc[]}){
+export default function ModulesOfApprentissageCritique({listModules}:{listModules:ModuleOfApc[]}){
     const {data: session} = useSession()
 
     return(

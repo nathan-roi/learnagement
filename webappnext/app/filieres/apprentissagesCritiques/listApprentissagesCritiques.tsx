@@ -79,15 +79,6 @@ export default function ListApprentissagesCritiques({idCompetence}:{idCompetence
         }
     }
 
-    function tooltip(id: number){
-        let keys = Object.keys(apcAsModule)
-        if (!(id in keys)){setShowTooltip(true)}
-    }
-
-    function moveTooltip(event: React.MouseEvent){
-        setTooltipPosition({x: event.clientX, y: event.clientY})
-    }
-    console.log(apcAsModule)
     return(
         <div className={"w-2/4 px-1 flex flex-col gap-4"}>
             {/* Affichage des niveaux */}
@@ -115,10 +106,6 @@ export default function ListApprentissagesCritiques({idCompetence}:{idCompetence
                                  }
                                  ${idApcClicked === apc.id_apprentissage_critique ? 'rounded-t-lg' : 'rounded-lg'}
                                  `}
-
-                                 onMouseOver={() => tooltip(apc.id_apprentissage_critique)}
-                                 onMouseLeave={() => setShowTooltip(false)}
-                                 onMouseMove={moveTooltip}
 
                                  onClick={() => {showModules(apc.id_apprentissage_critique)}}
                             >

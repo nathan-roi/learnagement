@@ -15,7 +15,7 @@ import React, {useEffect, useState} from "react";
  * @param {Function} setIdCompetenceClicked - Fonction pour mettre à jour la compétence sélectionnée
  * @returns {JSX.Element} Composant React
  */
-export default function listCompetences({infosCompetences, setIdCompetenceClicked}:{infosCompetences: infosCompetence[], setIdCompetenceClicked:any}){
+export default function ListCompetences({infosCompetences, setIdCompetenceClicked}:{infosCompetences: infosCompetence[], setIdCompetenceClicked:any}){
     const [competenceClicked, setCompetenceCLicked] = useState(-1)
 
     useEffect(() => {

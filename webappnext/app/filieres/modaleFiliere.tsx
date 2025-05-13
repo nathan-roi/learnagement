@@ -27,10 +27,10 @@ import cross from "@/public/white-cross.png"
  * @param {Function} setNomFiliere - Fonction pour mettre à jour le nom de la filière
  * @returns {JSX.Element} Composant React
  */
-export default function modaleFiliere({nomFiliere, setNomFiliere}: { nomFiliere: string[], setNomFiliere: any }) {
+export default function ModaleFiliere({nomFiliere, setNomFiliere}: { nomFiliere: string[], setNomFiliere: any }) {
     const [infosCompetences, setInfosCompetences] = useState<infosCompetence[]>([])
     const [idCompetenceClicked, setIdCompetenceClicked] = useState<number>(-1)
-    const [composanteEssentielle, setComposanteEssentielle] = useState<composanteEssentielle[]>([])
+    const [composantesEssentielles, setComposantesEssentielles] = useState<composanteEssentielle[]>([])
 
     useEffect(() => {
         let form_data = new FormData
@@ -48,10 +48,10 @@ export default function modaleFiliere({nomFiliere, setNomFiliere}: { nomFiliere:
             form_data.append("idCompetence", idCompetenceClicked.toString())
             axios.post("/api/proxy/select/selectComposanteEssentielle", form_data, {withCredentials: true})
                 .then(response => {
-                    setComposanteEssentielle(response.data)
+                    setComposantesEssentielles(response.data)
                 })
         }else{
-            setComposanteEssentielle([]);
+            setComposantesEssentielles([]);
         }
 
     }, [idCompetenceClicked]);
@@ -85,7 +85,7 @@ export default function modaleFiliere({nomFiliere, setNomFiliere}: { nomFiliere:
                     <h1 className={"mt-0 mb-8"}>{nomFiliere[1] != null ? <>{nomFiliere[0]} - {nomFiliere[1]}</>  : nomFiliere[0]}</h1>
                     <ListCompetences infosCompetences={infosCompetences} setIdCompetenceClicked={setIdCompetenceClicked} />
                     <div className={"w-full flex flex-row justify-between"}>
-                        <ComposantesEssentielles composanteEssentielle={composanteEssentielle}/>
+                        <ComposantesEssentielles composantesEssentielles={composantesEssentielles}/>
                         {idCompetenceClicked >= 0 ? <ListApprentissagesCritiques idCompetence={idCompetenceClicked}/> : <>{idCompetenceClicked}</>}
                     </div>
                 </div>
