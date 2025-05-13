@@ -3,7 +3,7 @@
 // Props: Aucune
 // Composants importés:
 // - ListCardsCharge: Composant pour afficher la charge de cours
-// - Filieres: Composant pour afficher les filières
+// - ListFilieres: Composant pour afficher les filières
 // - Loader: Composant d'indicateur de chargement
 
 import {useSession} from "next-auth/react";
@@ -11,8 +11,7 @@ import {Suspense, useEffect} from "react";
 import {useRouter} from "next/navigation";
 
 import ListCardsCharge from "@/app/homepage/charge/listCardsCharge";
-import Filieres from "@/app/homepage/competences/filieres"
-import Loader from "@/app/indicators/loading";
+import ListFilieres from "@/app/filieres/listFilieres"
 
 /**
  * Composant de la homepage
@@ -40,7 +39,7 @@ export default function Homepage(){
                 </div>
                 <div className={"w-full self-start"}>
                     <h3>Compétences par filières</h3>
-                    <Filieres />
+                    <ListFilieres />
                 </div>
             </div>
         </>

@@ -13,9 +13,9 @@ import {useEffect, useState} from "react";
 import Image from "next/image";
 import axios from "axios";
 
-import ListCompetences from "./listCompetences"
-import ComposantesEssentielles from "./composantesEssentielles"
-import ListApprentissagesCritiques from "@/app/homepage/competences/apprentissagesCritiques/listApprentissagesCritiques"
+import ListCompetences from "@/app/filieres/listCompetences"
+import ComposantesEssentielles from "@/app/filieres/composantesEssentielles"
+import ListApprentissagesCritiques from "@/app/filieres/apprentissagesCritiques/listApprentissagesCritiques"
 
 import cross from "@/public/white-cross.png"
 
@@ -86,7 +86,7 @@ export default function modaleFiliere({nomFiliere, setNomFiliere}: { nomFiliere:
                     <ListCompetences infosCompetences={infosCompetences} setIdCompetenceClicked={setIdCompetenceClicked} />
                     <div className={"w-full flex flex-row justify-between"}>
                         <ComposantesEssentielles composanteEssentielle={composanteEssentielle}/>
-                        {idCompetenceClicked >= 0 && <ListApprentissagesCritiques idCompetence={idCompetenceClicked}/>}
+                        {idCompetenceClicked >= 0 ? <ListApprentissagesCritiques idCompetence={idCompetenceClicked}/> : <>{idCompetenceClicked}</>}
                     </div>
                 </div>
             </div>

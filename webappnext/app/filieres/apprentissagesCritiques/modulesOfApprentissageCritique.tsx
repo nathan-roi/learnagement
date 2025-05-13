@@ -15,7 +15,7 @@ import {useSession} from "next-auth/react";
  * @returns {JSX.Element} Composant React
  */
 export default function modulesOfApprentissageCritique({listModules}:{listModules:ModuleOfApc[]}){
-    const {data: session, status} = useSession()
+    const {data: session} = useSession()
 
     return(
         <div className={`shadow-md rounded-b-lg bg-white`}>

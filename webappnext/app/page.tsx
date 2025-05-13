@@ -12,7 +12,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 import Loader from '@/app/indicators/loading';
-import ModaleFiliere from "@/app/homepage/competences/modaleFiliere";
+import ModaleFiliere from "@/app/filieres/modaleFiliere";
 
 /**
  * Composant principal de l'application

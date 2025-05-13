@@ -9,11 +9,13 @@
 import axios from "axios";
 import {useEffect, useState} from "react";
 
-import ModaleFiliere from "@/app/homepage/competences/modaleFiliere";
+import ModaleFiliere from "@/app/filieres/modaleFiliere";
+import Loader from "@/app/indicators/loading";
+
 import polytechLogo from "@/app/images/Logo_Reseau_Polytech.svg";
 import usmbLogo from "@/app/images/Logo_USMB_web_grand_RVB.png";
 
-import Loader from "@/app/indicators/loading";
+
 
 /**
  * Composant des filières
@@ -21,7 +23,7 @@ import Loader from "@/app/indicators/loading";
  * 
  * @returns {JSX.Element} Composant React
  */
-export default function Filieres(){
+export default function ListFilieres(){
     const [nomFilieres, setNomFilieres] = useState<string[]>([])
     const [nomFiliereClicked, setNomFiliereClicked] = useState([])
     const [isLoading, setIsLoading] = useState(true)

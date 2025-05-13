@@ -13,7 +13,7 @@ import {isEmpty} from "@jsonjoy.com/util/lib/isEmpty";
 import plus from "@/public/plus.png"
 import moins from "@/public/signe-moins-dune-ligne-en-position-horizontale.png"
 
-import ModulesOfApprentissageCritique from "./modulesOfApprentissageCritique"
+import ModulesOfApprentissageCritique from "@/app/filieres/apprentissagesCritiques/modulesOfApprentissageCritique"
 import Image from "next/image";
 
 
@@ -24,7 +24,7 @@ import Image from "next/image";
  * @param {number} idCompetence - Identifiant de la compétence
  * @returns {JSX.Element} Composant React
  */
-export default function listApprentissagesCritiques({idCompetence}:{idCompetence: number}) {
+export default function ListApprentissagesCritiques({idCompetence}:{idCompetence: number}) {
     const [apprentissagesCritiques, setApprentissagesCritiques] = useState<apprentissagesCritiquesStruct>({})
     const [apcAsModule, setApcAsModule] = useState<ModulesOfAPC>({})
 
@@ -58,7 +58,7 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
     useEffect(() => {
         let form_data = new FormData
         form_data.append("indexBy", "id_apprentissage_critique")
-        axios.get("/api/proxy/select/selectModulesOfAllAPC", {withCredentials: true})
+        axios.post("/api/proxy/select/selectModulesOfAllAPC", form_data, {withCredentials: true})
             .then(response => {
                 setApcAsModule(response.data)
             })
@@ -87,7 +87,7 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
     function moveTooltip(event: React.MouseEvent){
         setTooltipPosition({x: event.clientX, y: event.clientY})
     }
-
+    console.log(apcAsModule)
     return(
         <div className={"w-2/4 px-1 flex flex-col gap-4"}>
             {/* Affichage des niveaux */}
