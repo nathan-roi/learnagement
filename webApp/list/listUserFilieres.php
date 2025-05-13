@@ -18,7 +18,8 @@ if (isset($_SESSION["userId"])) {
     $userId = $_SESSION["userId"];
     $filieres = [];
 
-    $filieresUserResponsable = selectLNM_filiereByUserId($conn, $userId);
+    // Toutes les filières dont l'utilisateur connecté est responsable
+    $filieresUserResponsable = listLNM_filiereByUserId($conn, $userId);
     foreach ($filieresUserResponsable as $filiereUser) {
         $filieres[] = $filiereUser["nom_filiere"];
     }
@@ -30,8 +31,8 @@ if (isset($_SESSION["userId"])) {
     $result = mysqli_query($conn, $request);
     $result = rs_to_table($result);
 
+    // On récupère le nom des filières où l'utilisateur connecté intervient
     foreach ($result as $row) {
-
         $name_filieres = explode(", ", $row["filieres"]);
         if (sizeof($name_filieres) > 1) {
             foreach ($name_filieres as $name_filiere) {
@@ -44,15 +45,14 @@ if (isset($_SESSION["userId"])) {
 
     $filieres = array_values(array_unique($filieres)); //array_unique supprime tout les doublons mais garde les index d'origine de ceux-ci, array_values reindex le tableau de manière continue
 
-
+    // Construction du tableau contenant les informations des filières (id_filiere, nom_filiere...)
     for ($i = 0; $i < sizeof($filieres); $i++) {
         $nom_filiere = $filieres[$i];
-        $nom_long = selectLNM_filiereByName($conn, $nom_filiere)["nom_long"];
+        $filiere = selectLNM_filiereByName($conn, $nom_filiere);
 
-        $filieres[$i] = [$nom_filiere, $nom_long];
-
-
+        $filieres[$i] = $filiere;
     }
+
     sort($filieres); # ordre alphabétique
     echo json_encode($filieres, JSON_NUMERIC_CHECK);
 }

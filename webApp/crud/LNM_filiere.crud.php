@@ -25,7 +25,7 @@ function listLNM_filiere($conn) {
 
 
 
-function selectLNM_filiereByUserId($conn, $user_id) {
+function listLNM_filiereByUserId($conn, $user_id) {
     $sql = "SELECT * FROM `LNM_filiere` WHERE `id_responsable`=$user_id;";
     $res = mysqli_query($conn, $sql);
     $rs = rs_to_table($res);

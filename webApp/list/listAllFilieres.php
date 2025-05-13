@@ -10,8 +10,7 @@ include("../db_connection/connectDB.php");
 include("../crud/LNM_filiere.crud.php");
 include("../crud/function_rs_to_table.php");
 
-// Récupérer la liste des filières
 $filieres = listLNM_filiere($conn);
 
-// Retourner les données sous forme de JSON
+sort($filieres); # ordre alphabétique
 echo json_encode($filieres, JSON_NUMERIC_CHECK);

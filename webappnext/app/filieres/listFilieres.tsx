@@ -23,60 +23,50 @@ import usmbLogo from "@/app/images/Logo_USMB_web_grand_RVB.png";
  * 
  * @returns {JSX.Element} Composant React
  */
-export default function ListFilieres(){
-    const [nomFilieres, setNomFilieres] = useState<string[]>([])
-    const [nomFiliereClicked, setNomFiliereClicked] = useState([])
-    const [isLoading, setIsLoading] = useState(true)
-
-    useEffect(() => {
-
-        axios.get('/api/proxy/select/selectFilieres', {withCredentials: true})
-            .then(response => {
-                if (response.status == 200){
-                    setNomFilieres(response.data)
-                    setIsLoading(false)
-                }else{
-                    console.log('error : filiere.tsx')
-                }
-            })
-
-    }, []);
+export default function ListFilieres({filieres} : {filieres: Filiere[]}){
+    const [nomFiliereClicked, setNomFiliereClicked] = useState<string[]>([])
+    const [isLoading, setIsLoading] = useState(false)
 
     function filiereClicked(str: string){
-        let res:any = nomFilieres.find((element: string): boolean => str == element[0])
-        if(res != undefined){
-            setNomFiliereClicked(res)
+        let filiere:Filiere|undefined = filieres.find((element: Filiere): boolean => str == element.nom_filiere)
+
+        if(filiere != undefined){
+            let nom_long:string = ""
+            if(filiere.nom_long != undefined){
+                nom_long = filiere.nom_long
+            }
+            setNomFiliereClicked([filiere.nom_filiere, nom_long])
         }
     }
 
     if (isLoading){
         return <Loader />
+
     }else{
         return (
             <>
-                <div id="cards-container" className={"w-full px-3 flex flex-wrap justify-center gap-10 gap-y-8"}>
-                    {nomFilieres.length > 0 ? (
-                        nomFilieres.map((nom: string, index: number) => (
+                <div className='w-full flex flex-wrap justify-center items-center gap-6'>
+                    {filieres.map((filiere) => (
                             <div
-                                key={index}
+                                key={filiere.nom_filiere}
+                                className="
+                                    h-28 w-1/4 group cursor-pointer flex flex-col justify-center items-center
+                                    text-center shadow-md shadow-[rgba(193,193,193,0.45)] rounded-lg p-2 my-2
+                                    border border-[#e5e7eb] hover:bg-usmb-dark-blue hover:border-usmb-dark-blue
+                                "
+
                                 onClick={(): void => {
-                                    filiereClicked(nom[0]);
+                                    filiereClicked(filiere.nom_filiere);
                                 }}
-                                className={
-                                    "w-60 h-16 flex justify-start items-center rounded-lg shadow-default cursor-pointer gap-2 px-2"
-                                }
                             >
-                                <img
-                                    src={nom[0] === "POLYTECH" ? polytechLogo.src : usmbLogo.src}
-                                    alt="logo"
-                                    className="w-8 h-8 object-contain"
-                                />
-                                <p className={"font-semibold"}>{nom[0]}</p>
+                                <p className="text-black text-2xl font-bold group-hover:text-white">
+                                    {filiere.nom_filiere}
+                                </p>
+                                <p className="text-gray-400 text-xs ">
+                                    {filiere.nom_long}
+                                </p>
                             </div>
-                        ))
-                    ) : (
-                        <p>Aucune filière disponible.</p>
-                    )}
+                    ))}
                 </div>
                 {nomFiliereClicked.length > 0 && (
                     <ModaleFiliere

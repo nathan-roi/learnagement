@@ -6,12 +6,14 @@
 // - ListFilieres: Composant pour afficher les filières
 // - Loader: Composant d'indicateur de chargement
 
+import axios from "axios";
 import {useSession} from "next-auth/react";
-import {Suspense, useEffect} from "react";
+import {useState, useEffect} from "react";
 import {useRouter} from "next/navigation";
 
 import ListCardsCharge from "@/app/homepage/charge/listCardsCharge";
 import ListFilieres from "@/app/filieres/listFilieres"
+import Loader from "@/app/indicators/loading";
 
 /**
  * Composant de la homepage
@@ -23,11 +25,29 @@ export default function Homepage(){
     const {data: session, status} = useSession()
     const router = useRouter()
 
+    const [filieres, setNomFilieres] = useState<Filiere[]>([])
+    const [isLoading, setIsLoading] = useState(true)
+
     useEffect(() => {
         if(status == 'unauthenticated'){
             router.push('/connection')
         }
     }, [session, router]);
+
+    useEffect(() => {
+
+        axios.get('/api/proxy/list/listUserFilieres', {withCredentials: true})
+            .then(response => {
+                if (response.status == 200){
+                    console.log(response.data)
+                    setNomFilieres(response.data)
+                    setIsLoading(false)
+                }else{
+                    console.log('error : filiere.tsx')
+                }
+            })
+
+    }, []);
 
     return(
         <>
@@ -39,7 +59,7 @@ export default function Homepage(){
                 </div>
                 <div className={"w-full self-start"}>
                     <h3>Compétences par filières</h3>
-                    <ListFilieres />
+                    {isLoading ? <Loader /> : <ListFilieres filieres={filieres} />}
                 </div>
             </div>
         </>
