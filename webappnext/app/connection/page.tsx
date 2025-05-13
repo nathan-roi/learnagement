@@ -66,7 +66,6 @@ export default function Page() {
         handleValidation(formData, schema, 'password', setMdpMsgError);
     }
 
-
     useEffect(() => {
         if (status == 'authenticated'){
             router.push('/homepage')
