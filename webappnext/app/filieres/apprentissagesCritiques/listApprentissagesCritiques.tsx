@@ -33,9 +33,6 @@ export default function ListApprentissagesCritiques({idCompetence}:{idCompetence
 
     const [idApcClicked, setApcClicked] = useState<number>(-1)
 
-    const [showTooltip, setShowTooltip] = useState(false)
-    const [tooltipPostion, setTooltipPosition] = useState({x: 0, y:0})
-
 
     useEffect(() => {
         if (levels.length > 0 && apprentissagesCritiques != undefined){
@@ -47,7 +44,7 @@ export default function ListApprentissagesCritiques({idCompetence}:{idCompetence
     useEffect(() => {
         let form_data = new FormData
         form_data.append("idCompetence", idCompetence.toString())
-        axios.post("/api/proxy/select/selectApprentissageCritique", form_data, {withCredentials: true})
+        axios.post("/api/proxy/list/listApprentissagesCritiques", form_data, {withCredentials: true})
             .then(response => {
                 let data = response.data
                 setApprentissagesCritiques(data)
@@ -58,7 +55,7 @@ export default function ListApprentissagesCritiques({idCompetence}:{idCompetence
     useEffect(() => {
         let form_data = new FormData
         form_data.append("indexBy", "id_apprentissage_critique")
-        axios.post("/api/proxy/select/selectModulesOfAllAPC", form_data, {withCredentials: true})
+        axios.post("/api/proxy/list/listModulesOfAllAPC", form_data, {withCredentials: true})
             .then(response => {
                 setApcAsModule(response.data)
             })

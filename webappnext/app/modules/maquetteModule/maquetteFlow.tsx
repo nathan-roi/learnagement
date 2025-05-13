@@ -36,10 +36,6 @@ export default function MaquetteFlow({initialNodes, initialEdges, setWidth}:{ in
   const [displayCardCourse, setDisplayCardCourse] = useState<CourseData>({});
 
   useEffect(() => {
-    console.log("[DEBUG]Display Card Course : ", displayCardCourse);
-  }, [displayCardCourse]);
-
-  useEffect(() => {
     setNodes(initialNodes);
     setEdges(initialEdges);
   }, [initialNodes, initialEdges]);

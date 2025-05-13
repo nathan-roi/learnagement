@@ -39,7 +39,7 @@ export default function ListModule(){
     useEffect(() => {
         let form_data = new FormData
         form_data.append("indexBy", "id_module")
-        axios.post("/api/proxy/select/selectModulesOfAllAPC", form_data, {withCredentials: true})
+        axios.post("/api/proxy/list/listModulesOfAllAPC", form_data, {withCredentials: true})
             .then(response => {
                 let data = response.data
                 setIdModulesHasApc(Object.keys(data))

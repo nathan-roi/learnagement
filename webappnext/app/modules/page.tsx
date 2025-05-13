@@ -31,9 +31,8 @@ export default function Page(){
         if (id_module){
             let form_data = new FormData()
             form_data.append("id_module", id_module)
-            axios.post('/api/proxy/select/selectAPCbyIdModule',form_data,{withCredentials: true})
+            axios.post('/api/proxy/list/listAPCbyIdModule',form_data,{withCredentials: true})
                 .then(response => {
-                    console.log(response.data)
                     setListApc(response.data)
                 })
         }

@@ -15,28 +15,6 @@ function FloatingEdge({ id, source, target, markerEnd, style }:{id:any, source:a
         targetNode,
     );
 
-    /* TODO : mettre le lien smoothstep quand retour à la ligne */
-    // if (screenWidth){
-    //     const [edgePath] = getBezierPath({
-    //         sourceX: sx,
-    //         sourceY: sy,
-    //         sourcePosition: sourcePos,
-    //         targetPosition: targetPos,
-    //         targetX: tx,
-    //         targetY: ty,
-    //     });
-    // }else{
-    //     const [edgePath] = getSmoothStepPath({
-    //         sourceX: sx,
-    //         sourceY: sy,
-    //         sourcePosition: Position.Bottom,
-    //         targetPosition: Position.Top,
-    //         targetX: tx-20,
-    //         targetY: ty,
-    //         borderRadius: 10
-    //     });
-    // }
-
     const [edgePath] = getBezierPath({
         sourceX: sx,
         sourceY: sy,
