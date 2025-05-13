@@ -58,7 +58,7 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
     useEffect(() => {
         let form_data = new FormData
         form_data.append("indexBy", "id_apprentissage_critique")
-        axios.post("/api/proxy/select/selectModulesOfAllAPC", form_data, {withCredentials: true})
+        axios.get("/api/proxy/select/selectModulesOfAllAPC", {withCredentials: true})
             .then(response => {
                 setApcAsModule(response.data)
             })
@@ -70,8 +70,8 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
         setLevelClicked(parseInt(level[1]))
     }
 
-    function showModules(event: any){
-        let idApc: number = parseInt(event.target.id)
+    function showModules(idApc: number){
+
         if (idApcClicked == idApc){
             setApcClicked(-1)
         }else if(idApc in Object.keys(apcAsModule)){
@@ -79,9 +79,7 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
         }
     }
 
-    function tooltip(event: any){
-        let id = event.target.id
-
+    function tooltip(id: number){
         let keys = Object.keys(apcAsModule)
         if (!(id in keys)){setShowTooltip(true)}
     }
@@ -118,11 +116,11 @@ export default function listApprentissagesCritiques({idCompetence}:{idCompetence
                                  ${idApcClicked === apc.id_apprentissage_critique ? 'rounded-t-lg' : 'rounded-lg'}
                                  `}
 
-                                 onMouseOver={tooltip}
+                                 onMouseOver={() => tooltip(apc.id_apprentissage_critique)}
                                  onMouseLeave={() => setShowTooltip(false)}
                                  onMouseMove={moveTooltip}
 
-                                 onClick={showModules}
+                                 onClick={() => {showModules(apc.id_apprentissage_critique)}}
                             >
                                 <p className={"max-w-[90%]"}>{apc.libelle_apprentissage}</p>
                                 {(apc.id_apprentissage_critique in Object.keys(apcAsModule)) && (

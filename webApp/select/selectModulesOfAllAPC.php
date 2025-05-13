@@ -9,20 +9,18 @@ include("../db_connection/connectDB.php");
 include("../crud/function_rs_to_table.php");
 include("../crud/APC_apprentissage_critique_as_module.crud.php");
 
-session_start();
+// Renvoie un tableau associatif où les éléments sont groupés par :
+// - apprentissages critiques si indexBy = 'id_apprentissage_critique' (affiche la liste de modules pour un apprentissage critique)
+// - modules si indexBy = 'id_module' (affiche la liste d'apprentissages critiques pour un module)
+
 
 if(isset($_POST["indexBy"])){
-    if (isset($_SESSION["userId"])){
-        $id_user = $_SESSION["userId"];
-    }else{
-        $id_user = 'null';
-    }
-
     $indexBy = $_POST["indexBy"];
 
-    $modulesOfAllAPC = selectModulesOfAllAPC($conn, $id_user);
+    $modulesOfAllAPC = selectModulesOfAllAPC($conn);
     $modulesOfAllAPCIndex = [];
 
+    // groupement des modules par apprentissages critiques
     foreach ($modulesOfAllAPC as $item) {
         if($indexBy == "id_apprentissage_critique"){
             if(!isset($modulesOfAllAPCIndex[$item["id_apprentissage_critique"]])){

@@ -1,6 +1,6 @@
 <?php
 
-function selectModulesOfAllAPC($conn, $id_user)
+function selectModulesOfAllAPC($conn)
 {
     $sql = "SELECT 
                 `id_apprentissage_critique`,
@@ -9,8 +9,7 @@ function selectModulesOfAllAPC($conn, $id_user)
                 `MAQUETTE_module`.`nom`,
                 `MAQUETTE_module`.`id_responsable`
             FROM `APC_apprentissage_critique_as_module`
-            JOIN `MAQUETTE_module` ON `APC_apprentissage_critique_as_module`.`id_module` = `MAQUETTE_module`.`id_module`
-            WHERE $id_user IS NULL OR `MAQUETTE_module`.`id_responsable` = $id_user;";
+            JOIN `MAQUETTE_module` ON `APC_apprentissage_critique_as_module`.`id_module` = `MAQUETTE_module`.`id_module`;";
 
     $res = mysqli_query($conn, $sql);
 

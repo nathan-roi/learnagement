@@ -16,7 +16,6 @@ import {useSession} from "next-auth/react";
  */
 export default function modulesOfApprentissageCritique({listModules}:{listModules:ModuleOfApc[]}){
     const {data: session, status} = useSession()
-    console.log(listModules)
 
     return(
         <div className={`shadow-md rounded-b-lg bg-white`}>
@@ -24,18 +23,23 @@ export default function modulesOfApprentissageCritique({listModules}:{listModule
             <div className="p-2">
                 <ul className={`list-disc list-inside text-sm/6`}>
                     {listModules.map((module: ModuleOfApc) => {
-                        return (
-                            <Link key={module.id_module}
-                                  href={{pathname: '/modules', query: {id_module: module.id_module}}}>
+                        if (session && module.id_responsable == parseInt(session.user.id)){
+                            return(
+                                <Link key={module.id_module}
+                                      href={{pathname: '/modules', query: {id_module: module.id_module}}}>
+                                    <li className="cursor-pointer">
+                                        <span className={"underline text-usmb-blue hover:text-usmb-dark-blue"}>
+                                            {module.code_module} - {module.nom}
+                                        </span>
+                                    </li>
+                                </Link>
+                            )
+                        }else{
+                            return (
+                                <li key={module.id_module}>{module.code_module} - {module.nom}</li>
+                            )
+                        }
 
-                                <li className="cursor-pointer">
-                                    <span className={"underline text-usmb-blue hover:text-usmb-dark-blue"}>
-                                        {module.code_module} - {module.nom}
-                                    </span>
-                                </li>
-
-                            </Link>
-                        );
                     })}
                 </ul>
             </div>

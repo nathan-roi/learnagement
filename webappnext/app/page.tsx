@@ -92,7 +92,7 @@ export default function Home() {
       <div className='h-[88%] pt-[2%] pb-[2%] grid grid-cols-3'>
         <div className='col-span-3 border-r-[1px] border-[#C6C6C6] px-4'>
           <div className='text-black opacity-50 italic'>Résultats</div>
-          <div className='flex flex-row flex-wrap gap-6 justify-center h-full overflow-y-auto'>
+          <div className='flex flex-row flex-wrap gap-6 justify-center overflow-y-auto'>
 
               {isLoading ? (
                 <Loader />
@@ -102,9 +102,8 @@ export default function Home() {
                 filteredFilieres.map((filiere, index) => (
                 <div
                   key={filiere.id ?? filiere.nom_filiere ?? index}
-                  className="group cursor-pointer flex flex-col justify-center items-center
-                  text-center
-                  shadow-md shadow-[rgba(193,193,193,0.45)] rounded-lg p-2 my-2 h-1/6 w-1/4
+                  className="h-28 w-1/4 group cursor-pointer flex flex-col justify-center items-center
+                  text-center shadow-md shadow-[rgba(193,193,193,0.45)] rounded-lg p-2 my-2
                   border border-[#e5e7eb] hover:bg-usmb-dark-blue hover:border-usmb-dark-blue"
 
                   onClick={(): void => {
